@@ -1,0 +1,22 @@
+{
+  "destination_addresses": [
+    "St John's Church, North End Rd, London SW6 1PB, United Kingdom"
+  ],
+  "origin_addresses": [
+    "Westminster Abbey, 20 Deans Yd, London SW1P 3PA, United Kingdom"
+  ],
+  "rows": [
+    {
+      "elements": [
+        {
+          "distance": { "text": "7.3 km", "value": 7346 },
+          "duration": { "text": "23 mins", "value": 1401 },
+          "origin": "Westminster Abbey, 20 Deans Yd, Westminster, London SW1P 3PA, United Kingdom",
+          "destination": "St John's Church, North End Rd, Fulham, London SW6 1PB, United Kingdom",
+          "status": "OK"
+        }
+      ]
+    }
+  ],
+  "status": "OK"
+}
