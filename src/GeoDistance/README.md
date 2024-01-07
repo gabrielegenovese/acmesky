@@ -1,5 +1,5 @@
 # Geographical distance service
-This service calculates the distance between two points (coordinate or address). It uses the free [distancematrix.ai](distancematrix.ai) APIs.
+This service calculates the distance between two points (coordinate or address). It uses the free [distancematrix.ai](https://distancematrix.ai) APIs.
 
 ### API:
 | Endpoint | Type | Parameters |
