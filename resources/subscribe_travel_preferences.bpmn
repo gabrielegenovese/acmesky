@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0huu84b" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.19.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.3.0">
+  <bpmn:collaboration id="Collaboration_1jjmn4d">
+    <bpmn:participant id="Participant_02w2knf" name="ACMESky" processRef="process_saveCustomerTravelPreference" />
+    <bpmn:participant id="Participant_1pf7i3q" name="Customer" />
+    <bpmn:messageFlow id="Flow_0iz0mul" sourceRef="Participant_1pf7i3q" targetRef="receivedSubscribeTravelPreference" />
+  </bpmn:collaboration>
+  <bpmn:process id="process_saveCustomerTravelPreference" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_037qrfb">
+      <bpmn:lane id="Lane_1mhqvvt" />
+      <bpmn:lane id="Lane_0zj3azy" name="">
+        <bpmn:flowNodeRef>Activity_1gy4mxl</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_07qkvfg</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>receivedSubscribeTravelPreference</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:serviceTask id="Activity_1gy4mxl" name="Save Travel preference">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="saveTravelPreference" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0oifnml</bpmn:incoming>
+      <bpmn:outgoing>Flow_0h01ge5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_07qkvfg">
+      <bpmn:incoming>Flow_0h01ge5</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0oifnml" sourceRef="receivedSubscribeTravelPreference" targetRef="Activity_1gy4mxl" />
+    <bpmn:sequenceFlow id="Flow_0h01ge5" sourceRef="Activity_1gy4mxl" targetRef="Event_07qkvfg" />
+    <bpmn:startEvent id="receivedSubscribeTravelPreference" name="Receitravel preference subscription">
+      <bpmn:outgoing>Flow_0oifnml</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0vna81w" messageRef="Message_25dq7ms" />
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmn:message id="Message_2q4gekt" name="Message_2q4gekt" />
+  <bpmn:message id="Message_08tf94r" name="Message_08tf94r" />
+  <bpmn:message id="Message_25dq7ms" name="Message_ReceivedTravelSubscription" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1jjmn4d">
+      <bpmndi:BPMNShape id="Participant_1oat3jb_di" bpmnElement="Participant_1pf7i3q" isHorizontal="true">
+        <dc:Bounds x="172" y="70" width="788" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_02w2knf_di" bpmnElement="Participant_02w2knf" isHorizontal="true">
+        <dc:Bounds x="217" y="405" width="916" height="370" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1mhqvvt_di" bpmnElement="Lane_1mhqvvt" isHorizontal="true">
+        <dc:Bounds x="247" y="635" width="886" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0zj3azy_di" bpmnElement="Lane_0zj3azy" isHorizontal="true">
+        <dc:Bounds x="247" y="405" width="886" height="230" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_130ygww_di" bpmnElement="Activity_1gy4mxl">
+        <dc:Bounds x="823" y="455" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_07qkvfg_di" bpmnElement="Event_07qkvfg">
+        <dc:Bounds x="1005" y="477" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_00dnqac_di" bpmnElement="receivedSubscribeTravelPreference">
+        <dc:Bounds x="705" y="477" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="694" y="520" width="59" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0oifnml_di" bpmnElement="Flow_0oifnml">
+        <di:waypoint x="741" y="495" />
+        <di:waypoint x="823" y="495" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0h01ge5_di" bpmnElement="Flow_0h01ge5">
+        <di:waypoint x="923" y="495" />
+        <di:waypoint x="1005" y="495" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0iz0mul_di" bpmnElement="Flow_0iz0mul">
+        <di:waypoint x="723" y="130" />
+        <di:waypoint x="723" y="477" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
