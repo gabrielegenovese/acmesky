@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+
+# ACMEsky sevices
+  acmesky_db:
+    hostname: db.acmesky
+    container_name: acmesky_mysql_container
+    build: ./src/ACMEskyDB
+    env_file:
+      - ./src/ACMEskyDB/.env
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "5432:5432"
+    networks:
+      - acmesky
+    restart: unless-stopped
+
+networks:
+  acmesky:
+    name: acmesky-net
+
+volumes:
+  mysql_data:
