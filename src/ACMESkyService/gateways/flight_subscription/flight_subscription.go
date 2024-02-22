@@ -2,6 +2,7 @@ package flight_subscription
 
 import (
 	"acmesky/entities"
+	airports_repository "acmesky/repository/airports"
 	zbSingleton "acmesky/workers"
 	"context"
 	"fmt"
@@ -14,17 +15,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var airports = []entities.Airport{
-	{ID: "1", Name: "Aeroporto di Bologna-Guglielmo Marconi", City: "Bologna"},
-	{ID: "2", Name: "Aeroporto del Salento", City: "Brindisi"},
-}
-
 // getAlbums responds with the list of all albums as JSON.
 func getAirports(ctx *gin.Context) {
-	// var client zbc.Client
-	// client = *zbSingleton.GetInstance()
 
-	ctx.IndentedJSON(http.StatusOK, airports)
+	searchQuery := ctx.Query("query")
+	airports, err := airports_repository.GetAirports(searchQuery)
+
+	if err != nil {
+		ctx.IndentedJSON(http.StatusInternalServerError, airports)
+	} else {
+		ctx.IndentedJSON(http.StatusOK, airports)
+	}
+
 }
 
 func subscribeTravelPreference(ctx *gin.Context) {

@@ -1,9 +1,0 @@
-go 1.21.5
-
-use (
-	.
-	./gateways
-	./gateways/flight_subscription
-	./workers
-	./workers/travel_preference
-)

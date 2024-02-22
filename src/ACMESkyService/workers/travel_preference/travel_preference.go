@@ -1,8 +1,8 @@
-package travel_preference
+package travelPrefWorker
 
 import (
 	acmeskyEntities "acmesky/entities"
-	flight_subscription_repository "acmesky/repository"
+	travelPreferenceRepo "acmesky/repository/travel_preference"
 	zbSingleton "acmesky/workers"
 	"context"
 	"log"
@@ -41,7 +41,7 @@ func HandleSaveTravelPreference(client worker.JobClient, job entities.Job) {
 	}
 
 	flight_subscription := acmeskyEntities.CustomerFlightSubscriptionFromMap(vars)
-	flight_subscription_repository.AddCustomerSubscribtionPreference(flight_subscription)
+	travelPreferenceRepo.AddCustomerSubscribtionPreference(flight_subscription)
 
 	ctx, cancelFn := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelFn()
