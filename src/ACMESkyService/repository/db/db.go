@@ -2,6 +2,7 @@ package dbClient
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"os"
 	"sync"
@@ -22,10 +23,25 @@ func createClient() (*sql.DB, error) {
 		Addr:   os.Getenv("ACMESKY_DB_HOST"),
 		DBName: os.Getenv("ACMESKY_DB_NAME"),
 	}
+	fmt.Println("cfg: %+v", cfg)
 	// Get a database handle.
 	db, err := sql.Open("mysql", cfg.FormatDSN())
 
 	return db, err
+}
+
+func InitDB() {
+	dbInstance, err := createClient()
+	fmt.Printf("DB client failed%+v\n", err)
+	if err == nil {
+		pingErr := dbInstance.Ping()
+		if pingErr != nil {
+			err = pingErr
+			fmt.Printf("DB Connection failed%+v\n", pingErr)
+		} else {
+			fmt.Printf("DB Connection Succes%+v\n", pingErr)
+		}
+	}
 }
 
 func closeClient(client *sql.DB) {
@@ -34,22 +50,27 @@ func closeClient(client *sql.DB) {
 }
 
 func GetInstance() (*sql.DB, error) {
-	var err error
 
-	if dbInstance == nil {
-		lockDBInstance.Lock()
-		defer lockDBInstance.Unlock()
-		if dbInstance == nil {
-			dbInstance, err = createClient()
-
-			if err != nil {
-				pingErr := dbInstance.Ping()
-				if pingErr != nil {
-					err = pingErr
+	/*
+		var err error
+			if dbInstance == nil {
+				lockDBInstance.Lock()
+				defer lockDBInstance.Unlock()
+				if dbInstance == nil {
+					dbInstance, err = createClient()
+					fmt.Printf("DB client failed%+v\n", err)
+					if err == nil {
+						pingErr := dbInstance.Ping()
+						if pingErr != nil {
+							err = pingErr
+							fmt.Printf("DB Connection failed%+v\n", pingErr)
+						} else {
+							fmt.Printf("DB Connection Succes%+v\n", pingErr)
+						}
+					}
 				}
 			}
-		}
-	}
-
-	return dbInstance, err
+		return dbInstance, err
+	*/
+	return dbInstance, nil
 }

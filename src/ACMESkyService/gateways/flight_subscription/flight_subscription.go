@@ -23,6 +23,7 @@ func getAirports(ctx *gin.Context) {
 
 	if err != nil {
 		ctx.IndentedJSON(http.StatusInternalServerError, airports)
+		log.Fatal(err)
 	} else {
 		ctx.IndentedJSON(http.StatusOK, airports)
 	}
