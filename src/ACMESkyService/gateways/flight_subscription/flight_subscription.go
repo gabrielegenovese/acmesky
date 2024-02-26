@@ -2,7 +2,7 @@ package flight_subscription
 
 import (
 	"acmesky/entities"
-	airports_repository "acmesky/repository/airports"
+	airportsRepo "acmesky/repository/airports"
 	zbSingleton "acmesky/workers"
 	"context"
 	"fmt"
@@ -19,7 +19,7 @@ import (
 func getAirports(ctx *gin.Context) {
 
 	searchQuery := ctx.Query("query")
-	airports, err := airports_repository.GetAirports(searchQuery)
+	airports, err := airportsRepo.GetAirports(searchQuery)
 
 	if err != nil {
 		ctx.IndentedJSON(http.StatusInternalServerError, airports)

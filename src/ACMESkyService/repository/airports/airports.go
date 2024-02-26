@@ -8,17 +8,18 @@ import (
 )
 
 func GetAirports(query string) ([]entities.Airport, error) {
-	db, err := dbClient.GetInstance()
+	db := dbClient.GetInstance()
 	var airports []entities.Airport
-	if err != nil {
-		return airports, nil
-	}
 	var rows *sql.Rows
+	var err error
 
+	if db == nil {
+		fmt.Println("ERROR NIL")
+	}
 	if len(query) > 0 {
 		rows, err = db.Query("SELECT * FROM Airports WHERE Name LIKE %?% OR City LIKE %?% ORDER BY Name ASC", query)
 	} else {
-		rows, err = db.Query("SELECT * FROM Airports ORDER BY Name ASC", query)
+		rows, err = db.Query("SELECT * FROM Airports ORDER BY Name ASC")
 	}
 
 	if err != nil {

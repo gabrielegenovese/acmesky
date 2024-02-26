@@ -8,10 +8,7 @@ import (
 
 func AddCustomerSubscribtionPreference(pref entities.CustomerFlightSubscription) (int64, error) {
 
-	db, err := dbClient.GetInstance()
-	if err != nil {
-		return 0, err
-	}
+	db := dbClient.GetInstance()
 
 	result, err := db.Exec(
 		"INSERT INTO TravelPreference (Budget, AirportOriginID, AirportDestinationID, TravelDateStart, TravelDateEnd, ProntogramID) VALUES (?, ?, ?, ?, ?, ?)",
