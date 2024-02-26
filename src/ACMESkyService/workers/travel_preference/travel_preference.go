@@ -41,12 +41,30 @@ func HandleSaveTravelPreference(client worker.JobClient, job entities.Job) {
 	}
 
 	flight_subscription := acmeskyEntities.CustomerFlightSubscriptionFromMap(vars)
-	travelPreferenceRepo.AddCustomerSubscribtionPreference(flight_subscription)
+	newPrefID, insertErr := travelPreferenceRepo.AddCustomerSubscribtionPreference(flight_subscription)
 
 	ctx, cancelFn := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelFn()
 
-	_, err = client.NewCompleteJobCommand().JobKey(job.Key).Send(ctx)
+	if insertErr == nil {
+		command, err := client.NewCompleteJobCommand().
+			JobKey(job.Key).
+			VariablesFromMap(map[string]interface{}{
+				"travel_preference_id": newPrefID,
+			})
+		_, err = command.Send(ctx)
+		if err != nil {
+
+		}
+	} else {
+		_, err = client.NewFailJobCommand().
+			JobKey(job.Key).
+			Retries(1).
+			ErrorMessage(err.Error()).
+			Send(ctx)
+
+	}
+
 	if err != nil {
 		log.Printf("failed to complete job with key %d: [%s]", job.Key, err)
 	} else {
