@@ -16,37 +16,32 @@ import (
 )
 
 // getAlbums responds with the list of all albums as JSON.
-func getAirports(ctx *gin.Context) {
+func rest_getAirports(ctx *gin.Context) {
 
 	searchQuery := ctx.Query("query")
 	airports, err := airportsRepo.GetAirports(searchQuery)
 
 	if err != nil {
 		ctx.IndentedJSON(http.StatusInternalServerError, airports)
-		log.Fatal(err)
 	} else {
 		ctx.IndentedJSON(http.StatusOK, airports)
 	}
 
 }
 
-func subscribeTravelPreference(ctx *gin.Context) {
+func rest_subscribeTravelPreference(ctx *gin.Context) {
 	var newSubRequest entities.CustomerFlightSubscription
 
 	if err := ctx.BindJSON(&newSubRequest); err != nil {
-		log.Println(err)
 		ctx.Status(http.StatusBadRequest)
 		return
 	}
 
-	fmt.Printf("%+v\n", newSubRequest)
-
 	zbClient := *zbSingleton.GetInstance()
 
-	_, err := receivedTravelPreference(zbClient, newSubRequest)
+	_, err := bpmn_NotifyReceivedTravelPreference(zbClient, newSubRequest)
 
 	if err != nil {
-		fmt.Println(fmt.Errorf("Error on saving preference: %s", err))
 		ctx.Status(http.StatusInternalServerError)
 	} else {
 		ctx.Status(http.StatusOK)
@@ -54,7 +49,7 @@ func subscribeTravelPreference(ctx *gin.Context) {
 
 }
 
-func receivedTravelPreference(zBClient zbc.Client, newSubRequest entities.CustomerFlightSubscription) (*pb.PublishMessageResponse, error) {
+func bpmn_NotifyReceivedTravelPreference(zBClient zbc.Client, newSubRequest entities.CustomerFlightSubscription) (*pb.PublishMessageResponse, error) {
 
 	command, err := zBClient.NewPublishMessageCommand().
 		MessageName("Message_ReceivedTravelSubscription").
@@ -62,7 +57,7 @@ func receivedTravelPreference(zBClient zbc.Client, newSubRequest entities.Custom
 		VariablesFromMap(newSubRequest.ToMap())
 
 	if err != nil {
-		log.Println(fmt.Errorf("failed to create process instance command for message [%s]", newSubRequest))
+		log.Println(fmt.Errorf("failed to create process instance command for message [%+v]", newSubRequest))
 		return nil, err
 	}
 
@@ -71,7 +66,9 @@ func receivedTravelPreference(zBClient zbc.Client, newSubRequest entities.Custom
 
 	result, err := command.Send(ctx)
 
-	if err == nil {
+	if err != nil {
+		log.Println(fmt.Errorf("error on saving preference: %s", err))
+	} else {
 		log.Printf("notifed we received [%+v] with key %d", newSubRequest, result.GetKey())
 	}
 
@@ -80,6 +77,6 @@ func receivedTravelPreference(zBClient zbc.Client, newSubRequest entities.Custom
 
 func Listen(router *gin.Engine) {
 
-	router.GET("/airports", getAirports)
-	router.PUT("/subscribe", subscribeTravelPreference)
+	router.GET("/airports", rest_getAirports)
+	router.PUT("/subscribe", rest_subscribeTravelPreference)
 }

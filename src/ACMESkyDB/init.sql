@@ -21,7 +21,7 @@ CREATE TABLE TravelPreferences (
     ProntogramID VARCHAR(256) NOT NULL,
     Budget DECIMAL(8, 2) NOT NULL,
     TravelDateStart DATE NOT NULL,
-    TravelDateEnd DATE NOT NULL.
+    TravelDateEnd DATE NOT NULL,
     AirportOriginID int NOT NULL,
     AirportDestinationID int NOT NULL,
     PRIMARY KEY (TravelPreferenceID),
