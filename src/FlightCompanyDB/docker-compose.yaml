@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  flightcompany_db:
+    hostname: db.flightcompany
+    container_name: flightcompany_mysql_container
+    build: ./
+    env_file:
+      - .env
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "5432:5432"
+      - "3306:3306"
+    networks:
+      - flightcompany
+    restart: unless-stopped
+
+# temp for dev
+  phpmyadmin:
+    container_name: phpmyadmin_container
+    image: phpmyadmin
+    restart: unless-stopped
+    ports:
+      - 8061:80
+    networks:
+      - flightcompany
+    environment:
+      - PMA_HOSTS=db.flightcompany
+    depends_on:
+      - flightcompany_db
+
+networks:
+  flightcompany:
+    driver: bridge
+    name: flightcompany-net
+
+volumes:
+  mysql_data:
