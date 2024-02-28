@@ -11,8 +11,8 @@ func AddCustomerSubscribtionPreference(pref entities.CustomerFlightSubscription)
 	db := dbClient.GetInstance()
 
 	result, err := db.Exec(
-		"INSERT INTO TravelPreferences (Budget, AirportOriginID, AirportDestinationID, TravelDateStart, TravelDateEnd, ProntogramID) VALUES (?, ?, ?, ?, ?, ?)",
-		pref.Budget, pref.AirportOriginID, pref.AirportDestinationID, pref.DateStartISO8601, pref.DateEndISO8601, pref.ProntogramID)
+		"INSERT INTO TravelPreferences (AirportOriginID, AirportDestinationID, TravelDateStart, TravelDateEnd, SeatsCount, Budget, ProntogramID) VALUES (?, ?, ?, ?, ?, ?, ?)",
+		pref.AirportOriginID, pref.AirportDestinationID, pref.DateStartISO8601, pref.DateEndISO8601, pref.SeatsCount, pref.Budget, pref.ProntogramID)
 	if err != nil {
 		return 0, fmt.Errorf("[DBERROR] addCustomerTravelPreference: %v", err)
 	}

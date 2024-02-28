@@ -9,6 +9,7 @@ type CustomerFlightSubscription struct {
 	// end travel date range in ISO 8601 format (with timezone UTC)
 	DateEndISO8601 string  `json:"travel_date_end"`
 	Budget         float64 `json:"travel_max_price"`
+	SeatsCount     uint    `json:"travel_seats_count"`
 }
 
 func CustomerFlightSubscriptionFromMap(m map[string]interface{}) CustomerFlightSubscription {
@@ -19,6 +20,7 @@ func CustomerFlightSubscriptionFromMap(m map[string]interface{}) CustomerFlightS
 		DateStartISO8601:     m["travel_date_start"].(string),
 		DateEndISO8601:       m["travel_date_end"].(string),
 		Budget:               m["travel_max_price"].(float64),
+		SeatsCount:           m["travel_seats_count"].(uint),
 	}
 	return v
 }
@@ -31,6 +33,7 @@ func (v CustomerFlightSubscription) ToMap() map[string]interface{} {
 		"travel_date_end":        v.DateEndISO8601,
 		"travel_max_price":       v.Budget,
 		"customer_prontogram_id": v.ProntogramID,
+		"travel_seats_count":     v.SeatsCount,
 	}
 	return m
 }
