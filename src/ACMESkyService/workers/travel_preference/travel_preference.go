@@ -54,6 +54,8 @@ func HandleSaveTravelPreference(client worker.JobClient, job entities.Job) {
 
 		if err != nil {
 			log.Println(fmt.Errorf("[BPMNERROR] error on failing job with key [%d]: [%s]", job.Key, err))
+		} else {
+			log.Println(insertErr)
 		}
 	} else {
 		commandComplete, err := client.NewCompleteJobCommand().
