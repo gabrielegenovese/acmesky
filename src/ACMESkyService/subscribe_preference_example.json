@@ -2,7 +2,8 @@
     "customer_prontogram_id":"testUser",
     "airport_id_origin": "1",
     "airport_id_destination": "2",
-    "travel_date_start": "2023-01-01T00:00:00.000Z",
-    "travel_date_end": "2023-02-01T00:00:00.000Z",
-    "travel_max_price" : 200
+    "travel_date_start": "2023-01-01",
+    "travel_date_end": "2023-02-01",
+    "travel_max_price" : 200,
+    "travel_seats_count": 2
 }

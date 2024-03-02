@@ -54,7 +54,7 @@ func bpmn_NotifyReceivedTravelPreference(zBClient zbc.Client, newSubRequest enti
 	command, err := zBClient.NewPublishMessageCommand().
 		MessageName("Message_ReceivedTravelSubscription").
 		CorrelationKey("").
-		VariablesFromMap(newSubRequest.ToMap())
+		VariablesFromObject(newSubRequest)
 
 	if err != nil {
 		log.Println(fmt.Errorf("failed to create process instance command for message [%+v]", newSubRequest))
@@ -65,6 +65,8 @@ func bpmn_NotifyReceivedTravelPreference(zBClient zbc.Client, newSubRequest enti
 	defer cancelFn()
 
 	result, err := command.Send(ctx)
+
+	fmt.Println(result.String())
 
 	if err != nil {
 		log.Println(fmt.Errorf("error on saving preference: %s", err))

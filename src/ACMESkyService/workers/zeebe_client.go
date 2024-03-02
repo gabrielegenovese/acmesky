@@ -2,6 +2,7 @@ package zbSingleton
 
 import (
 	"log"
+	"os"
 	"sync"
 
 	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
@@ -13,7 +14,7 @@ var zeebeInstance *zbc.Client
 func createClient() zbc.Client {
 
 	config := zbc.ClientConfig{
-		GatewayAddress:         "localhost:26500",
+		GatewayAddress:         os.Getenv("ZEEBE_HOST"),
 		UsePlaintextConnection: true,
 	}
 
