@@ -4,9 +4,11 @@ import (
 	acmeskyEntities "acmesky/entities"
 	travelPreferenceRepo "acmesky/repository/travel_preference"
 	zbSingleton "acmesky/workers"
+	ginContextRepo "acmesky/workers/utils/gin_context_repository"
 	"context"
 	"fmt"
 	"log"
+	"net/http"
 	"time"
 
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
@@ -37,6 +39,8 @@ func HandleSaveTravelPreference(client worker.JobClient, job entities.Job) {
 	if err != nil {
 		log.Println(fmt.Errorf("[BPMNERROR] failed to get variables for job %d: [%s]", job.Key, err))
 	}
+	var bpk string = vars["bpk"].(string)
+	ginCtx := ginContextRepo.GetContext(bpk)
 
 	flight_subscription := acmeskyEntities.CustomerFlightSubscriptionFromMap(vars)
 	newPrefID, insertErr := travelPreferenceRepo.AddCustomerSubscribtionPreference(flight_subscription)
@@ -57,7 +61,10 @@ func HandleSaveTravelPreference(client worker.JobClient, job entities.Job) {
 		} else {
 			log.Println(insertErr)
 		}
+		ginCtx.Status(http.StatusInternalServerError)
+		ginContextRepo.UnsetContext(bpk)
 	} else {
+
 		commandComplete, err := client.NewCompleteJobCommand().
 			JobKey(job.Key).
 			VariablesFromMap(map[string]interface{}{
@@ -72,9 +79,15 @@ func HandleSaveTravelPreference(client worker.JobClient, job entities.Job) {
 			if err != nil {
 				log.Panicf("[BPMNERROR] failed to complete job with key %d: [%s]", job.Key, err)
 			} else {
-				log.Printf("[BPMN] completed job %d successfully", job.Key)
+				log.Printf("[BPMN] completed job %d successfully %d", job.Key, newPrefID)
 			}
-
 		}
+
+		if err != nil {
+			ginCtx.Status(http.StatusInternalServerError)
+		} else {
+			ginCtx.Status(http.StatusOK)
+		}
+		ginContextRepo.UnsetContext(bpk)
 	}
 }

@@ -4,6 +4,8 @@ import (
 	"acmesky/entities"
 	airportsRepo "acmesky/repository/airports"
 	zbSingleton "acmesky/workers"
+	ginContextRepo "acmesky/workers/utils/gin_context_repository"
+
 	"context"
 	"fmt"
 	"log"
@@ -13,6 +15,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/pb"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 // getAlbums responds with the list of all albums as JSON.
@@ -39,22 +42,28 @@ func rest_subscribeTravelPreference(ctx *gin.Context) {
 
 	zbClient := *zbSingleton.GetInstance()
 
-	_, err := bpmn_NotifyReceivedTravelPreference(zbClient, newSubRequest)
+	// Business Process Key
+	bpk_uuid := uuid.New()
+	ginContextRepo.SetContext(bpk_uuid.String(), ctx)
+	_, err := bpmn_NotifyReceivedTravelPreference(zbClient, bpk_uuid.String(), newSubRequest)
 
 	if err != nil {
 		ctx.Status(http.StatusInternalServerError)
 	} else {
-		ctx.Status(http.StatusOK)
+		ginContextRepo.SetContext("", ctx)
 	}
 
 }
 
-func bpmn_NotifyReceivedTravelPreference(zBClient zbc.Client, newSubRequest entities.CustomerFlightSubscription) (*pb.PublishMessageResponse, error) {
+func bpmn_NotifyReceivedTravelPreference(zBClient zbc.Client, bpk string, newSubRequest entities.CustomerFlightSubscription) (*pb.PublishMessageResponse, error) {
+
+	vars := newSubRequest.ToMap()
+	vars["bpk"] = bpk
 
 	command, err := zBClient.NewPublishMessageCommand().
 		MessageName("Message_ReceivedTravelSubscription").
-		CorrelationKey("").
-		VariablesFromObject(newSubRequest)
+		CorrelationKey("bpk").
+		VariablesFromMap(vars)
 
 	if err != nil {
 		log.Println(fmt.Errorf("failed to create process instance command for message [%+v]", newSubRequest))
@@ -65,8 +74,6 @@ func bpmn_NotifyReceivedTravelPreference(zBClient zbc.Client, newSubRequest enti
 	defer cancelFn()
 
 	result, err := command.Send(ctx)
-
-	fmt.Println(result.String())
 
 	if err != nil {
 		log.Println(fmt.Errorf("error on saving preference: %s", err))
