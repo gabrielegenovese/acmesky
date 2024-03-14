@@ -4,7 +4,7 @@ import (
 	"acmesky/entities"
 	airportsRepo "acmesky/repository/airports"
 	zbSingleton "acmesky/workers"
-	ginContextRepo "acmesky/workers/utils/gin_context_repository"
+	chanBPRepo "acmesky/workers/utils/channel_bp_repository"
 
 	"context"
 	"fmt"
@@ -32,27 +32,33 @@ func rest_getAirports(ctx *gin.Context) {
 
 }
 
-func rest_subscribeTravelPreference(ctx *gin.Context) {
+func rest_subscribeTravelPreference(context *gin.Context) {
 	var newSubRequest entities.CustomerFlightSubscription
 
-	if err := ctx.BindJSON(&newSubRequest); err != nil {
-		ctx.Status(http.StatusBadRequest)
+	if err := context.BindJSON(&newSubRequest); err != nil {
+		context.Status(http.StatusBadRequest)
 		return
 	}
 
 	zbClient := *zbSingleton.GetInstance()
-
 	// Business Process Key
 	bpk_uuid := uuid.New()
-	ginContextRepo.SetContext(bpk_uuid.String(), ctx)
+	chanBPRepo.SetContext(bpk_uuid.String())
+	result := chanBPRepo.GetContext(bpk_uuid.String())
+
 	_, err := bpmn_NotifyReceivedTravelPreference(zbClient, bpk_uuid.String(), newSubRequest)
 
 	if err != nil {
-		ctx.Status(http.StatusInternalServerError)
+		context.Status(http.StatusInternalServerError)
 	} else {
-		ginContextRepo.SetContext("", ctx)
+		outVars := <-result
+		if _, hasError := outVars["errorCode"]; hasError {
+			context.Status(http.StatusInternalServerError)
+		} else {
+			context.Status(http.StatusOK)
+		}
 	}
-
+	chanBPRepo.UnsetContext(bpk_uuid.String())
 }
 
 func bpmn_NotifyReceivedTravelPreference(zBClient zbc.Client, bpk string, newSubRequest entities.CustomerFlightSubscription) (*pb.PublishMessageResponse, error) {
