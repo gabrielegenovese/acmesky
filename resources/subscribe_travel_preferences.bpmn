@@ -12,10 +12,10 @@
         <bpmn:flowNodeRef>receivedSubscribeTravelPreference</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_1gy4mxl</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Event_07qkvfg</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Event_1d479cu</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_0877nmi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_06h7do3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1d479cu</bpmn:flowNodeRef>
       </bpmn:lane>
-      <bpmn:lane id="Lane_1mhqvvt" />
     </bpmn:laneSet>
     <bpmn:sequenceFlow id="Flow_0oifnml" sourceRef="receivedSubscribeTravelPreference" targetRef="Activity_1gy4mxl" />
     <bpmn:startEvent id="receivedSubscribeTravelPreference" name="Receive Travel preference subscription Request">
@@ -27,31 +27,36 @@
         <zeebe:taskDefinition type="saveTravelPreference" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0oifnml</bpmn:incoming>
-      <bpmn:outgoing>Flow_01d0958</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0uagfih</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_01d0958" sourceRef="Activity_1gy4mxl" targetRef="Activity_0877nmi" />
     <bpmn:sequenceFlow id="Flow_18iz0ka" sourceRef="Activity_0877nmi" targetRef="Event_07qkvfg" />
+    <bpmn:boundaryEvent id="Event_1d479cu" name="DB Error" attachedToRef="Activity_1gy4mxl">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=errorCode" target="errorCode" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_1e97bfw</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_060gb66" errorRef="Error_0bfhrtx" />
+    </bpmn:boundaryEvent>
     <bpmn:endEvent id="Event_07qkvfg">
       <bpmn:incoming>Flow_18iz0ka</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:boundaryEvent id="Event_1d479cu" attachedToRef="Activity_1gy4mxl">
-      <bpmn:extensionElements>
-        <zeebe:ioMapping>
-          <zeebe:output source="=1" target="Error" />
-        </zeebe:ioMapping>
-      </bpmn:extensionElements>
-      <bpmn:outgoing>Flow_037301u</bpmn:outgoing>
-      <bpmn:errorEventDefinition id="ErrorEventDefinition_060gb66" errorRef="Error_0bfhrtx" />
-    </bpmn:boundaryEvent>
-    <bpmn:sequenceFlow id="Flow_037301u" sourceRef="Event_1d479cu" targetRef="Activity_0877nmi" />
-    <bpmn:serviceTask id="Activity_0877nmi" name="Send Confirmation Response">
+    <bpmn:serviceTask id="Activity_0877nmi" name="Send Response">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="responseTravelPreference" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_01d0958</bpmn:incoming>
-      <bpmn:incoming>Flow_037301u</bpmn:incoming>
+      <bpmn:incoming>Flow_1r3db8b</bpmn:incoming>
       <bpmn:outgoing>Flow_18iz0ka</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0uagfih" sourceRef="Activity_1gy4mxl" targetRef="Gateway_06h7do3" />
+    <bpmn:sequenceFlow id="Flow_1e97bfw" sourceRef="Event_1d479cu" targetRef="Gateway_06h7do3" />
+    <bpmn:sequenceFlow id="Flow_1r3db8b" sourceRef="Gateway_06h7do3" targetRef="Activity_0877nmi" />
+    <bpmn:exclusiveGateway id="Gateway_06h7do3">
+      <bpmn:incoming>Flow_0uagfih</bpmn:incoming>
+      <bpmn:incoming>Flow_1e97bfw</bpmn:incoming>
+      <bpmn:outgoing>Flow_1r3db8b</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
   </bpmn:process>
   <bpmn:message id="Message_2q4gekt" name="Message_2q4gekt" />
   <bpmn:message id="Message_08tf94r" name="Message_08tf94r" />
@@ -60,14 +65,11 @@
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1jjmn4d">
       <bpmndi:BPMNShape id="Participant_02w2knf_di" bpmnElement="Participant_02w2knf" isHorizontal="true">
-        <dc:Bounds x="157" y="405" width="916" height="370" />
+        <dc:Bounds x="157" y="405" width="703" height="215" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_1mhqvvt_di" bpmnElement="Lane_1mhqvvt" isHorizontal="true">
-        <dc:Bounds x="187" y="635" width="886" height="140" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_0zj3azy_di" bpmnElement="Lane_0zj3azy" isHorizontal="true">
-        <dc:Bounds x="187" y="405" width="886" height="230" />
+        <dc:Bounds x="187" y="405" width="673" height="215" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_00dnqac_di" bpmnElement="receivedSubscribeTravelPreference">
         <dc:Bounds x="232" y="477" width="36" height="36" />
@@ -79,42 +81,53 @@
         <dc:Bounds x="330" y="455" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_07qkvfg_di" bpmnElement="Event_07qkvfg">
-        <dc:Bounds x="632" y="477" width="36" height="36" />
+        <dc:Bounds x="802" y="477" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0x6m6d2_di" bpmnElement="Activity_0877nmi">
-        <dc:Bounds x="500" y="455" width="100" height="80" />
+        <dc:Bounds x="630" y="455" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_06h7do3_di" bpmnElement="Gateway_06h7do3" isMarkerVisible="true">
+        <dc:Bounds x="515" y="470" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1ry4x1h_di" bpmnElement="Event_1d479cu">
         <dc:Bounds x="412" y="517" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="481" y="525" width="44" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0oifnml_di" bpmnElement="Flow_0oifnml">
         <di:waypoint x="268" y="495" />
         <di:waypoint x="330" y="495" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_01d0958_di" bpmnElement="Flow_01d0958">
-        <di:waypoint x="430" y="495" />
-        <di:waypoint x="500" y="495" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_18iz0ka_di" bpmnElement="Flow_18iz0ka">
-        <di:waypoint x="600" y="495" />
-        <di:waypoint x="632" y="495" />
+        <di:waypoint x="730" y="495" />
+        <di:waypoint x="802" y="495" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_037301u_di" bpmnElement="Flow_037301u">
+      <bpmndi:BPMNEdge id="Flow_0uagfih_di" bpmnElement="Flow_0uagfih">
+        <di:waypoint x="430" y="495" />
+        <di:waypoint x="515" y="495" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1e97bfw_di" bpmnElement="Flow_1e97bfw">
         <di:waypoint x="430" y="553" />
-        <di:waypoint x="430" y="580" />
-        <di:waypoint x="550" y="580" />
-        <di:waypoint x="550" y="535" />
+        <di:waypoint x="430" y="590" />
+        <di:waypoint x="540" y="590" />
+        <di:waypoint x="540" y="520" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1r3db8b_di" bpmnElement="Flow_1r3db8b">
+        <di:waypoint x="565" y="495" />
+        <di:waypoint x="630" y="495" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_1oat3jb_di" bpmnElement="Participant_1pf7i3q" isHorizontal="true">
-        <dc:Bounds x="200" y="90" width="788" height="60" />
+        <dc:Bounds x="157" y="100" width="703" height="60" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0iz0mul_di" bpmnElement="Flow_0iz0mul">
-        <di:waypoint x="250" y="150" />
+        <di:waypoint x="250" y="160" />
         <di:waypoint x="250" y="477" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0lpmh58_di" bpmnElement="Flow_0lpmh58">
-        <di:waypoint x="550" y="455" />
-        <di:waypoint x="550" y="150" />
+        <di:waypoint x="680" y="455" />
+        <di:waypoint x="680" y="160" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

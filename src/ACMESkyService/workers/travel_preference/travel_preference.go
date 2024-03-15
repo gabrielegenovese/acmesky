@@ -56,6 +56,8 @@ func HandleSaveTravelPreference(client worker.JobClient, job entities.Job) {
 			ErrorCode("DB_ERROR").
 			ErrorMessage(insertErr.Error()).
 			VariablesFromMap(map[string]interface{}{
+				// Note: in bpmn editor need to define variable mapping errorCode->errorCode;
+				// otherwise errorCode is not forwarded (zeebe)
 				"errorCode": "DB_ERROR",
 				"errorMsg":  insertErr.Error(),
 			})

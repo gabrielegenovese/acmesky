@@ -51,7 +51,9 @@ func rest_subscribeTravelPreference(context *gin.Context) {
 	if err != nil {
 		context.Status(http.StatusInternalServerError)
 	} else {
+		// waiting result
 		outVars := <-result
+
 		if _, hasError := outVars["errorCode"]; hasError {
 			context.Status(http.StatusInternalServerError)
 		} else {
