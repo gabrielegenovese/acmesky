@@ -4,6 +4,7 @@ import (
 	acmeskyEntities "acmesky/entities"
 	travelPreferenceRepo "acmesky/repository/travel_preference"
 	zbSingleton "acmesky/workers"
+	chanBPRepo "acmesky/workers/utils/channel_bp_repository"
 	"context"
 	"fmt"
 	"log"
@@ -20,6 +21,11 @@ func RegisterWorkers() []worker.JobWorker {
 			NewJobWorker().
 			JobType("saveTravelPreference").
 			Handler(HandleSaveTravelPreference).
+			Open(),
+		client.
+			NewJobWorker().
+			JobType("responseTravelPreference").
+			Handler(HandleResponseTravelPreference).
 			Open(),
 	}
 	return workers
@@ -45,12 +51,18 @@ func HandleSaveTravelPreference(client worker.JobClient, job entities.Job) {
 	defer cancelFn()
 
 	if insertErr != nil {
-		err = insertErr
-		_, err = client.NewFailJobCommand().
+		command, _ := client.NewThrowErrorCommand().
 			JobKey(job.Key).
-			Retries(0).
-			ErrorMessage(err.Error()).
-			Send(ctx)
+			ErrorCode("DB_ERROR").
+			ErrorMessage(insertErr.Error()).
+			VariablesFromMap(map[string]interface{}{
+				// Note: in bpmn editor need to define variable mapping errorCode->errorCode;
+				// otherwise errorCode is not forwarded (zeebe)
+				"errorCode": "DB_ERROR",
+				"errorMsg":  insertErr.Error(),
+			})
+
+		_, err = command.Send(ctx)
 
 		if err != nil {
 			log.Println(fmt.Errorf("[BPMNERROR] error on failing job with key [%d]: [%s]", job.Key, err))
@@ -58,6 +70,7 @@ func HandleSaveTravelPreference(client worker.JobClient, job entities.Job) {
 			log.Println(insertErr)
 		}
 	} else {
+
 		commandComplete, err := client.NewCompleteJobCommand().
 			JobKey(job.Key).
 			VariablesFromMap(map[string]interface{}{
@@ -72,9 +85,27 @@ func HandleSaveTravelPreference(client worker.JobClient, job entities.Job) {
 			if err != nil {
 				log.Panicf("[BPMNERROR] failed to complete job with key %d: [%s]", job.Key, err)
 			} else {
-				log.Printf("[BPMN] completed job %d successfully", job.Key)
+				log.Printf("[BPMN] completed job %d successfully %d", job.Key, newPrefID)
 			}
-
 		}
+	}
+}
+
+func HandleResponseTravelPreference(client worker.JobClient, job entities.Job) {
+
+	vars, _ := job.GetVariablesAsMap()
+
+	var bpk string = vars["bpk"].(string)
+	result := chanBPRepo.GetContext(bpk)
+	result <- vars
+
+	ctx, cancelFn := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelFn()
+	_, err := client.NewCompleteJobCommand().
+		JobKey(job.Key).
+		Send(ctx)
+
+	if err != nil {
+		log.Println(fmt.Errorf("[BPMNERROR] failed to create command to complete job [%d] due to [%s]", job.Key, err))
 	}
 }
