@@ -1,4 +1,4 @@
-package airportsRepo
+package flightsRepo
 
 import (
 	"database/sql"
@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func GetFlights(airportOriginID string, airportDestID string, departDatetime time.Time, arrivalDatetime time.Time) ([]entities.Flight, error) {
+func GetFlights(airportOriginID string, airportDestID string, departDatetime time.Time, minPassengers int) ([]entities.Flight, error) {
 	db := dbClient.GetInstance()
 	var flights []entities.Flight
 	var rows *sql.Rows
@@ -19,15 +19,19 @@ func GetFlights(airportOriginID string, airportDestID string, departDatetime tim
 		fmt.Println("ERROR NIL")
 	}
 
+	var nextDate = departDatetime
+	nextDate = nextDate.Add(time.Hour * 24).Truncate(time.Hour * 24)
+
 	// TODO: edit such that query should consider results on same hour
 	rows, err = db.Query(
 		"SELECT * FROM Flights"+
 			" WHERE (AirportOriginID == ? and AirportDestinationID == ?) "+
-			" AND (DepartDatime >= ? and ArrivalDatetime <= ?)"+
+			" AND (AvailableSeats >= ?) "+
+			" AND (DepartDatime >= ? and DepartDatime <= DATE(?))"+
 			" ORDER BY DepartDatetime ASC",
 		airportOriginID, airportDestID,
-		departDatetime.UTC().Format(time.DateTime),
-		arrivalDatetime.UTC().Format(time.DateTime),
+		minPassengers,
+		departDatetime.UTC().Format(time.DateTime), nextDate.UTC().Format(time.DateTime),
 	)
 
 	if err != nil {
@@ -50,4 +54,8 @@ func GetFlights(airportOriginID string, airportDestID string, departDatetime tim
 		return nil, fmt.Errorf("flightsByQuery %q: %v", query, err)
 	}
 	return flights, nil
+}
+
+func truncateToDay(t time.Time) time.Time {
+	return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
 }

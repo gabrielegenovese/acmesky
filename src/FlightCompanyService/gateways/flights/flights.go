@@ -1,25 +1,39 @@
 package flights
 
 import (
-	airportsRepo "flightcompany/repository/airports"
+	flightsRepo "flightcompany/repository/flights"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
-// getAlbums responds with the list of all albums as JSON.
 func rest_getFlights(ctx *gin.Context) {
-
-	searchQuery := ctx.Query("query")
-	airports, err := airportsRepo.GetAirports(searchQuery)
 
 	var originAirportID string = ctx.Query("origin_airport")
 	var destinationAirportID string = ctx.Query("dest_airport")
+	passengersCount, err1 := strconv.Atoi(ctx.Query("passengers_count"))
+	departDateTime, err2 := time.Parse(time.DateOnly, ctx.Query("depart_date"))
+
+	if err1 != nil || err2 != nil {
+		ctx.Status(http.StatusBadRequest)
+		return
+	}
+
+	passengersCount = max(1, passengersCount)
+
+	flights, err := flightsRepo.GetFlights(
+		originAirportID,
+		destinationAirportID,
+		departDateTime,
+		passengersCount,
+	)
 
 	if err != nil {
-		ctx.IndentedJSON(http.StatusInternalServerError, airports)
+		ctx.Status(http.StatusInternalServerError)
 	} else {
-		ctx.IndentedJSON(http.StatusOK, airports)
+		ctx.IndentedJSON(http.StatusOK, flights)
 	}
 
 }
