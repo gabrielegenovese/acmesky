@@ -7,18 +7,18 @@ services:
     build: ./
     env_file:
       - .env
-    volumes:
-      - mysql_data:/var/lib/mysql
+#    volumes:
+#      - mysql_data:/var/lib/mysql
     ports:
-      - "5432:5432"
-      - "3306:3306"
+      - "5433:5432"
+      - "3307:3306"
     networks:
       - flightcompany
     restart: unless-stopped
 
 # temp for dev
   phpmyadmin:
-    container_name: phpmyadmin_container
+    container_name: phpmyadmin_container2
     image: phpmyadmin
     restart: unless-stopped
     ports:
@@ -35,5 +35,5 @@ networks:
     driver: bridge
     name: flightcompany-net
 
-volumes:
-  mysql_data:
+#volumes:
+#  mysql_data:
