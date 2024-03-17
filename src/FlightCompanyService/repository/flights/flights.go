@@ -54,6 +54,75 @@ func GetFlights(airportOriginID string, airportDestID string, startDatetime time
 	return flights, nil
 }
 
+func ReserveFlightBooking(booking entities.FlightBooking) (int64, error) {
+	db := dbClient.GetInstance()
+
+	result, err := db.Exec(
+		"INSERT INTO FlightBookings (FlightID, SeatsCount, ReservationFlightPrice, CustomerName, CustomerSurname) "+
+			" SELECT B.FlightID, B.SeatsCount, F.FlightPrice, B.CustomerName, B.CustomerSurname"+
+			" FROM Flights F INNER JOIN ("+
+			"   SELECT (?) as FlightID, (?) as SeatsCount, (?) as CustomerName, (?) as CustomerSurname, (?) as BuyerID"+
+			" ) B ON F.FlightID = B.FlightID",
+		booking.FlightID,
+		booking.SeatsCount,
+		booking.CustomerName,
+		booking.CustomerSurname,
+		nil,
+	)
+
+	if err != nil {
+		return 0, fmt.Errorf("[DBERROR] addBookingReservation: %v", err)
+	}
+	id, err := result.LastInsertId()
+	if err != nil {
+		return 0, fmt.Errorf("[DBERROR] addBookingReservation: %v", err)
+	}
+	return id, nil
+}
+
+func ConfirmFlightBooking(bookingID int64) error {
+	db := dbClient.GetInstance()
+
+	result, err := db.Exec(
+		"UPDATE FlightBookings"+
+			" SET BoughtDatetime = NOW()"+
+			" WHERE BookingID = ? AND BoughtDatetime IS NULL",
+		bookingID,
+	)
+
+	if err != nil {
+		return fmt.Errorf("[DBERROR] setBookingConfirm: %v", err)
+	}
+	rowsCount, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("[DBERROR] setBookingConfirm: %v", err)
+	} else if rowsCount < 1 {
+		return fmt.Errorf("NOT FOUND %d", bookingID)
+	}
+	return nil
+}
+
+func RemoveFlightBooking(bookingID int64) error {
+	db := dbClient.GetInstance()
+
+	result, err := db.Exec(
+		"DELETE FROM FlightBookings"+
+			" WHERE BookingID = ? AND BoughtDatetime IS NULL",
+		bookingID,
+	)
+
+	if err != nil {
+		return fmt.Errorf("[DBERROR] removeBooking: %v", err)
+	}
+	rowsCount, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("[DBERROR] removeBooking: %v", err)
+	} else if rowsCount < 1 {
+		return fmt.Errorf("NOT FOUND %d", bookingID)
+	}
+	return nil
+}
+
 func truncateToDay(t time.Time) time.Time {
 	return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
 }
