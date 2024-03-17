@@ -8,9 +8,9 @@ import (
 	"time"
 )
 
-func GetFlights(airportOriginID string, airportDestID string, departDatetime time.Time, minPassengers int) ([]entities.Flight, error) {
+func GetFlights(airportOriginID string, airportDestID string, startDatetime time.Time, endDatetime time.Time, minPassengers int) ([]entities.Flight, error) {
 	db := dbClient.GetInstance()
-	var flights []entities.Flight
+	var flights []entities.Flight = []entities.Flight{}
 	var rows *sql.Rows
 	var err error
 	var query string
@@ -19,19 +19,17 @@ func GetFlights(airportOriginID string, airportDestID string, departDatetime tim
 		fmt.Println("ERROR NIL")
 	}
 
-	var nextDate = departDatetime
-	nextDate = nextDate.Add(time.Hour * 24).Truncate(time.Hour * 24)
-
-	// TODO: edit such that query should consider results on same hour
 	rows, err = db.Query(
-		"SELECT * FROM Flights"+
-			" WHERE (AirportOriginID == ? and AirportDestinationID == ?) "+
-			" AND (AvailableSeats >= ?) "+
-			" AND (DepartDatime >= ? and DepartDatime <= DATE(?))"+
+		"SELECT F.FlightID, AirportOriginID, AirportDestinationID, DepartDatetime, ArrivalDatetime, FlightPrice, LeftSeats"+
+			" FROM Flights F INNER JOIN FlightCurrentSeats FCS ON F.FlightID = FCS.FlightID"+
+			" WHERE (AirportOriginID = ? and AirportDestinationID = ?)"+
+			" AND (LeftSeats >= ?)"+
+			" AND (DepartDatetime >= STR_TO_DATE(?, '%Y-%m-%d %H:%i:%S') and DepartDatetime <= STR_TO_DATE(?, '%Y-%m-%d %H:%i:%S') )"+
 			" ORDER BY DepartDatetime ASC",
 		airportOriginID, airportDestID,
 		minPassengers,
-		departDatetime.UTC().Format(time.DateTime), nextDate.UTC().Format(time.DateTime),
+		startDatetime.UTC().Format(time.DateTime),
+		endDatetime.UTC().Format(time.DateTime),
 	)
 
 	if err != nil {

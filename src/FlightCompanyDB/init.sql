@@ -56,6 +56,19 @@ CREATE TABLE FlightBookings (
     FOREIGN KEY (FlightID) REFERENCES Flights(FlightID)
 );
 
+
+CREATE VIEW FlightCurrentSeats AS
+SELECT F.FlightID, COALESCE(F.AvailableSeats - B.CurrentlyReservedSeats, F.AvailableSeats) AS LeftSeats
+FROM Flights F
+    LEFT JOIN 
+    (
+        SELECT FlightID, SUM(SeatsCount) AS CurrentlyReservedSeats
+        FROM FlightBookings
+        GROUP BY FlightID
+    ) B
+    ON F.FlightID = B.FlightID
+;
+
 /*
 CREATE TABLE FlightsForReservedOffers (
     ReservedOfferCode int NOT NULL AUTO_INCREMENT,

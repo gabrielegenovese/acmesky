@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 
 	"flightcompany/gateways/flights"
 	dbClient "flightcompany/repository/db"
@@ -9,9 +10,10 @@ import (
 
 func main() {
 
+	godotenv.Load(".env")
 	dbClient.InitDB()
 
 	router := gin.Default()
 	flights.Listen(router)
-	router.Run("localhost:8081")
+	router.Run("localhost:8079")
 }
