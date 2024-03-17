@@ -3,7 +3,6 @@ package bookings
 import (
 	"flightcompany/entities"
 	flightsRepo "flightcompany/repository/flights"
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -105,7 +104,6 @@ func rest_confirmBooking(ctx *gin.Context) {
 	err = flightsRepo.ConfirmFlightBooking(bookingID)
 
 	if err != nil {
-		fmt.Println(err)
 		if strings.Contains(err.Error(), "NOT FOUND") {
 			ctx.Status(http.StatusNotFound)
 		} else {
