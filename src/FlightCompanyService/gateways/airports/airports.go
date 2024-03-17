@@ -7,7 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// getAlbums responds with the list of all albums as JSON.
+/*
+ * Return a JSON list of Airports
+ * Method: GET
+ * Query parameters:
+ * - query: a string to return airports which names contains this substring
+ */
 func rest_getAirports(ctx *gin.Context) {
 
 	searchQuery := ctx.Query("query")
