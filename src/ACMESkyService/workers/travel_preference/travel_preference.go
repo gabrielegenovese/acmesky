@@ -44,7 +44,7 @@ func HandleSaveTravelPreference(client worker.JobClient, job entities.Job) {
 		log.Println(fmt.Errorf("[BPMNERROR] failed to get variables for job %d: [%s]", job.Key, err))
 	}
 
-	flight_subscription := acmeskyEntities.CustomerFlightSubscriptionFromMap(vars)
+	flight_subscription := acmeskyEntities.CustomerFlightSubscriptionRequestFromMap(vars)
 	newPrefID, insertErr := travelPreferenceRepo.AddCustomerSubscribtionPreference(flight_subscription)
 
 	ctx, cancelFn := context.WithTimeout(context.Background(), 5*time.Second)
