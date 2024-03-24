@@ -6,6 +6,8 @@ import (
 
 	"acmesky/gateways/flight_subscription"
 	dbClient "acmesky/repository/db"
+	zbSingleton "acmesky/workers"
+	flightMatcher "acmesky/workers/flight_matcher"
 	travelPrefWorker "acmesky/workers/travel_preference"
 )
 
@@ -14,9 +16,10 @@ func main() {
 
 	dbClient.InitDB()
 	workers := travelPrefWorker.RegisterWorkers()
-	defer travelPrefWorker.UnregisterWorkers(workers)
+	workers = append(workers, flightMatcher.RegisterWorkers()...)
+	defer zbSingleton.UnregisterWorkers(workers)
 
 	router := gin.Default()
 	flight_subscription.Listen(router)
-	router.Run("localhost:8080")
+	router.Run("localhost:8090")
 }
