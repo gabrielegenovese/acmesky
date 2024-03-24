@@ -43,6 +43,11 @@ CREATE TABLE FlightCompanies (
     PRIMARY KEY (CompanyID)
 );
 
+INSERT INTO FlightCompanies
+    (CompanyID, CompanyName)
+VALUES
+    (1, "FlightCompany")
+
 CREATE TABLE Flights (
     CompanyFlightID int NOT NULL,
     CompanyID int NOT NULL,

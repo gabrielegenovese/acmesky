@@ -5,6 +5,7 @@ import (
 	"os"
 	"sync"
 
+	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
 )
 
@@ -44,4 +45,10 @@ func GetInstance() *zbc.Client {
 	}
 
 	return zeebeInstance
+}
+
+func UnregisterWorkers(workers []worker.JobWorker) {
+	for i := 0; i < len(workers); i++ {
+		workers[i].Close()
+	}
 }

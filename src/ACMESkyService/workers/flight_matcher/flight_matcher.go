@@ -2,22 +2,17 @@ package flightMatcher
 
 import (
 	entities "acmesky/entities"
+	flightsRepo "acmesky/repository/flights"
 	travelPreferenceRepo "acmesky/repository/travel_preference"
 	zbSingleton "acmesky/workers"
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
-	"net/url"
-	"os"
-	"strconv"
 	"strings"
 	"time"
 
 	zeebeEntities "github.com/camunda/zeebe/clients/go/v8/pkg/entities"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
-	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
 )
 
 func RegisterWorkers() []worker.JobWorker {
@@ -25,13 +20,18 @@ func RegisterWorkers() []worker.JobWorker {
 	workers := []worker.JobWorker{
 		client.
 			NewJobWorker().
-			JobType("loadTravelPreferencesAndDispatchBP").
-			Handler(HandleLoadTravelPreferencesAndDispatchBP).
+			JobType("loadTravelPreferences").
+			Handler(HandleLoadTravelPreferences).
 			Open(),
 		client.
 			NewJobWorker().
-			JobType("fetchFlightsByTravelPreference").
+			JobType("fetchAndStoreFlightsByTravelPreference").
 			Handler(HandleFetchFlightsByTravelPreference).
+			Open(),
+		client.
+			NewJobWorker().
+			JobType("storeFlights").
+			Handler(HandleStoreFlights).
 			Open(),
 		client.
 			NewJobWorker().
@@ -42,14 +42,17 @@ func RegisterWorkers() []worker.JobWorker {
 	return workers
 }
 
-func HandleLoadTravelPreferencesAndDispatchBP(client worker.JobClient, job zeebeEntities.Job) {
-	zbClient := *zbSingleton.GetInstance()
+func HandleLoadTravelPreferences(client worker.JobClient, job zeebeEntities.Job) {
 
+	fmt.Println("Getting customers' Travel Preferences")
 	prefs, err := travelPreferenceRepo.GetAllCustomerFlightPreferencesNotOutdated()
 
+	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancelFn()
+
 	if err != nil {
-		ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
-		defer cancelFn()
+		// cant get preference -> fails job
+
 		_, err := client.
 			NewFailJobCommand().
 			JobKey(job.Key).
@@ -66,35 +69,16 @@ func HandleLoadTravelPreferencesAndDispatchBP(client worker.JobClient, job zeebe
 		return
 	}
 
-	for _, _pref := range prefs {
-		go func(zbClient *zbc.Client, client worker.JobClient, job zeebeEntities.Job, pref entities.CustomerFlightSubscription) {
-			command, err := (*zbClient).NewCreateInstanceCommand().
-				BPMNProcessId("aaaa").
-				LatestVersion().
-				VariablesFromObject(pref)
-
-			if err != nil {
-				log.Println(fmt.Errorf("[BPMNERROR] error on creating BPMN process from job key [%d]: [%s]", job.Key, err))
-				return
-			}
-
-			ctx, cancelFn := context.WithTimeout(context.Background(), 5*time.Second)
-			defer cancelFn()
-
-			_, err = command.Send(ctx)
-			if err != nil {
-				log.Println(fmt.Errorf("[BPMNERROR] error on send created BPMN process from job key [%d]: [%s]", job.Key, err))
-			}
-		}(&zbClient, client, job, _pref)
-	}
-
-	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
-	defer cancelFn()
-
-	_, err = client.NewCompleteJobCommand().
+	fmt.Println("Got customers' Travel Preferences")
+	command, err := client.NewCompleteJobCommand().
 		JobKey(job.Key).
-		Send(ctx)
-
+		VariablesFromMap(map[string]interface{}{
+			"prefs": prefs,
+		})
+	if err != nil {
+		log.Println(fmt.Errorf("[BPMNERROR] error on complete job with key [%d]: [%s]", job.Key, err))
+	}
+	_, err = command.Send(ctx)
 	if err != nil {
 		log.Println(fmt.Errorf("[BPMNERROR] error on complete job with key [%d]: [%s]", job.Key, err))
 	}
@@ -107,13 +91,25 @@ func HandleFetchFlightsByTravelPreference(client worker.JobClient, job zeebeEnti
 	if err != nil {
 		return
 	}
+	var flightCompanyID int64
 
-	pref := entities.CustomerFlightSubscriptionRequestFromMap(vars)
+	_flightCompanyID, hasFlightCompanyID := vars["flight_company_id"]
 
-	flights, fetchErr := fetchFlightsForPreference(pref)
+	if hasFlightCompanyID {
+		flightCompanyID = _flightCompanyID.(int64)
+	} else {
+		flightCompanyID = 1
+	}
+
+	pref := entities.CustomerFlightSubscriptionRequestFromMap(vars["pref"].(map[string]interface{}))
+	fmt.Printf("Fething preference using flight company ID %d\n", flightCompanyID)
+	flights, fetchErr := FetchFlightsByCompanyID(pref, flightCompanyID)
 
 	if fetchErr == nil {
-		// TODO save flights to DB
+		fmt.Printf("Storing %d fetched flights\n", len(flights))
+		if len(flights) > 0 {
+			dbErr = flightsRepo.AddFlights(flights)
+		}
 	}
 
 	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
@@ -132,7 +128,9 @@ func HandleFetchFlightsByTravelPreference(client worker.JobClient, job zeebeEnti
 						"errorMsg":  fetchErr.Error(),
 					})
 
-				_, err = command.Send(ctx)
+				if err == nil {
+					_, err = command.Send(ctx)
+				}
 
 				if err != nil {
 					log.Println(fmt.Errorf("[BPMNERROR] error on throwing error on job with key [%d]: [%s]", job.Key, err))
@@ -182,42 +180,60 @@ func HandleFetchFlightsByTravelPreference(client worker.JobClient, job zeebeEnti
 	}
 }
 
-func fetchFlightsForPreference(pref entities.CustomerFlightSubscriptionRequest) ([]entities.Flight, error) {
+func HandleStoreFlights(client worker.JobClient, job zeebeEntities.Job) {
 
-	var FLIGHT_COMPANY_ADDRESS string = os.Getenv("FLIGHT_COMPANY_ADDRESS")
-	var flights []entities.Flight = []entities.Flight{}
-
-	departDateRangeEnd, parseErr := time.Parse(time.DateTime, pref.DateStartISO8601)
-	if parseErr != nil {
-		return flights, fmt.Errorf("PARSE_ERROR:" + parseErr.Error())
+	vars, err := job.GetVariablesAsMap()
+	if err != nil {
+		return
 	}
-	departDateRangeEnd = departDateRangeEnd.Add(24 * time.Hour).Truncate(24 * time.Hour)
+	var dbErr error
+	var flights []entities.Flight
+	flightsRaw := vars["flights"].([]map[string]interface{})
 
-	res, err := http.Get(
-		"http://" + FLIGHT_COMPANY_ADDRESS + "/flights?" + url.Values{
-			"origin_airport":       {pref.AirportOriginID},
-			"dest_airport":         {pref.AirportDestinationID},
-			"passengers_count":     {strconv.FormatUint(uint64(pref.SeatsCount), 10)},
-			"start_range_datetime": {pref.DateStartISO8601},
-			"end_range_datetime":   {departDateRangeEnd.UTC().Format(time.DateTime)},
-		}.Encode())
-	defer res.Body.Close()
+	for i := 0; i < len(flightsRaw); i++ {
+		flights = append(flights, entities.FlightFromMapFromMap(flightsRaw[i]))
+	}
+
+	if len(flights) > 0 {
+		dbErr = flightsRepo.AddFlights(flights)
+	}
+
+	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancelFn()
+
+	if dbErr != nil {
+		_, err := client.
+			NewFailJobCommand().
+			JobKey(job.Key).
+			Retries(job.GetRetries() - 1).
+			RetryBackoff(5 * time.Second).
+			ErrorMessage(err.Error()).
+			Send(ctx)
+
+		if err != nil {
+			log.Println(fmt.Errorf("[BPMNERROR] error on failing job with key [%d]: [%s]", job.Key, err))
+		} else {
+			log.Println(dbErr)
+		}
+		return
+	}
+
+	command, err := client.NewCompleteJobCommand().
+		JobKey(job.Key).
+		VariablesFromMap(map[string]interface{}{
+			"flights": flights,
+		})
 
 	if err != nil {
-		return flights, fmt.Errorf("CONNECTION_ERROR:" + err.Error())
+		log.Println(fmt.Errorf("[BPMNERROR] error on creating complete job with key [%d]: [%s]", job.Key, err))
+		return
 	}
-
-	if !(200 <= res.StatusCode && res.StatusCode < 300) {
-		return flights, fmt.Errorf("HTTP_ERROR:" + res.Status)
-	}
-
-	decodeErr := json.NewDecoder(res.Body).Decode(&flights)
+	_, err = command.Send(ctx)
 
 	if err != nil {
-		return flights, fmt.Errorf("PARSE_ERROR:" + decodeErr.Error())
+		log.Println(fmt.Errorf("[BPMNERROR] error on complete job with key [%d]: [%s]", job.Key, err))
 	}
 
-	return flights, nil
 }
 
 func HandleSearchMatchByTravelPreference(client worker.JobClient, job zeebeEntities.Job) {

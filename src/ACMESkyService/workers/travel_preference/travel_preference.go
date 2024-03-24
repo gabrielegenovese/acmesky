@@ -31,12 +31,6 @@ func RegisterWorkers() []worker.JobWorker {
 	return workers
 }
 
-func UnregisterWorkers(workers []worker.JobWorker) {
-	for i := 0; i < len(workers); i++ {
-		workers[i].Close()
-	}
-}
-
 func HandleSaveTravelPreference(client worker.JobClient, job entities.Job) {
 
 	vars, err := job.GetVariablesAsMap()
