@@ -34,17 +34,9 @@
       <bpmn:outgoing>Flow_15izf36</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics>
         <bpmn:extensionElements>
-          <zeebe:loopCharacteristics inputCollection="=prefs" inputElement="pref" outputCollection="pairsOfListOfFlights" outputElement="=pairOfFlights" />
+          <zeebe:loopCharacteristics inputCollection="=prefs" inputElement="pref" outputCollection="parOfFlightsList" outputElement="=flights" />
         </bpmn:extensionElements>
       </bpmn:multiInstanceLoopCharacteristics>
-    </bpmn:serviceTask>
-    <bpmn:serviceTask id="Activity_18vonxe" name="Find unoffered flights bundles matching with travel preference">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="findMatchingFlightsByTravelPreference" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_15izf36</bpmn:incoming>
-      <bpmn:incoming>Flow_199hqcd</bpmn:incoming>
-      <bpmn:outgoing>Flow_0nqmzu7</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="Activity_1sss7gp" name="Prepare Offers bundles for customer">
       <bpmn:extensionElements>
@@ -106,6 +98,19 @@
     <bpmn:startEvent id="Event_1rrpjan">
       <bpmn:outgoing>Flow_0ge2s11</bpmn:outgoing>
     </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_18vonxe" name="Find unoffered flights bundles matching with travel preference">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="findMatchingFlightsByTravelPreference" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_15izf36</bpmn:incoming>
+      <bpmn:incoming>Flow_199hqcd</bpmn:incoming>
+      <bpmn:outgoing>Flow_0nqmzu7</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics>
+        <bpmn:extensionElements>
+          <zeebe:loopCharacteristics inputCollection="=prefs" inputElement="pref" />
+        </bpmn:extensionElements>
+      </bpmn:multiInstanceLoopCharacteristics>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmn:message id="Message_131fs59" name="Message_ReceivedFlightsOffers" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">

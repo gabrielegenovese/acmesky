@@ -10,14 +10,14 @@ func AddFlights(flights []entities.Flight) error {
 
 	db := dbClient.GetInstance()
 
-	sqlStr := "INSERT INTO Flights" +
+	sqlStr := "REPLACE INTO Flights" +
 		" (CompanyFlightID, CompanyID, CompanyFlightPrice, AvailableSeats, AirportOriginID, AirportDestinationID, DepartDatetime, ArrivalDatetime)" +
 		" VALUES "
 	vals := []interface{}{}
 
 	for _, f := range flights {
-		sqlStr += "(?, ?, ?, ?, ?, ?, ?, ?, ?),"
-		vals = append(vals, f.FlightID, f.FlightCompanyID, f.FlightPrice, f.AvailableSeats, f.AirportOriginID, f.FlightPrice, f.AirportDestinationID, f.DepartDatetime, f.ArrivalDatetime)
+		sqlStr += "(?, ?, ?, ?, ?, ?, ?, ?),"
+		vals = append(vals, f.FlightID, f.FlightCompanyID, f.FlightPrice, f.AvailableSeats, f.AirportOriginID, f.AirportDestinationID, f.DepartDatetime, f.ArrivalDatetime)
 	}
 	//trim the last ,
 	sqlStr = sqlStr[0 : len(sqlStr)-1]

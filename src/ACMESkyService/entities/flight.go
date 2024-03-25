@@ -7,7 +7,7 @@ type Flight struct {
 	AirportDestinationID string  `json:"airport_destination_id"`
 	DepartDatetime       string  `json:"depart_datetime"`
 	ArrivalDatetime      string  `json:"arrival_datetime"`
-	FlightPrice          float32 `json:"flight_price"`
+	FlightPrice          float64 `json:"flight_price"`
 	AvailableSeats       uint    `json:"available_seats_count"`
 }
 
@@ -19,7 +19,7 @@ func FlightFromMapFromMap(m map[string]interface{}) Flight {
 		AirportDestinationID: m["airport_id_destination"].(string),
 		DepartDatetime:       m["depart_datetime"].(string),
 		ArrivalDatetime:      m["arrival_datetime"].(string),
-		FlightPrice:          float32(m["travel_max_price"].(float64)),
+		FlightPrice:          m["travel_max_price"].(float64),
 		AvailableSeats:       uint(m["travel_seats_count"].(float64)),
 	}
 	return v

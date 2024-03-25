@@ -46,7 +46,7 @@ CREATE TABLE FlightCompanies (
 INSERT INTO FlightCompanies
     (CompanyID, CompanyName)
 VALUES
-    (1, "FlightCompany")
+    (1, "FlightCompany");
 
 CREATE TABLE Flights (
     CompanyFlightID int NOT NULL,
@@ -69,11 +69,13 @@ CREATE TABLE ReservedOffers (
     EndReservationDatetime DATETIME DEFAULT NULL,
     CustomerFlightPrice DECIMAL(8, 2) NOT NULL,
     PRIMARY KEY (ReservedOfferCode),
-    FOREIGN KEY (CompanyOfferID, CompanyID) REFERENCES FlightCompanytOffers(CompanyOfferID, CompanyID),
+    /*FOREIGN KEY (CompanyOfferID, CompanyID) REFERENCES FlightCompanytOffers(CompanyOfferID, CompanyID),*/
+    FOREIGN KEY (CompanyID) REFERENCES FlightCompanies(CompanyID),
     FOREIGN KEY (TravelPreferenceID) REFERENCES TravelPreferences(TravelPreferenceID)
 );
 
-CREATE TABLE FlightsForReservedOffers{
+/*
+CREATE TABLE FlightsForReservedOffers(
     ReservedOfferCode int NOT NULL,
     CompanyFlightID int NOT NULL,
     CompanyID int NOT NULL,
@@ -89,3 +91,4 @@ CREATE TABLE CustomerBoughtOffers {
     FOREIGN KEY (ReservedOfferCode) REFERENCES ReservedOffers(ReservedOfferCode),
     FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
 }
+*/

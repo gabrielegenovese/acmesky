@@ -147,6 +147,7 @@ func HandleFetchFlightsByTravelPreference(client worker.JobClient, job zeebeEnti
 		} else {
 			err = dbErr
 		}
+		fmt.Printf("Fetch or Store error: %s\n", err.Error())
 		_, err := client.
 			NewFailJobCommand().
 			JobKey(job.Key).
@@ -163,6 +164,7 @@ func HandleFetchFlightsByTravelPreference(client worker.JobClient, job zeebeEnti
 		return
 	}
 
+	fmt.Printf("Store successfull of %d items\n", len(flights))
 	command, err := client.NewCompleteJobCommand().
 		JobKey(job.Key).
 		VariablesFromMap(map[string]interface{}{
