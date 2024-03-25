@@ -35,8 +35,8 @@ func RegisterWorkers() []worker.JobWorker {
 			Open(),
 		client.
 			NewJobWorker().
-			JobType("searchMatchByTravelPreference").
-			Handler(HandleSearchMatchByTravelPreference).
+			JobType("findSolutionsByTravelPreference").
+			Handler(HandleFindSolutionsByTravelPreference).
 			Open(),
 	}
 	return workers
@@ -209,7 +209,7 @@ func HandleStoreFlights(client worker.JobClient, job zeebeEntities.Job) {
 			JobKey(job.Key).
 			Retries(job.GetRetries() - 1).
 			RetryBackoff(5 * time.Second).
-			ErrorMessage(err.Error()).
+			ErrorMessage(dbErr.Error()).
 			Send(ctx)
 
 		if err != nil {
@@ -238,6 +238,55 @@ func HandleStoreFlights(client worker.JobClient, job zeebeEntities.Job) {
 
 }
 
-func HandleSearchMatchByTravelPreference(client worker.JobClient, job zeebeEntities.Job) {
+func HandleFindSolutionsByTravelPreference(client worker.JobClient, job zeebeEntities.Job) {
 
+	vars, err := job.GetVariablesAsMap()
+	if err != nil {
+		return
+	}
+	var dbErr error
+	var solutions []entities.Solution
+	fmt.Printf("getting pref\n")
+	pref := entities.CustomerFlightSubscriptionRequestFromMap(vars["pref"].(map[string]interface{}))
+
+	fmt.Printf("Searching solutions\n")
+	solutions, dbErr = flightsRepo.GetSolutionsFromPreference(pref)
+	fmt.Printf("Got %d solutions\n", len(solutions))
+
+	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancelFn()
+
+	if dbErr != nil {
+		_, err := client.
+			NewFailJobCommand().
+			JobKey(job.Key).
+			Retries(job.GetRetries() - 1).
+			RetryBackoff(5 * time.Second).
+			ErrorMessage(dbErr.Error()).
+			Send(ctx)
+
+		if err != nil {
+			log.Println(fmt.Errorf("[BPMNERROR] error on failing job with key [%d]: [%s]", job.Key, err))
+		} else {
+			log.Println(dbErr)
+		}
+		return
+	}
+
+	fmt.Printf("Found %d solutions\n", len(solutions))
+	command, err := client.NewCompleteJobCommand().
+		JobKey(job.Key).
+		VariablesFromMap(map[string]interface{}{
+			"solutions": solutions,
+		})
+
+	if err != nil {
+		log.Println(fmt.Errorf("[BPMNERROR] error on creating complete job with key [%d]: [%s]", job.Key, err))
+		return
+	}
+	_, err = command.Send(ctx)
+
+	if err != nil {
+		log.Println(fmt.Errorf("[BPMNERROR] error on complete job with key [%d]: [%s]", job.Key, err))
+	}
 }

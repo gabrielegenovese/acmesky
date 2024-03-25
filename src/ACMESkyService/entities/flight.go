@@ -1,14 +1,14 @@
 package entities
 
 type Flight struct {
-	FlightID             string  `json:"flight_id"`
-	FlightCompanyID      int64   `json:"flight_company_id"`
-	AirportOriginID      string  `json:"airport_origin_id"`
-	AirportDestinationID string  `json:"airport_destination_id"`
-	DepartDatetime       string  `json:"depart_datetime"`
-	ArrivalDatetime      string  `json:"arrival_datetime"`
-	FlightPrice          float64 `json:"flight_price"`
-	AvailableSeats       uint    `json:"available_seats_count"`
+	FlightID             string  `json:"flight_id,omitempty"`
+	FlightCompanyID      int64   `json:"flight_company_id,omitempty"`
+	AirportOriginID      string  `json:"airport_origin_id,omitempty"`
+	AirportDestinationID string  `json:"airport_destination_id,omitempty"`
+	DepartDatetime       string  `json:"depart_datetime,omitempty"`
+	ArrivalDatetime      string  `json:"arrival_datetime,omitempty"`
+	FlightPrice          float64 `json:"flight_price,omitempty"`
+	AvailableSeats       uint    `json:"available_seats_count,omitempty"`
 }
 
 func FlightFromMapFromMap(m map[string]interface{}) Flight {

@@ -55,7 +55,7 @@ CREATE TABLE Flights (
     AirportDestinationID int NOT NULL,
     DepartDatetime DATETIME NOT NULL,
     ArrivalDatetime DATETIME NOT NULL,
-    CompanyFlightPrice DECIMAL(8, 2) NOT NULL,
+    PassengerFlightPrice DECIMAL(8, 2) NOT NULL,
     AvailableSeats int NOT NULL DEFAULT(0),
     PRIMARY KEY (CompanyFlightID, CompanyID),
     FOREIGN KEY (CompanyID) REFERENCES FlightCompanies(CompanyID)

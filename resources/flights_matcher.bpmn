@@ -34,7 +34,7 @@
       <bpmn:outgoing>Flow_15izf36</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics>
         <bpmn:extensionElements>
-          <zeebe:loopCharacteristics inputCollection="=prefs" inputElement="pref" outputCollection="parOfFlightsList" outputElement="=flights" />
+          <zeebe:loopCharacteristics inputCollection="=prefs" inputElement="pref" />
         </bpmn:extensionElements>
       </bpmn:multiInstanceLoopCharacteristics>
     </bpmn:serviceTask>
@@ -44,6 +44,11 @@
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0nqmzu7</bpmn:incoming>
       <bpmn:outgoing>Flow_116t18y</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics>
+        <bpmn:extensionElements>
+          <zeebe:loopCharacteristics inputCollection="=solutionsList" inputElement="solutions" outputCollection="bundleList" outputElement="=bundle" />
+        </bpmn:extensionElements>
+      </bpmn:multiInstanceLoopCharacteristics>
     </bpmn:serviceTask>
     <bpmn:startEvent id="Event_0i53swo" name="Received Last-limite Offers">
       <bpmn:outgoing>Flow_1gluk5f</bpmn:outgoing>
@@ -100,14 +105,14 @@
     </bpmn:startEvent>
     <bpmn:serviceTask id="Activity_18vonxe" name="Find unoffered flights bundles matching with travel preference">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="findMatchingFlightsByTravelPreference" />
+        <zeebe:taskDefinition type="findSolutionsByTravelPreference" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_15izf36</bpmn:incoming>
       <bpmn:incoming>Flow_199hqcd</bpmn:incoming>
       <bpmn:outgoing>Flow_0nqmzu7</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics>
         <bpmn:extensionElements>
-          <zeebe:loopCharacteristics inputCollection="=prefs" inputElement="pref" />
+          <zeebe:loopCharacteristics inputCollection="=prefs" inputElement="pref" outputCollection="solutionsList" outputElement="=solutions" />
         </bpmn:extensionElements>
       </bpmn:multiInstanceLoopCharacteristics>
     </bpmn:serviceTask>
