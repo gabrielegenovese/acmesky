@@ -42,3 +42,10 @@ type CustomerFlightSubscription struct {
 	CustomerFlightSubscriptionRequest
 	TravelPreferenceID int64 `json:"travel_preference_id"`
 }
+
+func CustomerFlightSubscriptionFromMap(m map[string]interface{}) CustomerFlightSubscription {
+	return CustomerFlightSubscription{
+		CustomerFlightSubscriptionRequest: CustomerFlightSubscriptionRequestFromMap(m),
+		TravelPreferenceID:                int64(m["travel_preference_id"].(float64)),
+	}
+}

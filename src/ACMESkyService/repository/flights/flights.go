@@ -5,6 +5,7 @@ import (
 	dbClient "acmesky/repository/db"
 	"database/sql"
 	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -39,6 +40,53 @@ func AddFlights(flights []entities.Flight) error {
 	}
 
 	return nil
+}
+
+func GetFlight(flightIDs []string, companyIDs []int64) ([]entities.Flight, error) {
+	db := dbClient.GetInstance()
+	var flights []entities.Flight = []entities.Flight{}
+
+	if db == nil {
+		fmt.Println("ERROR NIL")
+	}
+
+	sqlStr := "SELECT CompanyID, CompanyFlightID, AirportOriginID, AirportDestinationID, DepartDatetime, ArrivalDatetime, PassengerFlightPrice, AvailableSeats" +
+		" FROM Flights WHERE CompanyID || ',' || CompanyFlightID IN ("
+	var key string
+	vals := []interface{}{}
+	for i, fID := range flightIDs {
+		key = strconv.FormatInt(companyIDs[i], 10) + "," + fID
+		sqlStr += "?,"
+		vals = append(vals, key)
+	}
+
+	//trim the last ,
+	sqlStr = sqlStr[0 : len(sqlStr)-1]
+	sqlStr += ")"
+
+	//prepare the statement
+	rows, err := db.Query(sqlStr, vals...)
+
+	if err != nil {
+		return flights, fmt.Errorf("[DBERROR] getFlights: %v", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var flight entities.Flight
+		if err := rows.Scan(&flight.FlightCompanyID, &flight.FlightID, &flight.AirportOriginID, &flight.AirportDestinationID, &flight.DepartDatetime, &flight.ArrivalDatetime, &flight.FlightPrice, &flight.AvailableSeats); err != nil {
+			return nil, fmt.Errorf("getFlights: %v", err)
+		}
+
+		flights = append(flights, flight)
+	}
+	if err := rows.Err(); err != nil {
+		if err == sql.ErrNoRows {
+			return flights, nil
+		}
+		return nil, fmt.Errorf("getFlights: %v", err)
+	}
+	return flights, nil
 }
 
 func GetSolutionsFromPreference(pref entities.CustomerFlightSubscriptionRequest) ([]entities.Solution, error) {

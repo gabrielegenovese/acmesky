@@ -62,33 +62,29 @@ CREATE TABLE Flights (
 );
 
 CREATE TABLE ReservedOffers (
-    ReservedOfferCode int NOT NULL AUTO_INCREMENT,
-    FlightBundleID int NOT NULL,
+    OfferCode int NOT NULL AUTO_INCREMENT,
+    TravelPreferenceID int NOT NULL,
+    StartReservationDatetime DATETIME DEFAULT NOW()
+    EndReservationDatetime DATETIME AS (DATE_ADD(StartReservationDatetime, INTERVAL 24 HOUR)),
+    TotalOfferPrice DECIMAL(8, 2) NOT NULL,
+    PRIMARY KEY (ReservedOfferCode),
+    FOREIGN KEY (TravelPreferenceID) REFERENCES TravelPreferences(TravelPreferenceID)
+);
+
+CREATE TABLE OffersBundles(
+    OfferCode int NOT NULL,
+    CompanyFlightID int NOT NULL,
     CompanyID int NOT NULL,
+    PRIMARY KEY (OfferCode, CompanyFlightID, CompanyID),
+    FOREIGN KEY (OfferCode) REFERENCES ReservedOffers(OfferCode),
+    FOREIGN KEY (CompanyFlightID, CompanyID) REFERENCES Flights(CompanyFlightID, CompanyID)
+);
+
+CREATE TABLE SoldOffers (
+    OfferCode int NOT NULL AUTO_INCREMENT,
     TravelPreferenceID int NOT NULL,
     EndReservationDatetime DATETIME DEFAULT NULL,
     CustomerFlightPrice DECIMAL(8, 2) NOT NULL,
     PRIMARY KEY (ReservedOfferCode),
-    /*FOREIGN KEY (CompanyOfferID, CompanyID) REFERENCES FlightCompanytOffers(CompanyOfferID, CompanyID),*/
-    FOREIGN KEY (CompanyID) REFERENCES FlightCompanies(CompanyID),
     FOREIGN KEY (TravelPreferenceID) REFERENCES TravelPreferences(TravelPreferenceID)
 );
-
-/*
-CREATE TABLE FlightsForReservedOffers(
-    ReservedOfferCode int NOT NULL,
-    CompanyFlightID int NOT NULL,
-    CompanyID int NOT NULL,
-    PRIMARY KEY (ReservedOfferCode, CompanyFlightID, CompanyID),
-    FOREIGN KEY (ReservedOfferCode) REFERENCES ReservedOffers(ReservedOfferCode),
-    FOREIGN KEY (CompanyFlightID, CompanyID) REFERENCES Flights(CompanyFlightID, CompanyID)
-};
-
-CREATE TABLE CustomerBoughtOffers {
-    CustomerID int NOT NULL, 
-    ReservedOfferCode int NOT NULL,
-    PRIMARY KEY (CustomerID, ReservedOfferCode),
-    FOREIGN KEY (ReservedOfferCode) REFERENCES ReservedOffers(ReservedOfferCode),
-    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
-}
-*/

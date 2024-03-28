@@ -38,6 +38,11 @@ func RegisterWorkers() []worker.JobWorker {
 			JobType("findSolutionsByTravelPreference").
 			Handler(HandleFindSolutionsByTravelPreference).
 			Open(),
+		client.
+			NewJobWorker().
+			JobType("prepareOffersForCustomer").
+			Handler(HandlePrepareOfferForCustomer).
+			Open(),
 	}
 	return workers
 }
@@ -84,26 +89,29 @@ func HandleLoadTravelPreferences(client worker.JobClient, job zeebeEntities.Job)
 	}
 }
 
+type fetchFlightsParameters struct {
+	Pref      entities.CustomerFlightSubscription `json:"pref,omitempty"`
+	CompanyID int64                               `json:"flight_company_id,omitempty"`
+}
+
 func HandleFetchFlightsByTravelPreference(client worker.JobClient, job zeebeEntities.Job) {
 	var dbErr error
+	var fetchParams fetchFlightsParameters
+	err := job.GetVariablesAs(&fetchParams)
 
-	vars, err := job.GetVariablesAsMap()
 	if err != nil {
+		ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
+		defer cancelFn()
+		_, _ = client.NewFailJobCommand().JobKey(job.Key).Retries(0).ErrorMessage(err.Error()).Send(ctx)
 		return
 	}
-	var flightCompanyID int64
 
-	_flightCompanyID, hasFlightCompanyID := vars["flight_company_id"]
-
-	if hasFlightCompanyID {
-		flightCompanyID = _flightCompanyID.(int64)
-	} else {
-		flightCompanyID = 1
+	if fetchParams.CompanyID == 0 {
+		fetchParams.CompanyID = 1
 	}
 
-	pref := entities.CustomerFlightSubscriptionRequestFromMap(vars["pref"].(map[string]interface{}))
-	fmt.Printf("Fething preference using flight company ID %d\n", flightCompanyID)
-	flights, fetchErr := FetchFlightsByCompanyID(pref, flightCompanyID)
+	fmt.Printf("Fething preference using flight company ID %d\n", fetchParams.CompanyID)
+	flights, fetchErr := FetchFlightsByCompanyID(fetchParams.Pref.CustomerFlightSubscriptionRequest, fetchParams.CompanyID)
 
 	if fetchErr == nil {
 		fmt.Printf("Storing %d fetched flights\n", len(flights))
@@ -182,22 +190,26 @@ func HandleFetchFlightsByTravelPreference(client worker.JobClient, job zeebeEnti
 	}
 }
 
-func HandleStoreFlights(client worker.JobClient, job zeebeEntities.Job) {
+type storeFlightsParameters struct {
+	Flights   []entities.Flight `json:"flights"`
+	CompanyID int64             `json:"flight_company_id,omitempty"`
+}
 
-	vars, err := job.GetVariablesAsMap()
+func HandleStoreFlights(client worker.JobClient, job zeebeEntities.Job) {
+	var dbErr error
+	var storeParams storeFlightsParameters
+
+	err := job.GetVariablesAs(&storeParams)
+
 	if err != nil {
+		ctx, cancelFn := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancelFn()
+		_, _ = client.NewFailJobCommand().JobKey(job.Key).Retries(0).ErrorMessage(err.Error()).Send(ctx)
 		return
 	}
-	var dbErr error
-	var flights []entities.Flight
-	flightsRaw := vars["flights"].([]map[string]interface{})
 
-	for i := 0; i < len(flightsRaw); i++ {
-		flights = append(flights, entities.FlightFromMapFromMap(flightsRaw[i]))
-	}
-
-	if len(flights) > 0 {
-		dbErr = flightsRepo.AddFlights(flights)
+	if len(storeParams.Flights) > 0 {
+		dbErr = flightsRepo.AddFlights(storeParams.Flights)
 	}
 
 	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
@@ -223,7 +235,7 @@ func HandleStoreFlights(client worker.JobClient, job zeebeEntities.Job) {
 	command, err := client.NewCompleteJobCommand().
 		JobKey(job.Key).
 		VariablesFromMap(map[string]interface{}{
-			"flights": flights,
+			"flights": storeParams.Flights,
 		})
 
 	if err != nil {
@@ -238,19 +250,27 @@ func HandleStoreFlights(client worker.JobClient, job zeebeEntities.Job) {
 
 }
 
+type findSolutionsParameters struct {
+	Pref entities.CustomerFlightSubscription `json:"pref,omitempty"`
+}
+
 func HandleFindSolutionsByTravelPreference(client worker.JobClient, job zeebeEntities.Job) {
 
-	vars, err := job.GetVariablesAsMap()
+	var findParams findSolutionsParameters
+	err := job.GetVariablesAs(&findParams)
+
 	if err != nil {
+		ctx, cancelFn := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancelFn()
+		_, _ = client.NewFailJobCommand().JobKey(job.Key).Retries(0).ErrorMessage(err.Error()).Send(ctx)
 		return
 	}
 	var dbErr error
 	var solutions []entities.Solution
 	fmt.Printf("getting pref\n")
-	pref := entities.CustomerFlightSubscriptionRequestFromMap(vars["pref"].(map[string]interface{}))
 
 	fmt.Printf("Searching solutions\n")
-	solutions, dbErr = flightsRepo.GetSolutionsFromPreference(pref)
+	solutions, dbErr = flightsRepo.GetSolutionsFromPreference(findParams.Pref.CustomerFlightSubscriptionRequest)
 	fmt.Printf("Got %d solutions\n", len(solutions))
 
 	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
@@ -278,6 +298,87 @@ func HandleFindSolutionsByTravelPreference(client worker.JobClient, job zeebeEnt
 		JobKey(job.Key).
 		VariablesFromMap(map[string]interface{}{
 			"solutions": solutions,
+		})
+
+	if err != nil {
+		log.Println(fmt.Errorf("[BPMNERROR] error on creating complete job with key [%d]: [%s]", job.Key, err))
+		return
+	}
+	_, err = command.Send(ctx)
+
+	if err != nil {
+		log.Println(fmt.Errorf("[BPMNERROR] error on complete job with key [%d]: [%s]", job.Key, err))
+	}
+}
+
+type prepareOffersParameters struct {
+	Pref     entities.CustomerFlightSubscription `json:"pref,omitempty"`
+	Solution entities.Solution                   `json:"solution,omitempty"`
+}
+
+func HandlePrepareOfferForCustomer(client worker.JobClient, job zeebeEntities.Job) {
+	var offer entities.ReservedOffer
+	var prepareOffersParams prepareOffersParameters
+	fmt.Printf("HandlePrepareOfferForCustomer")
+
+	err := job.GetVariablesAs(&prepareOffersParams)
+
+	if err != nil {
+		ctx, cancelFn := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancelFn()
+		_, _ = client.NewFailJobCommand().JobKey(job.Key).Retries(0).ErrorMessage(err.Error()).Send(ctx)
+		return
+	}
+
+	fmt.Printf("Preparing offer for TravelPreference %d\n", prepareOffersParams.Pref.TravelPreferenceID)
+	flights, errDb := flightsRepo.GetFlight(
+		[]string{
+			prepareOffersParams.Solution.DepartFlight.FlightID,
+			prepareOffersParams.Solution.ReturnFlight.FlightID,
+		},
+		[]int64{
+			prepareOffersParams.Solution.DepartFlight.FlightCompanyID,
+			prepareOffersParams.Solution.ReturnFlight.FlightCompanyID,
+		},
+	)
+
+	if errDb == nil {
+		var offerCode int64
+		fmt.Printf("Preparing offer ... \n")
+		var totalPrice float32 = 0
+		for _, f := range flights {
+			totalPrice += float32(f.FlightPrice)
+		}
+		offerCode, errDb = travelPreferenceRepo.AddReservedOffer(prepareOffersParams.Pref.TravelPreferenceID, totalPrice, flights)
+		if errDb == nil {
+			offer, errDb = travelPreferenceRepo.GetRservedOffer(offerCode)
+		}
+	}
+
+	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancelFn()
+
+	if errDb != nil {
+		_, err := client.
+			NewFailJobCommand().
+			JobKey(job.Key).
+			Retries(job.GetRetries() - 1).
+			RetryBackoff(5 * time.Second).
+			ErrorMessage(errDb.Error()).
+			Send(ctx)
+
+		if err != nil {
+			log.Println(fmt.Errorf("[BPMNERROR] error on failing job with key [%d]: [%s]", job.Key, err))
+		} else {
+			log.Println(errDb)
+		}
+		return
+	}
+
+	command, err := client.NewCompleteJobCommand().
+		JobKey(job.Key).
+		VariablesFromMap(map[string]interface{}{
+			"offer": offer,
 		})
 
 	if err != nil {
