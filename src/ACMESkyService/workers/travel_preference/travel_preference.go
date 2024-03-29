@@ -5,6 +5,7 @@ import (
 	travelPreferenceRepo "acmesky/repository/travel_preference"
 	zbSingleton "acmesky/workers"
 	chanBPRepo "acmesky/workers/utils/channel_bp_repository"
+	zeebeUtils "acmesky/workers/utils/zeebe_utils"
 	"context"
 	"fmt"
 	"log"
@@ -41,11 +42,11 @@ func HandleSaveTravelPreference(client worker.JobClient, job entities.Job) {
 	flight_subscription := acmeskyEntities.CustomerFlightSubscriptionRequestFromMap(vars)
 	newPrefID, insertErr := travelPreferenceRepo.AddCustomerSubscribtionPreference(flight_subscription)
 
-	ctx, cancelFn := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelFn()
+	if zeebeUtils.Handle_BP_fail_allow_retry(client, job, insertErr, 5*time.Second) {
+		return
+	} else if insertErr != nil {
 
-	if insertErr != nil {
-		command, _ := client.NewThrowErrorCommand().
+		command, err := client.NewThrowErrorCommand().
 			JobKey(job.Key).
 			ErrorCode("DB_ERROR").
 			ErrorMessage(insertErr.Error()).
@@ -56,6 +57,13 @@ func HandleSaveTravelPreference(client worker.JobClient, job entities.Job) {
 				"errorMsg":  insertErr.Error(),
 			})
 
+		if err != nil {
+			log.Println(fmt.Errorf("[BPMNERROR] error on creating fail job with key [%d]: [%s]", job.Key, err))
+			return
+		}
+
+		ctx, cancelFn := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancelFn()
 		_, err = command.Send(ctx)
 
 		if err != nil {
@@ -72,15 +80,16 @@ func HandleSaveTravelPreference(client worker.JobClient, job entities.Job) {
 			})
 
 		if err != nil {
-			log.Println(fmt.Errorf("[BPMNERROR] failed to create command to complete job [%d] due to [%s]", job.Key, err))
-		} else {
-			_, err = commandComplete.Send(ctx)
+			log.Println(fmt.Errorf("[BPMNERROR] error on creating complete job with key [%d]: [%s]", job.Key, err))
+			return
+		}
+		ctx, cancelFn := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancelFn()
+		_, err = commandComplete.Send(ctx)
 
-			if err != nil {
-				log.Panicf("[BPMNERROR] failed to complete job with key %d: [%s]", job.Key, err)
-			} else {
-				log.Printf("[BPMN] completed job %d successfully %d", job.Key, newPrefID)
-			}
+		if err != nil {
+			log.Println(fmt.Errorf("[BPMNERROR] error on failing job with key [%d]: [%s]", job.Key, err))
+			return
 		}
 	}
 }

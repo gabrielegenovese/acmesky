@@ -5,6 +5,7 @@ import (
 	flightsRepo "acmesky/repository/flights"
 	travelPreferenceRepo "acmesky/repository/travel_preference"
 	zbSingleton "acmesky/workers"
+	zeebeUtils "acmesky/workers/utils/zeebe_utils"
 	"context"
 	"fmt"
 	"log"
@@ -56,6 +57,10 @@ func HandleLoadTravelPreferences(client worker.JobClient, job zeebeEntities.Job)
 	defer cancelFn()
 
 	if err != nil {
+		if zeebeUtils.Handle_BP_fail_allow_retry(client, job, err, 10*time.Second) {
+			return
+		}
+
 		// cant get preference -> fails job
 
 		_, err := client.
@@ -124,7 +129,11 @@ func HandleFetchFlightsByTravelPreference(client worker.JobClient, job zeebeEnti
 	defer cancelFn()
 
 	if dbErr != nil || fetchErr != nil {
-		if fetchErr != nil {
+		if zeebeUtils.Handle_BP_fail_allow_retry(client, job, dbErr, 5*time.Second) {
+			return
+		} else if zeebeUtils.Handle_BP_fail_allow_retry(client, job, fetchErr, 10*time.Second) {
+			return
+		} else if fetchErr != nil {
 			if strings.Contains(fetchErr.Error(), "HTTP_ERROR") {
 				command, err := client.
 					NewThrowErrorCommand().
@@ -212,15 +221,15 @@ func HandleStoreFlights(client worker.JobClient, job zeebeEntities.Job) {
 		dbErr = flightsRepo.AddFlights(storeParams.Flights)
 	}
 
-	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
-	defer cancelFn()
-
-	if dbErr != nil {
+	if zeebeUtils.Handle_BP_fail_allow_retry(client, job, dbErr, 5*time.Second) {
+		return
+	} else if dbErr != nil {
+		ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
+		defer cancelFn()
 		_, err := client.
 			NewFailJobCommand().
 			JobKey(job.Key).
-			Retries(job.GetRetries() - 1).
-			RetryBackoff(5 * time.Second).
+			Retries(0).
 			ErrorMessage(dbErr.Error()).
 			Send(ctx)
 
@@ -242,6 +251,9 @@ func HandleStoreFlights(client worker.JobClient, job zeebeEntities.Job) {
 		log.Println(fmt.Errorf("[BPMNERROR] error on creating complete job with key [%d]: [%s]", job.Key, err))
 		return
 	}
+
+	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancelFn()
 	_, err = command.Send(ctx)
 
 	if err != nil {
@@ -273,14 +285,16 @@ func HandleFindSolutionsByTravelPreference(client worker.JobClient, job zeebeEnt
 	solutions, dbErr = flightsRepo.GetSolutionsFromPreference(findParams.Pref.CustomerFlightSubscriptionRequest)
 	fmt.Printf("Got %d solutions\n", len(solutions))
 
-	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
-	defer cancelFn()
+	if zeebeUtils.Handle_BP_fail_allow_retry(client, job, dbErr, 5*time.Second) {
+		return
+	} else if dbErr != nil {
+		ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
+		defer cancelFn()
 
-	if dbErr != nil {
 		_, err := client.
 			NewFailJobCommand().
 			JobKey(job.Key).
-			Retries(job.GetRetries() - 1).
+			Retries(0).
 			RetryBackoff(5 * time.Second).
 			ErrorMessage(dbErr.Error()).
 			Send(ctx)
@@ -304,6 +318,9 @@ func HandleFindSolutionsByTravelPreference(client worker.JobClient, job zeebeEnt
 		log.Println(fmt.Errorf("[BPMNERROR] error on creating complete job with key [%d]: [%s]", job.Key, err))
 		return
 	}
+
+	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancelFn()
 	_, err = command.Send(ctx)
 
 	if err != nil {
@@ -331,7 +348,7 @@ func HandlePrepareOfferForCustomer(client worker.JobClient, job zeebeEntities.Jo
 	}
 
 	fmt.Printf("Preparing offer for TravelPreference %d\n", prepareOffersParams.Pref.TravelPreferenceID)
-	flights, errDb := flightsRepo.GetFlight(
+	flights, dbErr := flightsRepo.GetFlight(
 		[]string{
 			prepareOffersParams.Solution.DepartFlight.FlightID,
 			prepareOffersParams.Solution.ReturnFlight.FlightID,
@@ -341,39 +358,45 @@ func HandlePrepareOfferForCustomer(client worker.JobClient, job zeebeEntities.Jo
 			prepareOffersParams.Solution.ReturnFlight.FlightCompanyID,
 		},
 	)
-
-	if errDb == nil {
+	if zeebeUtils.Handle_BP_fail_allow_retry(client, job, dbErr, 5*time.Second) {
+		return
+	} else if dbErr == nil {
 		var offerCode int64
 		fmt.Printf("Preparing offer ... \n")
 		var totalPrice float32 = 0
 		for _, f := range flights {
 			totalPrice += float32(f.FlightPrice)
 		}
-		offerCode, errDb = travelPreferenceRepo.AddReservedOffer(prepareOffersParams.Pref.TravelPreferenceID, totalPrice, flights)
-		if errDb == nil {
-			offer, errDb = travelPreferenceRepo.GetRservedOffer(offerCode)
+		offerCode, dbErr = travelPreferenceRepo.AddReservedOffer(prepareOffersParams.Pref.TravelPreferenceID, totalPrice, flights)
+		if dbErr == nil {
+			offer, dbErr = travelPreferenceRepo.GetRservedOffer(offerCode)
 		}
 	}
 
-	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
-	defer cancelFn()
+	if zeebeUtils.Handle_BP_fail_allow_retry(client, job, dbErr, 5*time.Second) {
+		return
+	} else if dbErr != nil {
+		ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
+		defer cancelFn()
 
-	if errDb != nil {
 		_, err := client.
 			NewFailJobCommand().
 			JobKey(job.Key).
-			Retries(job.GetRetries() - 1).
+			Retries(0).
 			RetryBackoff(5 * time.Second).
-			ErrorMessage(errDb.Error()).
+			ErrorMessage(dbErr.Error()).
 			Send(ctx)
 
 		if err != nil {
 			log.Println(fmt.Errorf("[BPMNERROR] error on failing job with key [%d]: [%s]", job.Key, err))
 		} else {
-			log.Println(errDb)
+			log.Println(dbErr)
 		}
 		return
 	}
+
+	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancelFn()
 
 	command, err := client.NewCompleteJobCommand().
 		JobKey(job.Key).
