@@ -63,7 +63,7 @@ func HandleLoadTravelPreferences(client worker.JobClient, job zeebeEntities.Job)
 
 		// cant get preference -> fails job
 
-		_, err := client.
+		_, errCmd := client.
 			NewFailJobCommand().
 			JobKey(job.Key).
 			Retries(job.GetRetries() - 1).
@@ -71,8 +71,8 @@ func HandleLoadTravelPreferences(client worker.JobClient, job zeebeEntities.Job)
 			ErrorMessage(err.Error()).
 			Send(ctx)
 
-		if err != nil {
-			log.Println(fmt.Errorf("[BPMNERROR] error on failing job with key [%d]: [%s]", job.Key, err))
+		if errCmd != nil {
+			log.Println(fmt.Errorf("[BPMNERROR] error on failing job with key [%d]: [%s]", job.Key, errCmd))
 		} else {
 			log.Println(err)
 		}
@@ -87,10 +87,12 @@ func HandleLoadTravelPreferences(client worker.JobClient, job zeebeEntities.Job)
 		})
 	if err != nil {
 		log.Println(fmt.Errorf("[BPMNERROR] error on complete job with key [%d]: [%s]", job.Key, err))
+		return
 	}
 	_, err = command.Send(ctx)
 	if err != nil {
 		log.Println(fmt.Errorf("[BPMNERROR] error on complete job with key [%d]: [%s]", job.Key, err))
+		return
 	}
 }
 

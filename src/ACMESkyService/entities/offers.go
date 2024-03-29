@@ -7,7 +7,9 @@ type OfferPart struct {
 }
 
 type ReservedOffer struct {
-	OfferCode          int64   `json:"offer_code"`
-	TotalPrice         float32 `json:"offer_price"`
-	TravelPreferenceID int64   `json:"travel_preference_id"`
+	OfferCode                int64   `json:"offer_code"`
+	TotalPrice               float32 `json:"offer_price"`
+	TravelPreferenceID       int64   `json:"travel_preference_id"`
+	StartReservationDatetime string  `json:"start_reservation_datetime"`
+	EndReservationDatetime   string  `json:"end_reservation_datetime"`
 }

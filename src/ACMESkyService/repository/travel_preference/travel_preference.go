@@ -147,7 +147,7 @@ func GetReservedOffer(offerCode int64) (entities.ReservedOffer, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		if err := rows.Scan(&reservedOffer.OfferCode, &reservedOffer.TravelPreferenceID, &reservedOffer.TotalPrice); err != nil {
+		if err := rows.Scan(&reservedOffer.OfferCode, &reservedOffer.TravelPreferenceID, &reservedOffer.TotalPrice, &reservedOffer.StartReservationDatetime, &reservedOffer.EndReservationDatetime); err != nil {
 			return reservedOffer, fmt.Errorf("GetReservedOffer: %v", err)
 		}
 		return reservedOffer, nil
