@@ -369,7 +369,7 @@ func HandlePrepareOfferForCustomer(client worker.JobClient, job zeebeEntities.Jo
 		}
 		offerCode, dbErr = travelPreferenceRepo.AddReservedOffer(prepareOffersParams.Pref.TravelPreferenceID, totalPrice, flights)
 		if dbErr == nil {
-			offer, dbErr = travelPreferenceRepo.GetRservedOffer(offerCode)
+			offer, dbErr = travelPreferenceRepo.GetReservedOffer(offerCode)
 		}
 	}
 

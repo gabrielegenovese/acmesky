@@ -73,15 +73,23 @@ func AddReservedOffer(travelPreferenceId int64, totalOfferPrice float32, flights
 	}
 
 	resultOffer, err := transaction.Exec(
-		"INSERT INTO ReservedOffer (TravelPreferenceID, TotalOfferPrice) VALUES (?, ?)",
+		"INSERT INTO ReservedOffers (TravelPreferenceID, TotalOfferPrice) VALUES (?, ?)",
 		travelPreferenceId, totalOfferPrice,
 	)
 	if err != nil {
+		abortErr := transaction.Rollback()
+		if abortErr != nil {
+			return 0, fmt.Errorf("[DBERROR] AddReservedOffer: %v %v", abortErr, err)
+		}
 		return 0, fmt.Errorf("[DBERROR] AddReservedOffer: %v", err)
 	}
 
 	offerCode, err := resultOffer.LastInsertId()
 	if err != nil {
+		abortErr := transaction.Rollback()
+		if abortErr != nil {
+			return 0, fmt.Errorf("[DBERROR] AddReservedOffer: %v %v", abortErr, err)
+		}
 		return 0, fmt.Errorf("[DBERROR] AddReservedOffer: %v", err)
 	}
 
@@ -99,18 +107,26 @@ func AddReservedOffer(travelPreferenceId int64, totalOfferPrice float32, flights
 		vals...,
 	)
 	if err != nil {
+		abortErr := transaction.Rollback()
+		if abortErr != nil {
+			return 0, fmt.Errorf("[DBERROR] AddReservedOffer: %v %v", abortErr, err)
+		}
 		return 0, fmt.Errorf("[DBERROR] AddReservedOffer: %v", err)
 	}
 
 	err = transaction.Commit()
 	if err != nil {
+		abortErr := transaction.Rollback()
+		if abortErr != nil {
+			return 0, fmt.Errorf("[DBERROR] AddReservedOffer: %v %v", abortErr, err)
+		}
 		return 0, fmt.Errorf("[DBERROR] AddReservedOffer: %v", err)
 	}
 
 	return offerCode, nil
 }
 
-func GetRservedOffer(offerCode int64) (entities.ReservedOffer, error) {
+func GetReservedOffer(offerCode int64) (entities.ReservedOffer, error) {
 	db := dbClient.GetInstance()
 	var reservedOffer entities.ReservedOffer
 
