@@ -64,10 +64,10 @@ CREATE TABLE Flights (
 CREATE TABLE ReservedOffers (
     OfferCode int NOT NULL AUTO_INCREMENT,
     TravelPreferenceID int NOT NULL,
-    StartReservationDatetime DATETIME DEFAULT NOW()
+    StartReservationDatetime DATETIME DEFAULT NOW(),
     EndReservationDatetime DATETIME AS (DATE_ADD(StartReservationDatetime, INTERVAL 24 HOUR)),
     TotalOfferPrice DECIMAL(8, 2) NOT NULL,
-    PRIMARY KEY (ReservedOfferCode),
+    PRIMARY KEY (OfferCode),
     FOREIGN KEY (TravelPreferenceID) REFERENCES TravelPreferences(TravelPreferenceID)
 );
 
@@ -81,10 +81,10 @@ CREATE TABLE OffersBundles(
 );
 
 CREATE TABLE SoldOffers (
-    OfferCode int NOT NULL AUTO_INCREMENT,
+    OfferCode int NOT NULL,
     TravelPreferenceID int NOT NULL,
     EndReservationDatetime DATETIME DEFAULT NULL,
     CustomerFlightPrice DECIMAL(8, 2) NOT NULL,
-    PRIMARY KEY (ReservedOfferCode),
+    PRIMARY KEY (OfferCode),
     FOREIGN KEY (TravelPreferenceID) REFERENCES TravelPreferences(TravelPreferenceID)
 );
