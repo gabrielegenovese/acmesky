@@ -1,7 +1,7 @@
 pages:
   stage: deploy
   script:
-    - mv -r docs public
+    - mv docs public
   artifacts:
     paths:
       - public
