@@ -49,7 +49,24 @@ func main() {
 	router.DELETE("/payment/:id", api.DelPaymentById)
 	router.POST("/payment/:id/pay", api.PayPaymentById)
 
+	router.Use(CORSMiddleware())
 	router.Run(config.Listen)
+}
+
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		// c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Origin, Accept, token")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
 }
 
 func loadConfig() (err error) {

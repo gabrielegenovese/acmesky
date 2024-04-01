@@ -2,19 +2,23 @@ package api
 
 import (
 	"bank/util"
+	"database/sql"
 	"net/http"
-	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
+	"github.com/google/uuid"
 )
 
 type Payment struct {
-	gorm.Model
-	User        string `json:"user"`
-	Description string `json:"description"`
-	Amount      uint32 `json:"amount"`
-	Paid        bool   `json:"paid"`
+	ID          uuid.UUID    `json:"id" gorm:"primarykey"`
+	CreatedAt   time.Time    `json:"created_at"`
+	UpdatedAt   time.Time    `json:"updated_at"`
+	DeletedAt   sql.NullTime `json:"deleted_at" gorm:"index"`
+	User        string       `json:"user"`
+	Description string       `json:"description"`
+	Amount      uint32       `json:"amount"`
+	Paid        bool         `json:"paid"`
 }
 
 type PaymentReq struct {
@@ -38,6 +42,7 @@ func NewPayment(c *gin.Context) {
 	}
 
 	pay := Payment{
+		ID:          uuid.New(),
 		User:        data.User,
 		Description: data.Description,
 		Amount:      data.Amount,
@@ -48,7 +53,7 @@ func NewPayment(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, Res{Res: "Done"})
+	c.JSON(http.StatusOK, pay)
 }
 
 // POST /payment/:id/pay
@@ -56,14 +61,14 @@ func PayPaymentById(c *gin.Context) {
 	db := util.GetDb()
 	userid := c.Param("id")
 
-	i, err := strconv.Atoi(userid)
+	uid, err := uuid.Parse(userid)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, Res{Res: "Couln't understand id: " + err.Error()})
 		return
 	}
 
 	var res Payment
-	if err := db.Model(Payment{}).Where("id = ?", i).First(&res).Error; err != nil {
+	if err := db.Where(Payment{ID: uid}).First(&res).Error; err != nil {
 		c.JSON(http.StatusBadRequest, Res{Res: "Couln't save payment: " + err.Error()})
 		return
 	}
@@ -81,14 +86,14 @@ func DelPaymentById(c *gin.Context) {
 	db := util.GetDb()
 	userid := c.Param("id")
 
-	i, err := strconv.Atoi(userid)
+	uid, err := uuid.Parse(userid)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, Res{Res: "Couln't understand id: " + err.Error()})
 		return
 	}
 
 	var res Payment
-	if err := db.Model(Payment{}).Where("id = ?", i).Delete(&res).Error; err != nil {
+	if err := db.Where(Payment{ID: uid}).Delete(&res).Error; err != nil {
 		c.JSON(http.StatusBadRequest, Res{Res: "Couln't delete payment: " + err.Error()})
 		return
 	}
@@ -101,14 +106,14 @@ func GetPaymentById(c *gin.Context) {
 	db := util.GetDb()
 	userid := c.Param("id")
 
-	i, err := strconv.Atoi(userid)
+	uid, err := uuid.Parse(userid)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, Res{Res: "Couln't understand id: " + err.Error()})
 		return
 	}
 
 	var res Payment
-	if err := db.Model(Payment{}).Where("id = ?", i).First(&res).Error; err != nil {
+	if err := db.Where(Payment{ID: uid}).First(&res).Error; err != nil {
 		c.JSON(http.StatusBadRequest, Res{Res: "Couln't get payment: " + err.Error()})
 		return
 	}
