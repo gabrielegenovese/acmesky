@@ -44,10 +44,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	router.POST("/payment", api.NewPayment)
+	router.POST("/payment/new", api.NewPayment)
+	router.POST("/payment/pay/:id", api.PayPaymentById)
 	router.GET("/payment/:id", api.GetPaymentById)
 	router.DELETE("/payment/:id", api.DelPaymentById)
-	router.POST("/payment/:id/pay", api.PayPaymentById)
 
 	router.Use(CORSMiddleware())
 	router.Run(config.Listen)
@@ -56,9 +56,9 @@ func main() {
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		// c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Origin, Accept, token")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")
 
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)

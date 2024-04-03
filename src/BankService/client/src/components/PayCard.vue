@@ -3,7 +3,18 @@ const props = defineProps<{ uuid: String }>();
 
 const pay = async () => {
   const id = props.uuid;
-  let res = await fetch("http://localhost:3000/payment/" + id + "/pay", {
+
+  let res = await fetch("http://localhost:3000/payment/" + id, {
+    mode: "cors",
+    headers: {
+      "Access-Control-Allow-Headers": "Content Type",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+  console.log(res);
+  res = await res.json();
+  console.log(res);
+  res = await fetch("http://localhost:3000/payment/pay/" + id, {
     method: "POST",
   });
   const data = await res.json();
@@ -23,12 +34,12 @@ const pay = async () => {
         <div
           class="bg-indigo-500 text-white overflow-hidden rounded-full w-20 h-20 -mt-16 mx-auto shadow-lg flex justify-center items-center"
         >
-          <i class="mdi mdi-credit-card-outline text-3xl"></i>
+          <img class="p-2 rounded-full" src="../assets/acme.jpg" />
         </div>
       </div>
       <div class="mb-10">
         <h1 class="text-center font-bold text-xl uppercase">
-          Secure payment info
+          ACME BANK PAYMENT SERVICE
         </h1>
       </div>
       <div class="mb-3 flex -mx-2">
@@ -108,16 +119,22 @@ const pay = async () => {
           <select
             class="form-select w-full px-3 py-2 mb-1 border-2 border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
           >
-            <option value="2020">2020</option>
-            <option value="2021">2021</option>
-            <option value="2022">2022</option>
-            <option value="2023">2023</option>
             <option value="2024">2024</option>
             <option value="2025">2025</option>
             <option value="2026">2026</option>
             <option value="2027">2027</option>
             <option value="2028">2028</option>
             <option value="2029">2029</option>
+            <option value="2030">2030</option>
+            <option value="2031">2031</option>
+            <option value="2032">2032</option>
+            <option value="2033">2033</option>
+            <option value="2034">2034</option>
+            <option value="2035">2035</option>
+            <option value="2036">2036</option>
+            <option value="2037">2037</option>
+            <option value="2038">2038</option>
+            <option value="2039">2039</option>
           </select>
         </div>
       </div>
@@ -148,8 +165,6 @@ const pay = async () => {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  -webkit-print-color-adjust: exact;
-  color-adjust: exact;
   display: inline-block;
   vertical-align: middle;
   background-origin: border-box;
@@ -190,8 +205,6 @@ const pay = async () => {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  -webkit-print-color-adjust: exact;
-  color-adjust: exact;
   background-repeat: no-repeat;
   padding-top: 0.5rem;
   padding-right: 2.5rem;

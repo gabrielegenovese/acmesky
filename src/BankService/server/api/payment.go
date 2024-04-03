@@ -31,7 +31,7 @@ type Res struct {
 	Res string `json:"res"`
 }
 
-// POST /payment
+// POST /payment/new
 func NewPayment(c *gin.Context) {
 	db := util.GetDb()
 
@@ -41,6 +41,7 @@ func NewPayment(c *gin.Context) {
 		return
 	}
 
+	// Non viene controllato se l'id già esiste ma non dovrebbe servire (finchè abbiamo pochi dati nel db)
 	pay := Payment{
 		ID:          uuid.New(),
 		User:        data.User,
@@ -56,20 +57,20 @@ func NewPayment(c *gin.Context) {
 	c.JSON(http.StatusOK, pay)
 }
 
-// POST /payment/:id/pay
+// POST /payment/pay/:id
 func PayPaymentById(c *gin.Context) {
 	db := util.GetDb()
 	userid := c.Param("id")
 
 	uid, err := uuid.Parse(userid)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, Res{Res: "Couln't understand id: " + err.Error()})
+		c.JSON(http.StatusBadRequest, Res{Res: "Couln't parse id: " + err.Error()})
 		return
 	}
 
 	var res Payment
 	if err := db.Where(Payment{ID: uid}).First(&res).Error; err != nil {
-		c.JSON(http.StatusBadRequest, Res{Res: "Couln't save payment: " + err.Error()})
+		c.JSON(http.StatusBadRequest, Res{Res: "Couln't get payment: " + err.Error()})
 		return
 	}
 
@@ -88,7 +89,7 @@ func DelPaymentById(c *gin.Context) {
 
 	uid, err := uuid.Parse(userid)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, Res{Res: "Couln't understand id: " + err.Error()})
+		c.JSON(http.StatusBadRequest, Res{Res: "Couln't parse id: " + err.Error()})
 		return
 	}
 
@@ -108,7 +109,7 @@ func GetPaymentById(c *gin.Context) {
 
 	uid, err := uuid.Parse(userid)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, Res{Res: "Couln't understand id: " + err.Error()})
+		c.JSON(http.StatusBadRequest, Res{Res: "Couln't parse id: " + err.Error()})
 		return
 	}
 

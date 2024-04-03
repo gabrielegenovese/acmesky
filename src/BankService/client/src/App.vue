@@ -3,9 +3,7 @@ import PayCard from "./components/PayCard.vue";
 </script>
 
 <template>
-  <div>
-    <PayCard uuid="cd6f7228-28ea-4d23-994b-338c943e2fad"/>
-  </div>
+  <PayCard uuid="0a9f1ca1-b44a-42fc-a558-5d3f0082be62" />
 </template>
 
 <style scoped></style>
