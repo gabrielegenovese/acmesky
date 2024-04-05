@@ -79,7 +79,7 @@ func HandleLoadTravelPreferences(client worker.JobClient, job zeebeEntities.Job)
 		return
 	}
 
-	fmt.Println("Got %v customers' Travel Preferences", len(prefs))
+	fmt.Printf("Got %v customers' Travel Preferences\n", len(prefs))
 	command, err := client.NewCompleteJobCommand().
 		JobKey(job.Key).
 		VariablesFromMap(map[string]interface{}{
