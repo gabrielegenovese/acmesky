@@ -281,11 +281,10 @@ func HandleFindSolutionsByTravelPreference(client worker.JobClient, job zeebeEnt
 	}
 	var dbErr error
 	var solutions []entities.Solution
-	fmt.Printf("getting pref\n")
 
-	fmt.Printf("Searching solutions\n")
+	fmt.Printf("Searching solutions for preference %v\n", findParams.Pref.TravelPreferenceID)
 	solutions, dbErr = flightsRepo.GetSolutionsFromPreference(findParams.Pref.CustomerFlightSubscriptionRequest)
-	fmt.Printf("Got %d solutions\n", len(solutions))
+	fmt.Printf("Found %d solutions for preference %v\n", len(solutions), findParams.Pref.TravelPreferenceID)
 
 	if zeebeUtils.Handle_BP_fail_allow_retry(client, job, dbErr, 5*time.Second) {
 		return
@@ -309,7 +308,17 @@ func HandleFindSolutionsByTravelPreference(client worker.JobClient, job zeebeEnt
 		return
 	}
 
-	fmt.Printf("Found %d solutions\n", len(solutions))
+	fmt.Printf("Found %d solutions for preference %v\n", len(solutions), findParams.Pref.TravelPreferenceID)
+	/*for _, s := range solutions {
+		fmt.Printf("Requested from %v to %v betwween %s and %s with budget < %v\n"+
+			"Find Solution: \n"+
+			"\tDepart: (%v,%v) from %v to %v betwween %s and %s with price %v\n"+
+			"\tReturn: (%v,%v) from %v to %v betwween %s and %s with price %v\n",
+			findParams.Pref.AirportOriginID, findParams.Pref.AirportDestinationID, findParams.Pref.DateStartISO8601, findParams.Pref.DateEndISO8601, findParams.Pref.Budget,
+			s.DepartFlight.FlightCompanyID, s.DepartFlight.FlightID, s.DepartFlight.AirportOriginID, s.DepartFlight.AirportDestinationID, s.DepartFlight.DepartDatetime, s.DepartFlight.ArrivalDatetime, s.DepartFlight.FlightPrice,
+			s.ReturnFlight.FlightCompanyID, s.ReturnFlight.FlightID, s.ReturnFlight.AirportOriginID, s.ReturnFlight.AirportDestinationID, s.ReturnFlight.DepartDatetime, s.ReturnFlight.ArrivalDatetime, s.ReturnFlight.FlightPrice,
+		)
+	}*/
 	command, err := client.NewCompleteJobCommand().
 		JobKey(job.Key).
 		VariablesFromMap(map[string]interface{}{
@@ -364,10 +373,10 @@ func HandlePrepareOfferForCustomer(client worker.JobClient, job zeebeEntities.Jo
 		return
 	} else if dbErr == nil {
 		var offerCode int64
-		fmt.Printf("Preparing offer ... \n")
-		var totalPrice float32 = 0
+		fmt.Printf("Preparing offer for pref %v ...\n", prepareOffersParams.Pref.TravelPreferenceID)
+		var totalPrice float32 = 0.
 		for _, f := range flights {
-			totalPrice += float32(f.FlightPrice)
+			totalPrice += float32(f.FlightPrice) * float32(prepareOffersParams.Pref.SeatsCount)
 		}
 		offerCode, dbErr = travelPreferenceRepo.AddReservedOffer(prepareOffersParams.Pref.TravelPreferenceID, totalPrice, flights)
 		if dbErr == nil {
@@ -399,6 +408,16 @@ func HandlePrepareOfferForCustomer(client worker.JobClient, job zeebeEntities.Jo
 
 	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancelFn()
+
+	fmt.Printf("Requested from %v to %v betwween %s and %s with budget < %v\n"+
+		"Prepared offer (%v) for %v money since %v up to %v with the following flights:\n"+
+		"\tDepart: (%v,%v) from %v to %v\n"+
+		"\tReturn: (%v,%v) from %v to %v\n",
+		prepareOffersParams.Pref.AirportOriginID, prepareOffersParams.Pref.AirportDestinationID, prepareOffersParams.Pref.DateStartISO8601, prepareOffersParams.Pref.DateEndISO8601, prepareOffersParams.Pref.Budget,
+		offer.OfferCode, offer.TotalPrice, offer.StartReservationDatetime, offer.EndReservationDatetime,
+		flights[0].FlightCompanyID, flights[0].FlightID, flights[0].AirportOriginID, flights[0].AirportDestinationID,
+		flights[1].FlightCompanyID, flights[1].FlightID, flights[1].AirportOriginID, flights[1].AirportDestinationID,
+	)
 
 	command, err := client.NewCompleteJobCommand().
 		JobKey(job.Key).

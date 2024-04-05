@@ -51,7 +51,7 @@ func GetFlight(flightIDs []string, companyIDs []int64) ([]entities.Flight, error
 	}
 
 	sqlStr := "SELECT CompanyID, CompanyFlightID, AirportOriginID, AirportDestinationID, DepartDatetime, ArrivalDatetime, PassengerFlightPrice, AvailableSeats" +
-		" FROM Flights WHERE CompanyID || ',' || CompanyFlightID IN ("
+		" FROM Flights WHERE CONCAT(CompanyID,',',CompanyFlightID) IN ("
 	var key string
 	vals := []interface{}{}
 	for i, fID := range flightIDs {
@@ -111,9 +111,9 @@ func GetSolutionsFromPreference(pref entities.CustomerFlightSubscriptionRequest)
 	rows, err = db.Query(
 		"SELECT DEPART_F.CompanyFlightID, DEPART_F.CompanyID, RETURN_F.CompanyFlightID, RETURN_F.CompanyID"+
 			" FROM"+
-			" (SELECT CompanyFlightID, CompanyID, PassengerFlightPrice, AvailableSeats, AirportOriginID, AirportDestinationID, DepartDatetime, ArrivalDatetime FROM Flights WHERE AirportOriginID = ? and AirportDestinationID = ? AND AvailableSeats >= ? AND (STR_TO_DATE(?, '%Y-%m-%d %H:%i:%S') <= DepartDatetime AND DepartDatetime < STR_TO_DATE(?, '%Y-%m-%d %H:%i:%S') ) ) AS DEPART_F"+
+			" 	(SELECT CompanyFlightID, CompanyID, PassengerFlightPrice, AvailableSeats, AirportOriginID, AirportDestinationID, DepartDatetime, ArrivalDatetime FROM Flights WHERE AirportOriginID = ? and AirportDestinationID = ? AND AvailableSeats >= ? AND (STR_TO_DATE(?, '%Y-%m-%d %H:%i:%S') <= DepartDatetime AND DepartDatetime < STR_TO_DATE(?, '%Y-%m-%d %H:%i:%S') ) ) AS DEPART_F"+
 			" INNER JOIN"+
-			" (SELECT CompanyFlightID, CompanyID, PassengerFlightPrice, AvailableSeats, AirportOriginID, AirportDestinationID, DepartDatetime, ArrivalDatetime FROM Flights WHERE AirportOriginID = ? and AirportDestinationID = ? AND AvailableSeats >= ? AND (STR_TO_DATE(?, '%Y-%m-%d %H:%i:%S') <= DepartDatetime AND DepartDatetime < STR_TO_DATE(?, '%Y-%m-%d %H:%i:%S') ) ) AS RETURN_F"+
+			" 	(SELECT CompanyFlightID, CompanyID, PassengerFlightPrice, AvailableSeats, AirportOriginID, AirportDestinationID, DepartDatetime, ArrivalDatetime FROM Flights WHERE AirportOriginID = ? and AirportDestinationID = ? AND AvailableSeats >= ? AND (STR_TO_DATE(?, '%Y-%m-%d %H:%i:%S') <= DepartDatetime AND DepartDatetime < STR_TO_DATE(?, '%Y-%m-%d %H:%i:%S') ) ) AS RETURN_F"+
 			" ON DEPART_F.AirportDestinationID = RETURN_F.AirportOriginID"+
 			" WHERE ( (DEPART_F.PassengerFlightPrice * ?) + (RETURN_F.PassengerFlightPrice * ?) ) < ? AND RETURN_F.DepartDatetime > DEPART_F.ArrivalDatetime"+
 			" ORDER BY DEPART_F.DepartDatetime, RETURN_F.ArrivalDatetime",
@@ -131,7 +131,10 @@ func GetSolutionsFromPreference(pref entities.CustomerFlightSubscriptionRequest)
 	for rows.Next() {
 		var departFlight entities.Flight
 		var returnFlight entities.Flight
-		if err := rows.Scan(&departFlight.FlightID, &departFlight.FlightCompanyID, &returnFlight.FlightID, &returnFlight.FlightCompanyID); err != nil {
+		if err := rows.Scan(
+			&departFlight.FlightID, &departFlight.FlightCompanyID,
+			&returnFlight.FlightID, &returnFlight.FlightCompanyID,
+		); err != nil {
 			return nil, fmt.Errorf("flightsByPreference: %v", err)
 		}
 		solution = entities.Solution{
