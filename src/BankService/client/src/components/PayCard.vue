@@ -3,18 +3,7 @@ const props = defineProps<{ uuid: String }>();
 
 const pay = async () => {
   const id = props.uuid;
-
-  let res = await fetch("http://localhost:3000/payment/" + id, {
-    mode: "cors",
-    headers: {
-      "Access-Control-Allow-Headers": "Content Type",
-      "Access-Control-Allow-Origin": "*",
-    },
-  });
-  console.log(res);
-  res = await res.json();
-  console.log(res);
-  res = await fetch("http://localhost:3000/payment/pay/" + id, {
+  let res = await fetch("http://localhost:3000/payment/pay/" + id, {
     method: "POST",
   });
   const data = await res.json();

@@ -44,12 +44,13 @@ func main() {
 		os.Exit(1)
 	}
 
+	router.Use(CORSMiddleware())
+
 	router.POST("/payment/new", api.NewPayment)
 	router.POST("/payment/pay/:id", api.PayPaymentById)
 	router.GET("/payment/:id", api.GetPaymentById)
 	router.DELETE("/payment/:id", api.DelPaymentById)
 
-	router.Use(CORSMiddleware())
 	router.Run(config.Listen)
 }
 
