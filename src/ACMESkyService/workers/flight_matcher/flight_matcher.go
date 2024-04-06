@@ -2,6 +2,7 @@ package flightMatcher
 
 import (
 	entities "acmesky/entities"
+	airportsRepo "acmesky/repository/airports"
 	flightsRepo "acmesky/repository/flights"
 	travelPreferenceRepo "acmesky/repository/travel_preference"
 	zbSingleton "acmesky/workers"
@@ -44,13 +45,18 @@ func RegisterWorkers() []worker.JobWorker {
 			JobType("prepareOffersForCustomer").
 			Handler(HandlePrepareOfferForCustomer).
 			Open(),
+		client.
+			NewJobWorker().
+			JobType("notifyReservedOffer").
+			Handler(HandleNotifyReservedOffer).
+			Open(),
 	}
 	return workers
 }
 
 func HandleLoadTravelPreferences(client worker.JobClient, job zeebeEntities.Job) {
 
-	fmt.Println("Getting customers' Travel Preferences")
+	fmt.Println("Getting customers' Travel Preferences without offers")
 	prefs, err := travelPreferenceRepo.GetAllCustomerFlightPreferencesNotOutdated()
 
 	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
@@ -434,4 +440,54 @@ func HandlePrepareOfferForCustomer(client worker.JobClient, job zeebeEntities.Jo
 	if err != nil {
 		log.Println(fmt.Errorf("[BPMNERROR] error on complete job with key [%d]: [%s]", job.Key, err))
 	}
+}
+
+type notifyOfferParameters struct {
+	Pref  entities.CustomerFlightSubscription `json:"pref,omitempty"`
+	Offer entities.ReservedOffer              `json:"offer,omitempty"`
+}
+
+func HandleNotifyReservedOffer(client worker.JobClient, job zeebeEntities.Job) {
+	var offer entities.ReservedOffer
+	var notifyParams notifyOfferParameters
+	fmt.Printf("HandleNotifyReservedOffer\n")
+
+	err := job.GetVariablesAs(&notifyParams)
+
+	if err != nil {
+		ctx, cancelFn := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancelFn()
+		_, _ = client.NewFailJobCommand().JobKey(job.Key).Retries(0).ErrorMessage(err.Error()).Send(ctx)
+		return
+	}
+
+	// TODO: USE DATA FROM VARS
+	airports, _ := airportsRepo.GetAirportsById([]string{
+		notifyParams.Pref.AirportOriginID,
+		notifyParams.Pref.AirportDestinationID,
+	})
+
+	departAirport := airports[0]
+	returnAirport := airports[1]
+	var departFlight entities.Flight
+	var returnFlight entities.Flight
+	offerEndDatetime, _ := time.Parse(time.DateTime, offer.EndReservationDatetime)
+
+	title := fmt.Sprintf("New ACMESKY travel offer from %s to %s until %s",
+		departAirport.City, returnAirport.City, offer.EndReservationDatetime,
+	)
+	body := fmt.Sprintf("ACMESKY found a flight travel offer with return flight for you (%v seats) from %v to %v between %s and %s within your budget of %v\n"+
+		"We offer the following flights at the price of %v %v :\n"+
+		"- Depart from %v at %v will arrive at %v;\n"+
+		"- Return from %v at %v will return at %v.\n"+
+		"Use the code %v until %v on %v to purchase this offer on our portal at this reserved price !",
+		notifyParams.Pref.SeatsCount, departAirport.City, returnAirport.City, notifyParams.Pref.DateStartISO8601, notifyParams.Pref.DateEndISO8601, notifyParams.Pref.Budget,
+		notifyParams.Offer.TotalPrice, '€',
+		departAirport.Name, departFlight.DepartDatetime, departFlight.ArrivalDatetime,
+		returnAirport.Name, returnFlight.DepartDatetime, returnFlight.ArrivalDatetime,
+		offer.OfferCode, offerEndDatetime.Format(time.TimeOnly), offerEndDatetime.Format(time.DateOnly),
+	)
+	messageContent := title + "\n" + body + "\n"
+
+	fmt.Printf("Notify Prontogram customer (%s) with message:\n%s", notifyParams.Pref.ProntogramID, messageContent)
 }
