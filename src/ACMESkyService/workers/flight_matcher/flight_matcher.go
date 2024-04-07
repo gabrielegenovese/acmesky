@@ -351,6 +351,7 @@ type prepareOffersParameters struct {
 }
 
 func HandlePrepareOfferForCustomer(client worker.JobClient, job zeebeEntities.Job) {
+	var airports []entities.Airport
 	var offer entities.ReservedOffer
 	var prepareOffersParams prepareOffersParameters
 	fmt.Printf("HandlePrepareOfferForCustomer")
@@ -375,6 +376,16 @@ func HandlePrepareOfferForCustomer(client worker.JobClient, job zeebeEntities.Jo
 			prepareOffersParams.Solution.ReturnFlight.FlightCompanyID,
 		},
 	)
+	prepareOffersParams.Solution.DepartFlight = flights[0]
+	prepareOffersParams.Solution.ReturnFlight = flights[1]
+
+	if dbErr == nil {
+		airports, dbErr = airportsRepo.GetAirportsById([]string{
+			flights[0].AirportOriginID,
+			flights[1].AirportOriginID,
+		})
+	}
+
 	if zeebeUtils.Handle_BP_fail_allow_retry(client, job, dbErr, 5*time.Second) {
 		return
 	} else if dbErr == nil {
@@ -428,7 +439,10 @@ func HandlePrepareOfferForCustomer(client worker.JobClient, job zeebeEntities.Jo
 	command, err := client.NewCompleteJobCommand().
 		JobKey(job.Key).
 		VariablesFromMap(map[string]interface{}{
-			"offer": offer,
+			"offer":               offer,
+			"solution":            prepareOffersParams.Solution,
+			"departOriginAirport": airports[0],
+			"returnOriginAirport": airports[1],
 		})
 
 	if err != nil {
@@ -443,8 +457,11 @@ func HandlePrepareOfferForCustomer(client worker.JobClient, job zeebeEntities.Jo
 }
 
 type notifyOfferParameters struct {
-	Pref  entities.CustomerFlightSubscription `json:"pref,omitempty"`
-	Offer entities.ReservedOffer              `json:"offer,omitempty"`
+	Pref          entities.CustomerFlightSubscription `json:"pref,omitempty"`
+	Offer         entities.ReservedOffer              `json:"offer,omitempty"`
+	Solution      entities.Solution                   `json:"solution,omitempty"`
+	DepartAirport entities.Airport                    `json:"departOriginAirport,omitempty"`
+	ReturnAirport entities.Airport                    `json:"returnOriginAirport,omitempty"`
 }
 
 func HandleNotifyReservedOffer(client worker.JobClient, job zeebeEntities.Job) {
@@ -461,16 +478,10 @@ func HandleNotifyReservedOffer(client worker.JobClient, job zeebeEntities.Job) {
 		return
 	}
 
-	// TODO: USE DATA FROM VARS
-	airports, _ := airportsRepo.GetAirportsById([]string{
-		notifyParams.Pref.AirportOriginID,
-		notifyParams.Pref.AirportDestinationID,
-	})
-
-	departAirport := airports[0]
-	returnAirport := airports[1]
-	var departFlight entities.Flight
-	var returnFlight entities.Flight
+	departAirport := notifyParams.DepartAirport
+	returnAirport := notifyParams.ReturnAirport
+	departFlight := notifyParams.Solution.DepartFlight
+	returnFlight := notifyParams.Solution.ReturnFlight
 	offerEndDatetime, _ := time.Parse(time.DateTime, offer.EndReservationDatetime)
 
 	title := fmt.Sprintf("New ACMESKY travel offer from %s to %s until %s",
