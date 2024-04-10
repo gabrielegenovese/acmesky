@@ -43,6 +43,11 @@ CREATE TABLE FlightCompanies (
     PRIMARY KEY (CompanyID)
 );
 
+INSERT INTO FlightCompanies
+    (CompanyID, CompanyName)
+VALUES
+    (1, "FlightCompany");
+
 CREATE TABLE Flights (
     CompanyFlightID int NOT NULL,
     CompanyID int NOT NULL,
@@ -50,37 +55,36 @@ CREATE TABLE Flights (
     AirportDestinationID int NOT NULL,
     DepartDatetime DATETIME NOT NULL,
     ArrivalDatetime DATETIME NOT NULL,
-    CompanyFlightPrice DECIMAL(8, 2) NOT NULL,
+    PassengerFlightPrice DECIMAL(8, 2) NOT NULL,
     AvailableSeats int NOT NULL DEFAULT(0),
     PRIMARY KEY (CompanyFlightID, CompanyID),
     FOREIGN KEY (CompanyID) REFERENCES FlightCompanies(CompanyID)
 );
 
 CREATE TABLE ReservedOffers (
-    ReservedOfferCode int NOT NULL AUTO_INCREMENT,
-    FlightBundleID int NOT NULL,
-    CompanyID int NOT NULL,
+    OfferCode int NOT NULL AUTO_INCREMENT,
     TravelPreferenceID int NOT NULL,
-    EndReservationDatetime DATETIME DEFAULT NULL,
-    CustomerFlightPrice DECIMAL(8, 2) NOT NULL,
-    PRIMARY KEY (ReservedOfferCode),
-    FOREIGN KEY (CompanyOfferID, CompanyID) REFERENCES FlightCompanytOffers(CompanyOfferID, CompanyID),
+    StartReservationDatetime DATETIME DEFAULT NOW(),
+    EndReservationDatetime DATETIME AS (DATE_ADD(StartReservationDatetime, INTERVAL 24 HOUR)),
+    TotalOfferPrice DECIMAL(8, 2) NOT NULL,
+    PRIMARY KEY (OfferCode),
     FOREIGN KEY (TravelPreferenceID) REFERENCES TravelPreferences(TravelPreferenceID)
 );
 
-CREATE TABLE FlightsForReservedOffers{
-    ReservedOfferCode int NOT NULL,
+CREATE TABLE OffersBundles(
+    OfferCode int NOT NULL,
     CompanyFlightID int NOT NULL,
     CompanyID int NOT NULL,
-    PRIMARY KEY (ReservedOfferCode, CompanyFlightID, CompanyID),
-    FOREIGN KEY (ReservedOfferCode) REFERENCES ReservedOffers(ReservedOfferCode),
+    PRIMARY KEY (OfferCode, CompanyFlightID, CompanyID),
+    FOREIGN KEY (OfferCode) REFERENCES ReservedOffers(OfferCode),
     FOREIGN KEY (CompanyFlightID, CompanyID) REFERENCES Flights(CompanyFlightID, CompanyID)
-};
+);
 
-CREATE TABLE CustomerBoughtOffers {
-    CustomerID int NOT NULL, 
-    ReservedOfferCode int NOT NULL,
-    PRIMARY KEY (CustomerID, ReservedOfferCode),
-    FOREIGN KEY (ReservedOfferCode) REFERENCES ReservedOffers(ReservedOfferCode),
-    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
-}
+CREATE TABLE SoldOffers (
+    OfferCode int NOT NULL,
+    TravelPreferenceID int NOT NULL,
+    EndReservationDatetime DATETIME DEFAULT NULL,
+    CustomerFlightPrice DECIMAL(8, 2) NOT NULL,
+    PRIMARY KEY (OfferCode),
+    FOREIGN KEY (TravelPreferenceID) REFERENCES TravelPreferences(TravelPreferenceID)
+);

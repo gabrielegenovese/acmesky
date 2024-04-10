@@ -1,6 +1,6 @@
 package entities
 
-type CustomerFlightSubscription struct {
+type CustomerFlightSubscriptionRequest struct {
 	ProntogramID         string `json:"customer_prontogram_id"`
 	AirportOriginID      string `json:"airport_id_origin"`
 	AirportDestinationID string `json:"airport_id_destination"`
@@ -12,8 +12,8 @@ type CustomerFlightSubscription struct {
 	SeatsCount     uint    `json:"travel_seats_count"`
 }
 
-func CustomerFlightSubscriptionFromMap(m map[string]interface{}) CustomerFlightSubscription {
-	v := CustomerFlightSubscription{
+func CustomerFlightSubscriptionRequestFromMap(m map[string]interface{}) CustomerFlightSubscriptionRequest {
+	v := CustomerFlightSubscriptionRequest{
 		ProntogramID:         m["customer_prontogram_id"].(string),
 		AirportOriginID:      m["airport_id_origin"].(string),
 		AirportDestinationID: m["airport_id_destination"].(string),
@@ -25,7 +25,7 @@ func CustomerFlightSubscriptionFromMap(m map[string]interface{}) CustomerFlightS
 	return v
 }
 
-func (v CustomerFlightSubscription) ToMap() map[string]interface{} {
+func (v CustomerFlightSubscriptionRequest) ToMap() map[string]interface{} {
 	m := map[string]interface{}{
 		"airport_id_origin":      v.AirportOriginID,
 		"airport_id_destination": v.AirportDestinationID,
@@ -36,4 +36,16 @@ func (v CustomerFlightSubscription) ToMap() map[string]interface{} {
 		"travel_seats_count":     v.SeatsCount,
 	}
 	return m
+}
+
+type CustomerFlightSubscription struct {
+	CustomerFlightSubscriptionRequest
+	TravelPreferenceID int64 `json:"travel_preference_id"`
+}
+
+func CustomerFlightSubscriptionFromMap(m map[string]interface{}) CustomerFlightSubscription {
+	return CustomerFlightSubscription{
+		CustomerFlightSubscriptionRequest: CustomerFlightSubscriptionRequestFromMap(m),
+		TravelPreferenceID:                int64(m["travel_preference_id"].(float64)),
+	}
 }

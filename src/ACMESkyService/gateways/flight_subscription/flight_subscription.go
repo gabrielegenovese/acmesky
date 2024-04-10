@@ -33,7 +33,7 @@ func rest_getAirports(ctx *gin.Context) {
 }
 
 func rest_subscribeTravelPreference(context *gin.Context) {
-	var newSubRequest entities.CustomerFlightSubscription
+	var newSubRequest entities.CustomerFlightSubscriptionRequest
 
 	if err := context.BindJSON(&newSubRequest); err != nil {
 		context.Status(http.StatusBadRequest)
@@ -63,7 +63,7 @@ func rest_subscribeTravelPreference(context *gin.Context) {
 	chanBPRepo.UnsetContext(bpk_uuid.String())
 }
 
-func bpmn_NotifyReceivedTravelPreference(zBClient zbc.Client, bpk string, newSubRequest entities.CustomerFlightSubscription) (*pb.PublishMessageResponse, error) {
+func bpmn_NotifyReceivedTravelPreference(zBClient zbc.Client, bpk string, newSubRequest entities.CustomerFlightSubscriptionRequest) (*pb.PublishMessageResponse, error) {
 
 	vars := newSubRequest.ToMap()
 	vars["bpk"] = bpk
