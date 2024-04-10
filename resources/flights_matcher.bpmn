@@ -81,7 +81,7 @@
         <bpmn:incoming>Flow_1skmqk5</bpmn:incoming>
         <bpmn:multiInstanceLoopCharacteristics>
           <bpmn:extensionElements>
-            <zeebe:loopCharacteristics inputCollection="=offers" inputElement="offer" />
+            <zeebe:loopCharacteristics inputCollection="=offers" inputElement="offerData" />
           </bpmn:extensionElements>
         </bpmn:multiInstanceLoopCharacteristics>
         <bpmn:startEvent id="Event_053ufsw">

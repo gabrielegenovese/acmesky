@@ -6,6 +6,7 @@ import (
 
 	"acmesky/gateways/flight_subscription"
 	dbClient "acmesky/repository/db"
+	"acmesky/services/notification/prontogram"
 	zbSingleton "acmesky/workers"
 	flightMatcher "acmesky/workers/flight_matcher"
 	travelPrefWorker "acmesky/workers/travel_preference"
@@ -18,6 +19,8 @@ func main() {
 	workers := travelPrefWorker.RegisterWorkers()
 	workers = append(workers, flightMatcher.RegisterWorkers()...)
 	defer zbSingleton.UnregisterWorkers(workers)
+
+	prontogram.Init()
 
 	router := gin.Default()
 	flight_subscription.Listen(router)

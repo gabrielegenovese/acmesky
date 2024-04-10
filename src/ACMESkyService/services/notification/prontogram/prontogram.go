@@ -44,17 +44,17 @@ func Init() error {
 	credentials := getACMESkyCredentials()
 	errSignUp := SignUpAs(credentials)
 
-	if errSignUp == nil {
-		fmt.Printf("[Prontogram] ACMESky Signed up")
+	if errSignUp != nil {
+		fmt.Printf("[Prontogram] ACMESky can't sign up %s\n", errSignUp)
 	} else {
-		fmt.Printf("[Prontogram] ACMESky can't sign up")
+		fmt.Println("[Prontogram] ACMESky Signed up")
 	}
 	_, errSignIn := SignInAs(credentials)
 
-	if errSignUp == nil {
-		fmt.Printf("[Prontogram] ACMESky Signed in")
+	if errSignIn != nil {
+		fmt.Printf("[Prontogram] ACMESky can't sign in %s\n", errSignIn)
 	} else {
-		fmt.Printf("[Prontogram] ACMESky can't sign in")
+		fmt.Println("[Prontogram] ACMESky Signed in")
 	}
 
 	return errSignIn

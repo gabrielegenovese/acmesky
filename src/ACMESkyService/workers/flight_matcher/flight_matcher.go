@@ -436,13 +436,16 @@ func HandlePrepareOfferForCustomer(client worker.JobClient, job zeebeEntities.Jo
 		flights[1].FlightCompanyID, flights[1].FlightID, flights[1].AirportOriginID, flights[1].AirportDestinationID,
 	)
 
+	output := offerData{
+		Offer:         offer,
+		Solution:      prepareOffersParams.Solution,
+		DepartAirport: airports[0],
+		ReturnAirport: airports[1],
+	}
 	command, err := client.NewCompleteJobCommand().
 		JobKey(job.Key).
 		VariablesFromMap(map[string]interface{}{
-			"offer":               offer,
-			"solution":            prepareOffersParams.Solution,
-			"departOriginAirport": airports[0],
-			"returnOriginAirport": airports[1],
+			"offerData": output,
 		})
 
 	if err != nil {
@@ -456,20 +459,23 @@ func HandlePrepareOfferForCustomer(client worker.JobClient, job zeebeEntities.Jo
 	}
 }
 
+type offerData struct {
+	Offer         entities.ReservedOffer `json:"offer,omitempty"`
+	Solution      entities.Solution      `json:"solution,omitempty"`
+	DepartAirport entities.Airport       `json:"departOriginAirport,omitempty"`
+	ReturnAirport entities.Airport       `json:"returnOriginAirport,omitempty"`
+}
+
 type notifyOfferParameters struct {
-	Pref          entities.CustomerFlightSubscription `json:"pref,omitempty"`
-	Offer         entities.ReservedOffer              `json:"offer,omitempty"`
-	Solution      entities.Solution                   `json:"solution,omitempty"`
-	DepartAirport entities.Airport                    `json:"departOriginAirport,omitempty"`
-	ReturnAirport entities.Airport                    `json:"returnOriginAirport,omitempty"`
+	OfferData offerData                           `json:"offerData,omitempty"`
+	Pref      entities.CustomerFlightSubscription `json:"pref,omitempty"`
 }
 
 func HandleNotifyReservedOffer(client worker.JobClient, job zeebeEntities.Job) {
-	var offer entities.ReservedOffer
-	var notifyParams notifyOfferParameters
+	var input notifyOfferParameters
 	fmt.Printf("HandleNotifyReservedOffer\n")
 
-	err := job.GetVariablesAs(&notifyParams)
+	err := job.GetVariablesAs(&input)
 
 	if err != nil {
 		ctx, cancelFn := context.WithTimeout(context.Background(), 5*time.Second)
@@ -478,34 +484,37 @@ func HandleNotifyReservedOffer(client worker.JobClient, job zeebeEntities.Job) {
 		return
 	}
 
-	departAirport := notifyParams.DepartAirport
-	returnAirport := notifyParams.ReturnAirport
-	departFlight := notifyParams.Solution.DepartFlight
-	returnFlight := notifyParams.Solution.ReturnFlight
-	offerEndDatetime, _ := time.Parse(time.DateTime, offer.EndReservationDatetime)
+	departAirport := input.OfferData.DepartAirport
+	returnAirport := input.OfferData.ReturnAirport
+	departFlight := input.OfferData.Solution.DepartFlight
+	returnFlight := input.OfferData.Solution.ReturnFlight
+	offerEndDatetime, _ := time.Parse(time.DateTime, input.OfferData.Offer.EndReservationDatetime)
 
 	title := fmt.Sprintf("New ACMESKY travel offer from %s to %s until %s",
-		departAirport.City, returnAirport.City, offer.EndReservationDatetime,
+		departAirport.City, returnAirport.City, input.OfferData.Offer.EndReservationDatetime,
 	)
-	body := fmt.Sprintf("ACMESKY found a flight travel offer with return flight for you (%v seats) from %v to %v between %s and %s within your budget of %v\n"+
+	body := fmt.Sprintf("ACMESKY found a flight travel offer with return flight for you (%v seats) from %v to %v between %s and %s within your budget of %v %v\n"+
 		"We offer the following flights at the price of %v %v :\n"+
 		"- Depart from %v at %v will arrive at %v;\n"+
 		"- Return from %v at %v will return at %v.\n"+
 		"Use the code %v until %v on %v to purchase this offer on our portal at this reserved price !",
-		notifyParams.Pref.SeatsCount, departAirport.City, returnAirport.City, notifyParams.Pref.DateStartISO8601, notifyParams.Pref.DateEndISO8601, notifyParams.Pref.Budget,
-		notifyParams.Offer.TotalPrice, '€',
+		input.Pref.SeatsCount, departAirport.City, returnAirport.City, input.Pref.DateStartISO8601, input.Pref.DateEndISO8601, input.Pref.Budget, "€",
+		input.OfferData.Offer.TotalPrice, "€",
 		departAirport.Name, departFlight.DepartDatetime, departFlight.ArrivalDatetime,
 		returnAirport.Name, returnFlight.DepartDatetime, returnFlight.ArrivalDatetime,
-		offer.OfferCode, offerEndDatetime.Format(time.TimeOnly), offerEndDatetime.Format(time.DateOnly),
+		input.OfferData.Offer.OfferCode, offerEndDatetime.Format(time.TimeOnly), offerEndDatetime.Format(time.DateOnly),
 	)
 
-	messageRes, errSends := NotifyCustomer(notifyParams.Pref.CustomerFlightSubscriptionRequest, Notification{
+	messageRes, errSends := NotifyCustomer(input.Pref.CustomerFlightSubscriptionRequest, Notification{
 		subject: title,
 		content: body,
 	})
-
-	message := messageRes[0]
-	errSend := errSends[0]
+	var errSend error
+	if len(messageRes) < 1 {
+		errSend = fmt.Errorf("[NotifyCustomer] no notification sent: %v", errSends)
+	} else if len(errSends) > 0 {
+		errSend = errSends[0]
+	}
 
 	if zeebeUtils.Handle_BP_fail_allow_retry(client, job, errSend, 5*time.Second) {
 		return
@@ -528,6 +537,7 @@ func HandleNotifyReservedOffer(client worker.JobClient, job zeebeEntities.Job) {
 		}
 		return
 	}
+	message := messageRes[0]
 	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancelFn()
 
