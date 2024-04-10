@@ -498,7 +498,52 @@ func HandleNotifyReservedOffer(client worker.JobClient, job zeebeEntities.Job) {
 		returnAirport.Name, returnFlight.DepartDatetime, returnFlight.ArrivalDatetime,
 		offer.OfferCode, offerEndDatetime.Format(time.TimeOnly), offerEndDatetime.Format(time.DateOnly),
 	)
-	messageContent := title + "\n" + body + "\n"
 
-	fmt.Printf("Notify Prontogram customer (%s) with message:\n%s", notifyParams.Pref.ProntogramID, messageContent)
+	messageRes, errSends := NotifyCustomer(notifyParams.Pref.CustomerFlightSubscriptionRequest, Notification{
+		subject: title,
+		content: body,
+	})
+
+	message := messageRes[0]
+	errSend := errSends[0]
+
+	if zeebeUtils.Handle_BP_fail_allow_retry(client, job, errSend, 5*time.Second) {
+		return
+	} else if errSend != nil {
+		ctx, cancelFn := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancelFn()
+
+		_, err := client.
+			NewFailJobCommand().
+			JobKey(job.Key).
+			Retries(0).
+			RetryBackoff(5 * time.Second).
+			ErrorMessage(errSend.Error()).
+			Send(ctx)
+
+		if err != nil {
+			log.Println(fmt.Errorf("[BPMNERROR] error on failing job with key [%d]: [%s]", job.Key, err))
+		} else {
+			log.Println(errSend)
+		}
+		return
+	}
+	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancelFn()
+
+	command, err := client.NewCompleteJobCommand().
+		JobKey(job.Key).
+		VariablesFromMap(map[string]interface{}{
+			"notification_id": message.Id,
+		})
+
+	if err != nil {
+		log.Println(fmt.Errorf("[BPMNERROR] error on creating complete job with key [%d]: [%s]", job.Key, err))
+		return
+	}
+	_, err = command.Send(ctx)
+
+	if err != nil {
+		log.Println(fmt.Errorf("[BPMNERROR] error on complete job with key [%d]: [%s]", job.Key, err))
+	}
 }

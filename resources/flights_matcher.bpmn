@@ -7,8 +7,6 @@
     <bpmn:messageFlow id="Flow_0xn49uj" sourceRef="Activity_1cubro8" targetRef="Participant_FlightCompany" />
     <bpmn:messageFlow id="Flow_0wl3d2j" sourceRef="Participant_FlightCompany" targetRef="Activity_1cubro8" />
     <bpmn:messageFlow id="Flow_0jwxedb" sourceRef="Participant_FlightCompany" targetRef="Event_0i53swo" />
-    <bpmn:messageFlow id="Flow_1ngt5zn" sourceRef="Activity_0caqzgp" targetRef="Participant_Prontogram" />
-    <bpmn:messageFlow id="Flow_062y3hu" sourceRef="Participant_Prontogram" targetRef="Activity_0caqzgp" />
     <bpmn:messageFlow id="Flow_124lfq2" sourceRef="Activity_0wdy0pi" targetRef="Participant_Prontogram" />
   </bpmn:collaboration>
   <bpmn:process id="Process_Flightsmatcher" isExecutable="true">
@@ -87,23 +85,15 @@
           </bpmn:extensionElements>
         </bpmn:multiInstanceLoopCharacteristics>
         <bpmn:startEvent id="Event_053ufsw">
-          <bpmn:outgoing>Flow_1lbyfka</bpmn:outgoing>
+          <bpmn:outgoing>Flow_143mv5m</bpmn:outgoing>
         </bpmn:startEvent>
-        <bpmn:serviceTask id="Activity_0caqzgp" name="Auth Login as company account">
-          <bpmn:extensionElements>
-            <zeebe:taskDefinition type="authCompanyToProntogramService" />
-          </bpmn:extensionElements>
-          <bpmn:incoming>Flow_1lbyfka</bpmn:incoming>
-          <bpmn:outgoing>Flow_0eyijg6</bpmn:outgoing>
-        </bpmn:serviceTask>
-        <bpmn:sequenceFlow id="Flow_0eyijg6" sourceRef="Activity_0caqzgp" targetRef="Activity_0wdy0pi" />
         <bpmn:serviceTask id="Activity_0wdy0pi" name="Send offer as message to customer">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="sendOffersToProntogramCustomers" />
+            <zeebe:taskDefinition type="notifyReservedOffer" />
           </bpmn:extensionElements>
-          <bpmn:incoming>Flow_0eyijg6</bpmn:incoming>
+          <bpmn:incoming>Flow_143mv5m</bpmn:incoming>
         </bpmn:serviceTask>
-        <bpmn:sequenceFlow id="Flow_1lbyfka" sourceRef="Event_053ufsw" targetRef="Activity_0caqzgp" />
+        <bpmn:sequenceFlow id="Flow_143mv5m" sourceRef="Event_053ufsw" targetRef="Activity_0wdy0pi" />
       </bpmn:subProcess>
       <bpmn:serviceTask id="Activity_1sss7gp" name="Prepare Offer bundle for each solution">
         <bpmn:extensionElements>
@@ -113,7 +103,7 @@
         <bpmn:outgoing>Flow_1skmqk5</bpmn:outgoing>
         <bpmn:multiInstanceLoopCharacteristics>
           <bpmn:extensionElements>
-            <zeebe:loopCharacteristics inputCollection="=solutions" inputElement="solution" outputCollection="offers" outputElement="=offer" />
+            <zeebe:loopCharacteristics inputCollection="=solutions" inputElement="solution" outputCollection="offers" outputElement="=offerData" />
           </bpmn:extensionElements>
         </bpmn:multiInstanceLoopCharacteristics>
       </bpmn:serviceTask>
@@ -159,28 +149,20 @@
           <dc:Bounds x="193" y="324.5" width="74" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0ieanqr_di" bpmnElement="Gateway_0ieanqr" isMarkerVisible="true">
-        <dc:Bounds x="675" y="435" width="50" height="50" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1qripbb_di" bpmnElement="Activity_10rcwq0">
         <dc:Bounds x="560" y="340" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1rrpjan_di" bpmnElement="Event_1rrpjan">
         <dc:Bounds x="272" y="472" width="36" height="36" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0ieanqr_di" bpmnElement="Gateway_0ieanqr" isMarkerVisible="true">
+        <dc:Bounds x="675" y="435" width="50" height="50" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_13g7ric_di" bpmnElement="Event_13g7ric">
         <dc:Bounds x="1952" y="452" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1x6y59o_di" bpmnElement="Activity_1yirtgm" isExpanded="true">
         <dc:Bounds x="770" y="325" width="1130" height="270" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_142jg7c_di" bpmnElement="Activity_1sss7gp">
-        <dc:Bounds x="1120" y="415" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0jbp2n8_di" bpmnElement="Activity_18vonxe">
-        <dc:Bounds x="900" y="415" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1loiaeh_di" bpmnElement="Event_1loiaeh">
@@ -193,32 +175,32 @@
       <bpmndi:BPMNShape id="Event_053ufsw_di" bpmnElement="Event_053ufsw">
         <dc:Bounds x="1430" y="437" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1fqjai9_di" bpmnElement="Activity_0caqzgp">
-        <dc:Bounds x="1520" y="415" width="100" height="80" />
+      <bpmndi:BPMNShape id="Activity_1d12neq_di" bpmnElement="Activity_0wdy0pi">
+        <dc:Bounds x="1570" y="415" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_143mv5m_di" bpmnElement="Flow_143mv5m">
+        <di:waypoint x="1466" y="455" />
+        <di:waypoint x="1570" y="455" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_142jg7c_di" bpmnElement="Activity_1sss7gp">
+        <dc:Bounds x="1120" y="415" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1d12neq_di" bpmnElement="Activity_0wdy0pi">
-        <dc:Bounds x="1680" y="415" width="100" height="80" />
+      <bpmndi:BPMNShape id="Activity_0jbp2n8_di" bpmnElement="Activity_18vonxe">
+        <dc:Bounds x="900" y="415" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_1lbyfka_di" bpmnElement="Flow_1lbyfka">
-        <di:waypoint x="1466" y="455" />
-        <di:waypoint x="1520" y="455" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0eyijg6_di" bpmnElement="Flow_0eyijg6">
-        <di:waypoint x="1620" y="455" />
-        <di:waypoint x="1680" y="455" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0unmmao_di" bpmnElement="Flow_0unmmao">
         <di:waypoint x="1000" y="455" />
         <di:waypoint x="1120" y="455" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1skmqk5_di" bpmnElement="Flow_1skmqk5">
-        <di:waypoint x="1220" y="455" />
-        <di:waypoint x="1410" y="455" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_11r3hbb_di" bpmnElement="Flow_11r3hbb">
         <di:waypoint x="838" y="455" />
         <di:waypoint x="900" y="455" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1skmqk5_di" bpmnElement="Flow_1skmqk5">
+        <di:waypoint x="1220" y="455" />
+        <di:waypoint x="1410" y="455" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0s4ym7k_di" bpmnElement="Flow_0s4ym7k">
         <di:waypoint x="308" y="550" />
@@ -254,12 +236,12 @@
         <di:waypoint x="725" y="460" />
         <di:waypoint x="770" y="460" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Participant_1mr4u3y_di" bpmnElement="Participant_Prontogram" isHorizontal="true">
-        <dc:Bounds x="160" y="80" width="1850" height="60" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_1ufjqqo_di" bpmnElement="Participant_FlightCompany" isHorizontal="true">
         <dc:Bounds x="150" y="850" width="1250" height="60" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_1mr4u3y_di" bpmnElement="Participant_Prontogram" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1850" height="60" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0xn49uj_di" bpmnElement="Flow_0xn49uj">
@@ -274,17 +256,9 @@
         <di:waypoint x="230" y="850" />
         <di:waypoint x="230" y="398" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1ngt5zn_di" bpmnElement="Flow_1ngt5zn">
-        <di:waypoint x="1540" y="415" />
-        <di:waypoint x="1540" y="140" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_062y3hu_di" bpmnElement="Flow_062y3hu">
-        <di:waypoint x="1580" y="140" />
-        <di:waypoint x="1580" y="415" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_124lfq2_di" bpmnElement="Flow_124lfq2">
-        <di:waypoint x="1730" y="415" />
-        <di:waypoint x="1730" y="140" />
+        <di:waypoint x="1620" y="415" />
+        <di:waypoint x="1620" y="140" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
