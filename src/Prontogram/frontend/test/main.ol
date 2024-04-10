@@ -12,7 +12,7 @@ outputPort ProntogramService
         osc << {
             auth_signup << {
                 template = "/api/auth/signup"
-                method = "put"
+                method = "post"
                 statusCodes.UserAlreadyExists = 403
             }
             auth_login << {
@@ -35,7 +35,7 @@ outputPort ProntogramService
             }
             sendMessage << {
                 template = "/api/messages"
-                method = "put"
+                method = "post"
                 statusCodes.UserNotAuthorized = 401
                 statusCodes.UserNotFound = 404
             }
