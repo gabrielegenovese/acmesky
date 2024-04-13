@@ -18,7 +18,16 @@ import (
 	"github.com/google/uuid"
 )
 
-// getAlbums responds with the list of all albums as JSON.
+// Get a list of all available airports
+// @Summary      Get all airports
+// @Description  Get a list of all available airports
+// @Tags         airport
+// @Accept       json
+// @Produce      json
+// @Param        query  query     string     false  "Search query"
+// @Success      200  {array}  []entitties.Airports
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /airports [get]
 func rest_getAirports(ctx *gin.Context) {
 
 	searchQuery := ctx.Query("query")
@@ -32,6 +41,23 @@ func rest_getAirports(ctx *gin.Context) {
 
 }
 
+// Create a Travel Preference and subscribe to notification service (a sort of Newsletter like servive)
+// @Summary      Add a Travel preference
+// @Description  Add a Travel preference and subscribe to notification service
+// @Tags         travel_preference
+// @Accept       json
+// @Param        query  query     string     false  "Search query"
+// @Param customer_prontogram_id body string true "Your prontogram username" SchemaExample(testUser)
+// @Param airport_id_origin body string true "Airport origin ID for depart"
+// @Param airport_id_destination body string true "Airport origin ID for return"
+// @Param travel_date_start body string true "Depart date in YYYY-MM-DD hh:mm:ss format" SchemaExample(2024-12-30 14:30:00)
+// @Param travel_date_end body string true "Return date in YYYY-MM-DD hh:mm:ss format" SchemaExample(2024-12-30 14:30:00)
+// @Param travel_seats_count body int true "Count of passengers seats customer want reserve"
+// @Param travel_max_price body float32 true "Max customer total budget for depart and return offer where (depart flight price) * (travel_seats_count) + (return flight price) * (travel_seats_count) <= travel_max_price"
+// @Success      200  {object}  string
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /subscribe [post]
 func rest_subscribeTravelPreference(context *gin.Context) {
 	var newSubRequest entities.CustomerFlightSubscriptionRequest
 
@@ -92,7 +118,7 @@ func bpmn_NotifyReceivedTravelPreference(zBClient zbc.Client, bpk string, newSub
 	return result, err
 }
 
-func Listen(router *gin.Engine) {
+func Listen(router *gin.RouterGroup) {
 
 	router.GET("/airports", rest_getAirports)
 	router.PUT("/subscribe", rest_subscribeTravelPreference)
