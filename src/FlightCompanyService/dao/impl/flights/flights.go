@@ -1,9 +1,9 @@
-package flightsRepo
+package flightsDAO
 
 import (
 	"database/sql"
-	"flightcompany/entities"
-	dbClient "flightcompany/repository/db"
+	dbClient "flightcompany/dao/db"
+	"flightcompany/dao/entities"
 	"fmt"
 	"time"
 )

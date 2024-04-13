@@ -1,7 +1,7 @@
 package flight_subscription
 
 import (
-	airportsRepo "flightcompany/repository/airports"
+	airportsDAO "flightcompany/dao/impl/airports"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -16,7 +16,7 @@ import (
 func rest_getAirports(ctx *gin.Context) {
 
 	searchQuery := ctx.Query("query")
-	airports, err := airportsRepo.GetAirports(searchQuery)
+	airports, err := airportsDAO.GetAirports(searchQuery)
 
 	if err != nil {
 		ctx.IndentedJSON(http.StatusInternalServerError, airports)
