@@ -1,8 +1,8 @@
 package travelPrefWorker
 
 import (
-	acmeskyEntities "acmesky/entities"
-	travelPreferenceRepo "acmesky/repository/travel_preference"
+	acmeskyEntities "acmesky/dao/entities"
+	travelPreferenceDAO "acmesky/dao/impl/travel_preference"
 	zbSingleton "acmesky/workers"
 	chanBPRepo "acmesky/workers/utils/channel_bp_repository"
 	zeebeUtils "acmesky/workers/utils/zeebe_utils"
@@ -40,7 +40,7 @@ func HandleSaveTravelPreference(client worker.JobClient, job entities.Job) {
 	}
 
 	flight_subscription := acmeskyEntities.CustomerFlightSubscriptionRequestFromMap(vars)
-	newPrefID, insertErr := travelPreferenceRepo.AddCustomerSubscribtionPreference(flight_subscription)
+	newPrefID, insertErr := travelPreferenceDAO.AddCustomerSubscribtionPreference(flight_subscription)
 
 	if zeebeUtils.Handle_BP_fail_allow_retry(client, job, insertErr, 5*time.Second) {
 		return

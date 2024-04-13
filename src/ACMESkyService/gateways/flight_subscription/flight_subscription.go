@@ -1,8 +1,8 @@
 package flight_subscription
 
 import (
-	"acmesky/entities"
-	airportsRepo "acmesky/repository/airports"
+	"acmesky/dao/entities"
+	airportsDAO "acmesky/dao/impl/airports"
 	zbSingleton "acmesky/workers"
 	chanBPRepo "acmesky/workers/utils/channel_bp_repository"
 
@@ -22,7 +22,7 @@ import (
 func rest_getAirports(ctx *gin.Context) {
 
 	searchQuery := ctx.Query("query")
-	airports, err := airportsRepo.GetAirports(searchQuery)
+	airports, err := airportsDAO.GetAirports(searchQuery)
 
 	if err != nil {
 		ctx.IndentedJSON(http.StatusInternalServerError, airports)

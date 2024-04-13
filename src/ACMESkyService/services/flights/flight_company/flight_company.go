@@ -1,7 +1,7 @@
-package flightMatcher
+package flights_company
 
 import (
-	"acmesky/entities"
+	"acmesky/dao/entities"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -11,24 +11,7 @@ import (
 	"time"
 )
 
-func FetchFlightsByCompanyID(pref entities.CustomerFlightSubscriptionRequest, flightCompanyID int64) ([]entities.Flight, error) {
-	switch flightCompanyID {
-	case 1:
-		{
-			return strategyFetchFlightFrom_FlightCompany(pref)
-		}
-	// case x:
-	//	{
-	//		return strategyFetchFlightFrom_X(pref)
-	//	}
-	default:
-		{
-			return strategyFetchFlightFrom_FlightCompany(pref)
-		}
-	}
-}
-
-func strategyFetchFlightFrom_FlightCompany(pref entities.CustomerFlightSubscriptionRequest) ([]entities.Flight, error) {
+func FetchFlights(pref entities.CustomerFlightSubscriptionRequest) ([]entities.Flight, error) {
 	var FLIGHT_COMPANY_ADDRESS string = os.Getenv("FLIGHT_COMPANY_ADDRESS")
 	var FlightCompanyID int64 = 1
 	var flights []entities.Flight = []entities.Flight{}

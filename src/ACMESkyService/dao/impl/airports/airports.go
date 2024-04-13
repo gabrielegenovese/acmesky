@@ -1,8 +1,8 @@
-package airportsRepo
+package airportsDAO
 
 import (
-	"acmesky/entities"
-	dbClient "acmesky/repository/db"
+	dbClient "acmesky/dao/db"
+	"acmesky/dao/entities"
 	"database/sql"
 	"fmt"
 )

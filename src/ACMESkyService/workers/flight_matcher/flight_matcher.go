@@ -1,10 +1,11 @@
 package flightMatcher
 
 import (
-	entities "acmesky/entities"
-	airportsRepo "acmesky/repository/airports"
-	flightsRepo "acmesky/repository/flights"
-	travelPreferenceRepo "acmesky/repository/travel_preference"
+	entities "acmesky/dao/entities"
+	airportsDAO "acmesky/dao/impl/airports"
+	flightsDAO "acmesky/dao/impl/flights"
+	travelPreferenceDAO "acmesky/dao/impl/travel_preference"
+	"acmesky/services/flights"
 	zbSingleton "acmesky/workers"
 	zeebeUtils "acmesky/workers/utils/zeebe_utils"
 	"context"
@@ -57,7 +58,7 @@ func RegisterWorkers() []worker.JobWorker {
 func HandleLoadTravelPreferences(client worker.JobClient, job zeebeEntities.Job) {
 
 	fmt.Println("Getting customers' Travel Preferences without offers")
-	prefs, err := travelPreferenceRepo.GetAllCustomerFlightPreferencesNotOutdated()
+	prefs, err := travelPreferenceDAO.GetAllCustomerFlightPreferencesNotOutdated()
 
 	ctx, cancelFn := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancelFn()
@@ -124,12 +125,12 @@ func HandleFetchFlightsByTravelPreference(client worker.JobClient, job zeebeEnti
 	}
 
 	fmt.Printf("Fething preference using flight company ID %d\n", fetchParams.CompanyID)
-	flights, fetchErr := FetchFlightsByCompanyID(fetchParams.Pref.CustomerFlightSubscriptionRequest, fetchParams.CompanyID)
+	flights, fetchErr := flights.FetchFlightsByCompanyID(fetchParams.Pref.CustomerFlightSubscriptionRequest, fetchParams.CompanyID)
 
 	if fetchErr == nil {
 		fmt.Printf("Storing %d fetched flights\n", len(flights))
 		if len(flights) > 0 {
-			dbErr = flightsRepo.AddFlights(flights)
+			dbErr = flightsDAO.AddFlights(flights)
 		}
 	}
 
@@ -226,7 +227,7 @@ func HandleStoreFlights(client worker.JobClient, job zeebeEntities.Job) {
 	}
 
 	if len(storeParams.Flights) > 0 {
-		dbErr = flightsRepo.AddFlights(storeParams.Flights)
+		dbErr = flightsDAO.AddFlights(storeParams.Flights)
 	}
 
 	if zeebeUtils.Handle_BP_fail_allow_retry(client, job, dbErr, 5*time.Second) {
@@ -289,7 +290,7 @@ func HandleFindSolutionsByTravelPreference(client worker.JobClient, job zeebeEnt
 	var solutions []entities.Solution
 
 	fmt.Printf("Searching solutions for preference %v\n", findParams.Pref.TravelPreferenceID)
-	solutions, dbErr = flightsRepo.GetSolutionsFromPreference(findParams.Pref.CustomerFlightSubscriptionRequest)
+	solutions, dbErr = flightsDAO.GetSolutionsFromPreference(findParams.Pref.CustomerFlightSubscriptionRequest)
 	fmt.Printf("Found %d solutions for preference %v\n", len(solutions), findParams.Pref.TravelPreferenceID)
 
 	if zeebeUtils.Handle_BP_fail_allow_retry(client, job, dbErr, 5*time.Second) {
@@ -366,7 +367,7 @@ func HandlePrepareOfferForCustomer(client worker.JobClient, job zeebeEntities.Jo
 	}
 
 	fmt.Printf("Preparing offer for TravelPreference %d\n", prepareOffersParams.Pref.TravelPreferenceID)
-	flights, dbErr := flightsRepo.GetFlight(
+	flights, dbErr := flightsDAO.GetFlight(
 		[]string{
 			prepareOffersParams.Solution.DepartFlight.FlightID,
 			prepareOffersParams.Solution.ReturnFlight.FlightID,
@@ -380,7 +381,7 @@ func HandlePrepareOfferForCustomer(client worker.JobClient, job zeebeEntities.Jo
 	prepareOffersParams.Solution.ReturnFlight = flights[1]
 
 	if dbErr == nil {
-		airports, dbErr = airportsRepo.GetAirportsById([]string{
+		airports, dbErr = airportsDAO.GetAirportsById([]string{
 			flights[0].AirportOriginID,
 			flights[1].AirportOriginID,
 		})
@@ -395,9 +396,9 @@ func HandlePrepareOfferForCustomer(client worker.JobClient, job zeebeEntities.Jo
 		for _, f := range flights {
 			totalPrice += float32(f.FlightPrice) * float32(prepareOffersParams.Pref.SeatsCount)
 		}
-		offerCode, dbErr = travelPreferenceRepo.AddReservedOffer(prepareOffersParams.Pref.TravelPreferenceID, totalPrice, flights)
+		offerCode, dbErr = travelPreferenceDAO.AddReservedOffer(prepareOffersParams.Pref.TravelPreferenceID, totalPrice, flights)
 		if dbErr == nil {
-			offer, dbErr = travelPreferenceRepo.GetReservedOffer(offerCode)
+			offer, dbErr = travelPreferenceDAO.GetReservedOffer(offerCode)
 		}
 	}
 
