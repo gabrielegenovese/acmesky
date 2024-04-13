@@ -6,6 +6,7 @@ import (
 	flightsDAO "acmesky/dao/impl/flights"
 	travelPreferenceDAO "acmesky/dao/impl/travel_preference"
 	"acmesky/services/flights"
+	"acmesky/services/notification"
 	zbSingleton "acmesky/workers"
 	zeebeUtils "acmesky/workers/utils/zeebe_utils"
 	"context"
@@ -506,9 +507,9 @@ func HandleNotifyReservedOffer(client worker.JobClient, job zeebeEntities.Job) {
 		input.OfferData.Offer.OfferCode, offerEndDatetime.Format(time.TimeOnly), offerEndDatetime.Format(time.DateOnly),
 	)
 
-	messageRes, errSends := NotifyCustomer(input.Pref.CustomerFlightSubscriptionRequest, Notification{
-		subject: title,
-		content: body,
+	messageRes, errSends := notification.NotifyCustomer(input.Pref.CustomerFlightSubscriptionRequest, notification.Notification{
+		Subject: title,
+		Content: body,
 	})
 	var errSend error
 	if len(messageRes) < 1 {
