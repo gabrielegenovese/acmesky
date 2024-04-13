@@ -1,8 +1,8 @@
-package flightsRepo
+package flightsDAO
 
 import (
-	"acmesky/entities"
-	dbClient "acmesky/repository/db"
+	dbClient "acmesky/dao/db"
+	"acmesky/dao/entities"
 	"database/sql"
 	"fmt"
 	"strconv"

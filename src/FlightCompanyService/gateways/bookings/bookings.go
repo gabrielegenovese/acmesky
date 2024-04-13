@@ -1,8 +1,8 @@
 package bookings
 
 import (
-	"flightcompany/entities"
-	flightsRepo "flightcompany/repository/flights"
+	"flightcompany/dao/entities"
+	flightsDAO "flightcompany/dao/impl/flights"
 	"net/http"
 	"strconv"
 	"strings"
@@ -31,7 +31,7 @@ func rest_bookFlights(ctx *gin.Context) {
 		return
 	}
 
-	bookingRespose.BookingID, err = flightsRepo.ReserveFlightBooking(bookingRequest)
+	bookingRespose.BookingID, err = flightsDAO.ReserveFlightBooking(bookingRequest)
 
 	if err != nil {
 		ctx.Status(http.StatusInternalServerError)
@@ -64,7 +64,7 @@ func rest_unbookFlight(ctx *gin.Context) {
 		return
 	}
 
-	err = flightsRepo.RemoveFlightBooking(bookingID)
+	err = flightsDAO.RemoveFlightBooking(bookingID)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "NOT FOUND") {
@@ -101,7 +101,7 @@ func rest_confirmBooking(ctx *gin.Context) {
 		return
 	}
 
-	err = flightsRepo.ConfirmFlightBooking(bookingID)
+	err = flightsDAO.ConfirmFlightBooking(bookingID)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "NOT FOUND") {

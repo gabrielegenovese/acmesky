@@ -1,7 +1,7 @@
 package flightMatcher
 
 import (
-	"acmesky/entities"
+	"acmesky/dao/entities"
 	"acmesky/services/notification/prontogram"
 	"fmt"
 )

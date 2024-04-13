@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 
+	dbClient "acmesky/dao/db"
 	"acmesky/gateways/flight_subscription"
-	dbClient "acmesky/repository/db"
 	"acmesky/services/notification/prontogram"
 	zbSingleton "acmesky/workers"
 	flightMatcher "acmesky/workers/flight_matcher"

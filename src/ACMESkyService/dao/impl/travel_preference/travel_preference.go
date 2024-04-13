@@ -1,8 +1,8 @@
-package travelPreferenceRepo
+package travelPreferenceDAO
 
 import (
-	"acmesky/entities"
-	dbClient "acmesky/repository/db"
+	dbClient "acmesky/dao/db"
+	"acmesky/dao/entities"
 	"database/sql"
 	"fmt"
 )

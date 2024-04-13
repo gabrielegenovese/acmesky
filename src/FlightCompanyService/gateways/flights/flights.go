@@ -1,7 +1,7 @@
 package flights
 
 import (
-	flightsRepo "flightcompany/repository/flights"
+	flightsDAO "flightcompany/dao/impl/flights"
 	"net/http"
 	"strconv"
 	"time"
@@ -34,7 +34,7 @@ func rest_getFlights(ctx *gin.Context) {
 
 	passengersCount = max(1, passengersCount)
 
-	flights, err := flightsRepo.GetFlights(
+	flights, err := flightsDAO.GetFlights(
 		originAirportID,
 		destinationAirportID,
 		startRangeDatetime,
