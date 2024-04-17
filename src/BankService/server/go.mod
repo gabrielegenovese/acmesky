@@ -1,10 +1,9 @@
 module bank
 
-go 1.22.1
+go 1.21.8
 
 require (
 	github.com/BurntSushi/toml v1.3.2
-	github.com/gin-contrib/cors v1.7.1
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.6.0
 	gorm.io/driver/postgres v1.5.7
