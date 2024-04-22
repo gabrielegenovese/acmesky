@@ -41,6 +41,10 @@ type ResBody struct {
 	Status   string `json:"status"`
 }
 
+type SimpleRes struct {
+	Res string `json:"res"`
+}
+
 func sendError(w http.ResponseWriter) {
 	elemBody := ResBody{
 		Distance: "",
@@ -50,7 +54,7 @@ func sendError(w http.ResponseWriter) {
 	writeRes(w, elemBody)
 }
 
-func writeRes(w http.ResponseWriter, el ResBody) {
+func writeRes(w http.ResponseWriter, el any) {
 	w.Header().Set("Content-Type", "application/json")
 	bodybyte, err := json.MarshalIndent(el, "", "")
 	if err != nil {
@@ -114,12 +118,17 @@ func calcDistance(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+func test(w http.ResponseWriter, _req *http.Request) {
+	writeRes(w, &SimpleRes{Res: "hello world!"})
+}
+
 func main() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal(err)
 	}
 	http.HandleFunc("/distance", calcDistance)
+	http.HandleFunc("/test", test)
 	log.Println("Listing for requests at http://localhost:8000/distance")
 	log.Fatal(http.ListenAndServe(":8000", nil))
 }
