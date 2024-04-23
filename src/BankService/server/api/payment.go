@@ -15,7 +15,7 @@ import (
 //	@Produce		json
 //	@Success		200	{object}	Payment
 //	@Failure		400	{object}	Res
-//	@Router			/payment/new [post]
+//	@Router			/payment/new [put]
 func NewPayment(c *gin.Context) {
 	db := util.GetDb()
 

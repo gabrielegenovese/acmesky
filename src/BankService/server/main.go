@@ -19,22 +19,19 @@ type Config struct {
 var (
 	// Default config values
 	config = Config{
-		Listen:  "0.0.0.0:3000",
-		BaseURL: "http://localhost:3000",
+		Listen:  "0.0.0.0:8000",
+		BaseURL: "http://localhost:8000",
 	}
 )
 
 //	@title			Bank Service API
 //	@version		1.0
 //	@description	This is a minimal microservice to act as a bank.
-
 //	@contact.name	Gabriele Genovese
 //	@contact.email	gabriele.genovese2@studio.unibo.it
-
 //	@license.name	GPLv2
 //	@license.url	https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-
-//	@BasePath	/
+//	@BasePath		/
 func main() {
 	router := gin.Default()
 
@@ -57,7 +54,7 @@ func main() {
 
 	router.Use(CORSMiddleware())
 
-	router.POST("/payment/new", api.NewPayment)
+	router.PUT("/payment/new", api.NewPayment)
 	router.POST("/payment/pay/:id", api.PayPaymentById)
 	router.GET("/payment/:id", api.GetPaymentById)
 	router.DELETE("/payment/:id", api.DelPaymentById)

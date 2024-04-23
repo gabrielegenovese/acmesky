@@ -23,7 +23,7 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/payment/new": {
-            "post": {
+            "put": {
                 "description": "Create a new unpaid payment",
                 "consumes": [
                     "application/json"

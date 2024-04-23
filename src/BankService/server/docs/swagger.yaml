@@ -93,7 +93,7 @@ paths:
       tags:
       - payment
   /payment/new:
-    post:
+    put:
       consumes:
       - application/json
       description: Create a new unpaid payment
