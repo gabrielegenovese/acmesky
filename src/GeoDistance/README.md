@@ -30,7 +30,7 @@ docker build . -t geodistance
 docker run -dp 127.0.0.1:8000:8000 geodistance:latest
 ```
 
-To generate Swagger API:
+Use [swaggo](https://github.com/swaggo/swag) to generate the Swagger API documentation:
 
 ```sh
 swag i

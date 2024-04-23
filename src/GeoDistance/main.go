@@ -78,16 +78,16 @@ func format_query(from string, to string) *url.URL {
 	return url
 }
 
-// @Summary		Calculate a distance between two locations
-// @Description	Given two locations, it responds with the distance.
-// @Tags			main
-// @Accept			json
-// @Produce		json
-// @Param			from	query		string	true	"From location"
-// @Param			to		query		string	true	"To location"
-// @Success		200		{object}	ResBody
-// @Failure		500		{object}	ResBody
-// @Router			/distance [get]
+//	@Summary		Calculate a distance between two locations
+//	@Description	Given two locations, it responds with the distance.
+//	@Tags			main
+//	@Accept			json
+//	@Produce		json
+//	@Param			from	query		string	true	"From location"
+//	@Param			to		query		string	true	"To location"
+//	@Success		200		{object}	ResBody
+//	@Failure		500		{object}	ResBody
+//	@Router			/distance [get]
 func calcDistance(w http.ResponseWriter, req *http.Request) {
 	from_param := req.URL.Query().Get("from")
 	to_param := req.URL.Query().Get("to")
@@ -141,7 +141,7 @@ func calcDistance(w http.ResponseWriter, req *http.Request) {
 //	@license.name	GPLv2
 //	@license.url	https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
-// @BasePath	/
+//	@BasePath	/
 func main() {
 	err := godotenv.Load()
 	if err != nil {

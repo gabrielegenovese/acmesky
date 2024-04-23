@@ -5,13 +5,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
+	"os"
+
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
 	"github.com/joho/godotenv"
-	"log"
-	"net/http"
-	"os"
 )
 
 var readyClose = make(chan struct{})
@@ -72,7 +73,7 @@ func createPayment(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	json_data, err := json.Marshal(variables)
+	json_data, _ := json.Marshal(variables)
 
 	resp, _ := http.Post("http://localhost:3000/payment/new", "application/json", bytes.NewBuffer(json_data))
 	var res map[string]interface{}
@@ -109,7 +110,7 @@ func pay(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	json_data, err := json.Marshal(variables)
+	json_data, _ := json.Marshal(variables)
 
 	resp, _ := http.Post("http://localhost:3000/payment/pay/"+variables["id"].(string), "application/json", bytes.NewBuffer(json_data))
 	var res map[string]interface{}

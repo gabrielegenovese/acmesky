@@ -24,6 +24,17 @@ var (
 	}
 )
 
+//	@title			Bank Service API
+//	@version		1.0
+//	@description	This is a minimal microservice to act as a bank.
+
+//	@contact.name	Gabriele Genovese
+//	@contact.email	gabriele.genovese2@studio.unibo.it
+
+//	@license.name	GPLv2
+//	@license.url	https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+
+//	@BasePath	/
 func main() {
 	router := gin.Default()
 
