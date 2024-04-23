@@ -78,6 +78,16 @@ func format_query(from string, to string) *url.URL {
 	return url
 }
 
+// @Summary		Calculate a distance between two locations
+// @Description	Given two locations, it responds with the distance.
+// @Tags			main
+// @Accept			json
+// @Produce		json
+// @Param			from	query		string	true	"From location"
+// @Param			to		query		string	true	"To location"
+// @Success		200		{object}	ResBody
+// @Failure		500		{object}	ResBody
+// @Router			/distance [get]
 func calcDistance(w http.ResponseWriter, req *http.Request) {
 	from_param := req.URL.Query().Get("from")
 	to_param := req.URL.Query().Get("to")
@@ -87,6 +97,7 @@ func calcDistance(w http.ResponseWriter, req *http.Request) {
 	resp, err := http.Get(url.String())
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
 	defer resp.Body.Close()
 
@@ -95,10 +106,12 @@ func calcDistance(w http.ResponseWriter, req *http.Request) {
 		bodyBytes, err := io.ReadAll(resp.Body)
 		if err != nil {
 			log.Fatal(err)
+			return
 		}
 		err = json.Unmarshal(bodyBytes, &result)
 		if err != nil {
 			log.Fatal(err)
+			return
 		}
 		if result.Status == "OK" {
 			stringDistance := result.Rows[0].Elements[0].Distance.Text
@@ -118,17 +131,23 @@ func calcDistance(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func test(w http.ResponseWriter, _req *http.Request) {
-	writeRes(w, &SimpleRes{Res: "hello world!"})
-}
+//	@title			Geographical Distance Service API
+//	@version		1.0
+//	@description	This is a microservice to calculate the distance between two points.
 
+//	@contact.name	Gabriele Genovese
+//	@contact.email	gabriele.genovese2@studio.unibo.it
+
+//	@license.name	GPLv2
+//	@license.url	https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+
+// @BasePath	/
 func main() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal(err)
 	}
 	http.HandleFunc("/distance", calcDistance)
-	http.HandleFunc("/test", test)
 	log.Println("Listing for requests at http://localhost:8000/distance")
 	log.Fatal(http.ListenAndServe(":8000", nil))
 }

@@ -1,0 +1,80 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a microservice to calculate the distance between two points.",
+        "title": "Geographical Distance Service API",
+        "contact": {
+            "name": "Gabriele Genovese",
+            "email": "gabriele.genovese2@studio.unibo.it"
+        },
+        "license": {
+            "name": "GPLv2",
+            "url": "https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "basePath": "/",
+    "paths": {
+        "/distance": {
+            "get": {
+                "description": "Given two locations, it responds with the distance.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "main"
+                ],
+                "summary": "Calculate a distance between two locations",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "From location",
+                        "name": "from",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "To location",
+                        "name": "to",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.ResBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/main.ResBody"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.ResBody": {
+            "type": "object",
+            "properties": {
+                "distance": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}
