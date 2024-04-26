@@ -7,12 +7,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-/*
- * Return a JSON list of Airports
- * Method: GET
- * Query parameters:
- * - query: a string to return airports which names contains this substring
- */
+// Get a list of all available airports
+//
+//	@Summary		Get all airports
+//	@Description	Get a list of all available airports
+//	@Tags			Airports
+//	@Produce		json
+//	@Param			query	query	string	false	"Search string to return airports which names contains this substring"
+//	@Success		200		{array}	entities.Airport
+//	@Failure		500
+//	@Router			/airports [get]
 func rest_getAirports(ctx *gin.Context) {
 
 	searchQuery := ctx.Query("query")

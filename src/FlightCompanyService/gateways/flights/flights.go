@@ -9,16 +9,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-/*
- * Return a JSON list of Flight entities
- * Method: GET
- * Query Parameters:
- * - (Required) origin_airport: ID of origin airport from GET /airports
- * - (Required) dest_airport: ID of destination airport from GET /airports
- * - (Required) passengers_count: number > 0 of min passengers seats count that need be available
- * - (Required) start_range_datetime:  string rappresenting the datetime for start filter range
- * - (Required) end_range_datetime: string rappresenting the datetime for end filter range
- */
+// Get a list of Flights matching the filter
+//
+//	@Summary		Get all filtered flights
+//	@Description	Get a list of all available flights over thr provided filters
+//	@Tags			Flight
+//	@Produce		json
+//	@Param			origin_airport			query	string	true	"ID of origin airport from GET /airports"
+//	@Param			dest_airport			query	string	true	"ID of destination airport from GET /airports"
+//	@Param			passengers_count		query	number	true	"number > 0 of min passengers seats count that need be available"
+//	@Param			start_range_datetime	query	string	true	"string rappresenting the datetime for start filter range"
+//	@Param			end_range_datetime		query	string	true	"string rappresenting the datetime for end filter range"
+//	@Success		200						{array}	entities.Flight
+//	@Failure		400
+//	@Failure		500
+//	@Router			/flights [get]
 func rest_getFlights(ctx *gin.Context) {
 
 	var originAirportID string = ctx.Query("origin_airport")

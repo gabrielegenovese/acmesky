@@ -10,17 +10,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-/*
- * Book a flight
- * Path: /bookings/
- * Method: POST
- * Return:
- * - 200 if flight has been booked
- * - 400 if body input is in wrong format
- * - 500 otherwise if errors occurred
- * Body:
- * - case 200: JSON with booking_id for this booking
- */
+// Book a flight
+//
+//	@Summary		Book a flight
+//	@Description	book a flight which can be confirmed or unbooked
+//	@Tags			Bookings
+//	@Produce		json
+//	@Param			origin_airport			query	string					true	"ID of origin airport from GET /airports"
+//	@Param			dest_airport			query	string					true	"ID of destination airport from GET /airports"
+//	@Param			passengers_count		query	number					true	"number > 0 of min passengers seats count that need be available"
+//	@Param			start_range_datetime	query	string					true	"string rappresenting the datetime for start filter range"
+//	@Param			end_range_datetime		query	string					true	"string rappresenting the datetime for end filter range"
+//	@Success		200						{array}	entities.FlightBooking	"Flight has been booked"
+//	@Failure		400						"If provided booking is in wrong format"
+//	@Failure		500						"If any error occurred"
+//	@Router			/bookings/ [post]
 func rest_bookFlights(ctx *gin.Context) {
 	var bookingRequest entities.FlightBooking
 	var bookingRespose entities.FlightBooking
@@ -40,16 +44,18 @@ func rest_bookFlights(ctx *gin.Context) {
 	}
 }
 
-/*
- * unbook a flight booking which has not been confirmed yet
- * PATH: /bookings/:booking_id
- * Method: DELETE
- * Return:
- * - 200 if flight has been unbooked
- * - 400 if body input is in wrong format
- * - 404 if provided booking is not unconfirmed / doesnt existing
- * - 500 otherwise if errors occurred
- */
+// Unbook a flight
+//
+//	@Summary		Unbook a flight
+//	@Description	Unbook a booked flight
+//	@Tags			Bookings
+//	@Produce		json
+//	@Param			bookingID	path	string	true	"A booking ID"
+//	@Success		200			"Flight has been unbooked"
+//	@Failure		400			"If booking has not been provided"
+//	@Failure		404			"If booking doesn't exist"
+//	@Failure		500			"If any error occurred and flight has not been unbooked"
+//	@Router			/bookings/{bookingID} [delete]
 func rest_unbookFlight(ctx *gin.Context) {
 	strBookingID, hasBookingID := ctx.Params.Get("bookingID")
 
@@ -77,16 +83,18 @@ func rest_unbookFlight(ctx *gin.Context) {
 	}
 }
 
-/*
- * Confirm / pay a booking of flight which was not unconfirmed yet
- * PATH: /bookings/:booking_id/confirm
- * Method: POST
- * Return:
- * - 200 if flight has been confirmed
- * - 400 if body input is in wrong format
- * - 404 if provided booking is not unconfirmed / doesnt existing
- * - 500 otherwise if errors occurred
- */
+// Confirm a booking
+//
+//	@Summary		Confirm a booking
+//	@Description	Confirm / pay a booking of flight which was not unconfirmed yet
+//	@Tags			Bookings
+//	@Produce		json
+//	@Param			bookingID	path	string	true	"A booking ID"
+//	@Success		200			"Booking has been confirmed"
+//	@Failure		400			"If booking has not been provided"
+//	@Failure		404			"If booking doesn't exist"
+//	@Failure		500			"If any error occurred and flight has not been confirmed"
+//	@Router			/bookings/{bookingID}/confirm [post]
 func rest_confirmBooking(ctx *gin.Context) {
 	strBookingID, hasBookingID := ctx.Params.Get("bookingID")
 
