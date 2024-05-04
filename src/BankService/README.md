@@ -35,9 +35,10 @@ go run main.go
 curl -X PUT -i http://localhost:8000/payment/new --data '{"user":"mario","amount":100,"description":"volo bologna milano"}'
 ```
 
-Update the client, then
+Copy the id and update the client, then do
 
 ```sh
+cd client
 pnpm i
 pnpm dev
 ```
