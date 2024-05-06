@@ -1,12 +1,11 @@
 services:
-
   db:
     image: postgres
     restart: always
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: acmebank 
+      POSTGRES_USER: acmebank
       POSTGRES_PASSWORD: acmebank
 
   adminer:
@@ -14,3 +13,8 @@ services:
     restart: always
     ports:
       - 8080:8080
+
+  # bank:
+  #   build: .
+  #   ports:
+  #     - "8000:8000"

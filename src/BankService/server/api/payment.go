@@ -2,36 +2,20 @@ package api
 
 import (
 	"bank/util"
-	"database/sql"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
-type Payment struct {
-	ID          uuid.UUID    `json:"id" gorm:"primarykey"`
-	CreatedAt   time.Time    `json:"created_at"`
-	UpdatedAt   time.Time    `json:"updated_at"`
-	DeletedAt   sql.NullTime `json:"deleted_at" gorm:"index"`
-	User        string       `json:"user"`
-	Description string       `json:"description"`
-	Amount      uint32       `json:"amount"`
-	Paid        bool         `json:"paid"`
-}
-
-type PaymentReq struct {
-	User        string `json:"user"`
-	Description string `json:"description"`
-	Amount      uint32 `json:"amount"`
-}
-
-type Res struct {
-	Res string `json:"res"`
-}
-
-// POST /payment/new
+//	@Summary		New payment
+//	@Description	Create a new unpaid payment
+//	@Tags			payment
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	Payment
+//	@Failure		400	{object}	Res
+//	@Router			/payment/new [put]
 func NewPayment(c *gin.Context) {
 	db := util.GetDb()
 
@@ -57,7 +41,15 @@ func NewPayment(c *gin.Context) {
 	c.JSON(http.StatusOK, pay)
 }
 
-// POST /payment/pay/:id
+//	@Summary		Pay a payment
+//	@Description	Pay an unpaid payment
+//	@Tags			payment
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		string	true	"payment ID"
+//	@Success		200	{object}	Res
+//	@Failure		400	{object}	Res
+//	@Router			/payment/pay/{id} [post]
 func PayPaymentById(c *gin.Context) {
 	db := util.GetDb()
 	userid := c.Param("id")
@@ -82,7 +74,15 @@ func PayPaymentById(c *gin.Context) {
 	c.JSON(http.StatusOK, Res{Res: "Done"})
 }
 
-// DELETE /payment/:id
+//	@Summary		Delete a payment
+//	@Description	Given a payment ID, find the corresponding payment and delete it.
+//	@Tags			payment
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		string	true	"payment ID"
+//	@Success		200	{object}	Res
+//	@Failure		400	{object}	Res
+//	@Router			/payment/{id} [delete]
 func DelPaymentById(c *gin.Context) {
 	db := util.GetDb()
 	userid := c.Param("id")
@@ -102,7 +102,15 @@ func DelPaymentById(c *gin.Context) {
 	c.JSON(http.StatusOK, Res{Res: "Done"})
 }
 
-// GET /payment/:id
+//	@Summary		Get a payment
+//	@Description	Given a payment ID, find the corresponding payment and return it.
+//	@Tags			payment
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		string	true	"payment ID"
+//	@Success		200	{object}	Res
+//	@Failure		400	{object}	Res
+//	@Router			/payment/{id} [get]
 func GetPaymentById(c *gin.Context) {
 	db := util.GetDb()
 	userid := c.Param("id")

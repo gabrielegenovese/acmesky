@@ -1,6 +1,6 @@
-# client
+# Bank client component
 
-This template should help get you started developing with Vue 3 in Vite.
+This is a component for the Bank Service. The payment ID in `App.vue` needs to be updated.
 
 ## Recommended IDE Setup
 

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0yyd8qu" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0">
+  <bpmn:process id="bank" isExecutable="true">
+    <bpmn:serviceTask id="Activity_15s61hy" name="Create payment">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="create-payment" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1mfbhf0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1291tag</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1291tag" sourceRef="Activity_15s61hy" targetRef="Activity_0c172kx" />
+    <bpmn:endEvent id="Event_195619i">
+      <bpmn:incoming>Flow_12lplcp</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_12lplcp" sourceRef="Activity_0c172kx" targetRef="Event_195619i" />
+    <bpmn:serviceTask id="Activity_0c172kx" name="Pay">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="pay" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1291tag</bpmn:incoming>
+      <bpmn:outgoing>Flow_12lplcp</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="Event_1gkv130">
+      <bpmn:outgoing>Flow_1mfbhf0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1mfbhf0" sourceRef="Event_1gkv130" targetRef="Activity_15s61hy" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="bank">
+      <bpmndi:BPMNShape id="Activity_0p8kl51_di" bpmnElement="Activity_15s61hy">
+        <dc:Bounds x="280" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1olv97u_di" bpmnElement="Activity_0c172kx">
+        <dc:Bounds x="450" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_195619i_di" bpmnElement="Event_195619i">
+        <dc:Bounds x="602" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1gkv130_di" bpmnElement="Event_1gkv130">
+        <dc:Bounds x="182" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1291tag_di" bpmnElement="Flow_1291tag">
+        <di:waypoint x="380" y="117" />
+        <di:waypoint x="450" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12lplcp_di" bpmnElement="Flow_12lplcp">
+        <di:waypoint x="550" y="117" />
+        <di:waypoint x="602" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1mfbhf0_di" bpmnElement="Flow_1mfbhf0">
+        <di:waypoint x="218" y="117" />
+        <di:waypoint x="280" y="117" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
