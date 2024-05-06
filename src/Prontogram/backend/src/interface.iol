@@ -1,6 +1,6 @@
 
 type UserAuthCredentials: void {
-    .user_id: string
+    .userId: string
     .password: string
 }
 
@@ -10,20 +10,20 @@ type UserSignUpRequest: void {
 }
 
 type AuthenticatedUser: void {
-    .user_id: string
+    .userId: string
     .sid: string
 }
 
 type SendMessageRequest: void {
     .sender: AuthenticatedUser
-    .receiver_user_id: string
+    .receiverUserId: string
     .content: string
 }
 
 type Message: void {
     .id: string
-    .sender_user_id: string
-    .receiver_user_id: string
+    .sender_userId: string
+    .receiverUserId: string
     .content: string
 }
 
@@ -36,8 +36,8 @@ interface IProntogramService
 
     RequestResponse:
         auth_signup(UserSignUpRequest)(void) throws UserAlreadyExists(string),
-        auth_login(UserAuthCredentials)(AuthenticatedUser) throws UserNotFound(string) UserNotAuthorized(string),
-        auth_logout(AuthenticatedUser)(void) throws UserNotAuthorized(string),
-        sendMessage(SendMessageRequest)(Message) throws UserNotFound(string) UserNotAuthorized(string),
-        getMessages(AuthenticatedUser)(MessageList) throws UserNotAuthorized(string)
+        auth_login(UserAuthCredentials)(AuthenticatedUser) throws UserNotFound(string) UserUnauthorized(string),
+        auth_logout(AuthenticatedUser)(void) throws UserUnauthorized(string),
+        sendMessage(SendMessageRequest)(Message) throws UserNotFound(string) UserUnauthorized(string),
+        getMessages(AuthenticatedUser)(MessageList) throws UserUnauthorized(string)
 }

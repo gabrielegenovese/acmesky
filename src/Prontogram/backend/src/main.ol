@@ -5,39 +5,39 @@ include "string_utils.iol"
 
 inputPort ProntogramServicePort
 {
-    Location: "socket://localhost:8000"
+    Location: "socket://localhost:8080"
     Interfaces: IProntogramService
     Protocol: http {
         format = "json"
         // contentType = "application/json"
         osc << {
             auth_signup << {
-                template = "/api/auth/signup"
+                template = "/api/users"
                 method = "post"
                 statusCodes.UserAlreadyExists = 403
             }
             auth_login << {
-                template = "/api/auth/login"
+                template = "/api/auth/{userId}/login"
                 method = "post"
-                statusCodes.UserNotAuthorized = 401
+                statusCodes.UserUnauthorized = 401
                 statusCodes.UserNotFound = 404
             }
             auth_logout << {
-                template = "/api/auth/logout"
+                template = "/api/auth/{userId}/logout"
                 method = "post"
-                statusCodes.UserNotAuthorized = 401
+                statusCodes.UserUnauthorized = 401
                 statusCodes.UserNotFound = 404
             }
             // get stored messages
             getMessages << {
-                template = "/api/messages"
+                template = "/api/users/{userId}/messages"
                 method = "get"
-                statusCodes.UserNotAuthorized = 401
+                statusCodes.UserUnauthorized = 401
             }
             sendMessage << {
-                template = "/api/messages"
+                template = "/api/users/{receiverUserId}/messages"
                 method = "post"
-                statusCodes.UserNotAuthorized = 401
+                statusCodes.UserUnauthorized = 401
                 statusCodes.UserNotFound = 404
             }
         }
@@ -60,48 +60,48 @@ main {
 
     [
         auth_signup(UserSignUpRequest)() {
-            if ( is_defined( global.users.(UserSignUpRequest.credentials.user_id) ) ) {
-                throw (UserAlreadyExists, UserSignUpRequest.credentials.user_id)
+            if ( is_defined( global.users.(UserSignUpRequest.credentials.userId) ) ) {
+                throw (UserAlreadyExists, UserSignUpRequest.credentials.userId)
             }
             
-            with(global.users.(UserSignUpRequest.credentials.user_id)) {
-                .id = UserSignUpRequest.credentials.user_id;
+            with(global.users.(UserSignUpRequest.credentials.userId)) {
+                .id = UserSignUpRequest.credentials.userId;
                 .display_name = UserSignUpRequest.display_name;
                 .password = UserSignUpRequest.credentials.password
             }
 
-            println@Console("New user signed up: '" + global.users.(UserSignUpRequest.credentials.user_id).id + "'")()
+            println@Console("New user signed up: '" + global.users.(UserSignUpRequest.credentials.userId).id + "'")()
         }
     ]
     [
         auth_login(UserAuthCredentials)(AuthenticatedUser) {
-            if ( !is_defined( global.users.(UserAuthCredentials.user_id) ) ) {
-                throw (UserNotFound, UserAuthCredentials.user_id)
+            if ( !is_defined( global.users.(UserAuthCredentials.userId) ) ) {
+                throw (UserNotFound, UserAuthCredentials.userId)
             }
-            else if( global.users.(UserAuthCredentials.user_id).password != UserAuthCredentials.password ) {
-                throw (UserNotAuthorized, UserAuthCredentials.user_id)
+            else if( global.users.(UserAuthCredentials.userId).password != UserAuthCredentials.password ) {
+                throw (UserUnauthorized, UserAuthCredentials.userId)
             }
             else {
                 csets.sid = new
                 with(AuthenticatedUser) {
-                    .user_id = UserAuthCredentials.user_id;
+                    .userId = UserAuthCredentials.userId;
                     .sid = csets.sid
                 }
                 isLogged = true
-                println@Console("user '" + AuthenticatedUser.user_id + "' logged in")()
-                println@Console("user '" + AuthenticatedUser.user_id + " started session " + AuthenticatedUser.sid )()
+                println@Console("user '" + AuthenticatedUser.userId + "' logged in")()
+                println@Console("user '" + AuthenticatedUser.userId + " started session " + AuthenticatedUser.sid )()
             }
         }
     ]
     [
         auth_logout(AuthenticatedUser)() {
-            if ( !is_defined( global.users.(AuthenticatedUser.user_id) ) ) {
-                throw (UserNotFound, UserAuthCredentials.user_id)
+            if ( !is_defined( global.users.(AuthenticatedUser.userId) ) ) {
+                throw (UserNotFound, UserAuthCredentials.userId)
             }
             else {
                 isLogged = false
             }
-            println@Console("user '" + AuthenticatedUser.user_id + "' logged out")()
+            println@Console("user '" + AuthenticatedUser.userId + "' logged out")()
         }
     ]
     [
@@ -109,13 +109,13 @@ main {
             with(Message) {
                 .id = new;
                 .content = SendMessageRequest.content;
-                .sender_user_id = SendMessageRequest.sender.user_id;
-                .receiver_user_id = SendMessageRequest.receiver_user_id
+                .sender_userId = SendMessageRequest.sender.userId;
+                .receiverUserId = SendMessageRequest.receiverUserId
             }
-            if ( !is_defined( global.users.(Message.receiver_user_id) ) ) {
-                throw (UserNotFound, Message.receiver_user_id)
+            if ( !is_defined( global.users.(Message.receiverUserId) ) ) {
+                throw (UserNotFound, Message.receiverUserId)
             }
-            inbox -> global.inbox.(Message.receiver_user_id)
+            inbox -> global.inbox.(Message.receiverUserId)
             synchronized(inboxLock) {
                 idx = #inbox
                 inbox[idx] << Message
@@ -127,7 +127,7 @@ main {
     ]
     [
         getMessages(AuthenticatedUser)(MessageList){
-            inbox -> global.inbox.(AuthenticatedUser.user_id)
+            inbox -> global.inbox.(AuthenticatedUser.userId)
             synchronized(inboxLock) {
                 for( i = 0, i < #inbox, i++ ) {
                     if( is_defined(inbox[i])) {
@@ -135,7 +135,7 @@ main {
                     }
                 }
                 
-                // undef(global.inbox.(AuthenticatedUser.user_id))
+                // undef(global.inbox.(AuthenticatedUser.userId))
             }
 
             valueToPrettyString@StringUtils(MessageList)( s )

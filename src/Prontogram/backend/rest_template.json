@@ -1,0 +1,23 @@
+
+{
+    "auth_login": {
+        "method": "post",
+        "template": "/api/auth/{userId}/login"
+    },
+    "auth_logout": {
+        "method": "post",
+        "template": "/api/auth/{userId}/logout"
+    },
+    "auth_signup": {
+        "method": "post",
+        "template": "/api/users"
+    },
+    "getMessages": {
+        "method": "get",
+        "template": "/api/users/{userId}/messages?{sid}"
+    },
+    "sendMessage": {
+        "method": "post",
+        "template": "/api/users/{receiverUserId}/messages"
+    }
+}

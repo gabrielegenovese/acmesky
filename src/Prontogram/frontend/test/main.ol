@@ -18,25 +18,25 @@ outputPort ProntogramService
             auth_login << {
                 template = "/api/auth/login"
                 method = "post"
-                statusCodes.UserNotAuthorized = 401
+                statusCodes.UserUnauthorized = 401
                 statusCodes.UserNotFound = 404
             }
             auth_logout << {
                 template = "/api/auth/logout"
                 method = "post"
-                statusCodes.UserNotAuthorized = 401
+                statusCodes.UserUnauthorized = 401
                 statusCodes.UserNotFound = 404
             }
             // get stored messages
             getMessages << {
                 template = "/api/messages"
                 method = "get"
-                statusCodes.UserNotAuthorized = 401
+                statusCodes.UserUnauthorized = 401
             }
             sendMessage << {
                 template = "/api/messages"
                 method = "post"
-                statusCodes.UserNotAuthorized = 401
+                statusCodes.UserUnauthorized = 401
                 statusCodes.UserNotFound = 404
             }
         }
@@ -49,7 +49,7 @@ init {
     with(newUserA){
         .display_name = "A test user";
         .credentials << {
-            user_id = "A"
+            userId = "A"
             password = "123A"
         }
     }
@@ -57,7 +57,7 @@ init {
     with(newUserB){
         .display_name = "B test user";
         .credentials << {
-            user_id = "B"
+            userId = "B"
             password = "123B"
         }
     }
@@ -79,12 +79,12 @@ define test_login {
     println@Console("test_login()")()
 
 
-    println@Console("logging in as\n" + newUserB.credentials.user_id)()
+    println@Console("logging in as\n" + newUserB.credentials.userId)()
     auth_login@ProntogramService(newUserB.credentials)(AuthenticatedUserB)
     valueToPrettyString@StringUtils(AuthenticatedUserB)( sB )
     println@Console("Logged in as\n" + sB)()
 
-    println@Console("logging in as\n" + newUserA.credentials.user_id)()
+    println@Console("logging in as\n" + newUserA.credentials.userId)()
     auth_login@ProntogramService(newUserA.credentials)(AuthenticatedUserA)
     valueToPrettyString@StringUtils(AuthenticatedUserA)( sA )
     println@Console("Logged in as\n" + sA)()
@@ -120,7 +120,7 @@ define test_sendMessage {
     {
         with(Amsg2B) {
             .sender -> AuthenticatedUserA;
-            .receiver_user_id = "B";
+            .receiverUserId = "B";
             .content = "Hi B, i'm A"
         }
 
@@ -137,7 +137,7 @@ define test_sendMessage {
     {
         with(Bmsg2A) {
             .sender -> AuthenticatedUserB;
-            .receiver_user_id = "A";
+            .receiverUserId = "A";
             .content = "Hi A, i'm B"
         }
 
