@@ -1,30 +1,42 @@
 include "interface.iol"
 include "console.iol"
 include "string_utils.iol"
-// include "queue_utils.iol"
 
 inputPort ProntogramServicePort
 {
     Location: "socket://localhost:8080"
     Interfaces: IProntogramService
     Protocol: http {
-        format = "json"
-        // contentType = "application/json"
+        format -> httpResponse.format
+        statusCode -> httpResponse.statusCode
+        response.headers.("Access-Control-Allow-Origin") = "*"
+        response.headers.("Access-Control-Allow-Headers") = "*"
+        response.headers.("Access-Control-Allow-Credentials") = "true"
+        response.headers.("Access-Control-Allow-Methods") = "*"
         osc << {
             auth_signup << {
                 template = "/api/users"
                 method = "post"
+                format = "json"
+                statusCodes = 201
+                statusCodes.TypeMismatch = 400
                 statusCodes.UserAlreadyExists = 403
             }
             auth_login << {
                 template = "/api/auth/{userId}/login"
                 method = "post"
+                format = "json"
+                statusCodes = 200
+                statusCodes.TypeMismatch = 400
                 statusCodes.UserUnauthorized = 401
                 statusCodes.UserNotFound = 404
             }
             auth_logout << {
                 template = "/api/auth/{userId}/logout"
                 method = "post"
+                format = "json"
+                statusCodes = 200
+                statusCodes.TypeMismatch = 400
                 statusCodes.UserUnauthorized = 401
                 statusCodes.UserNotFound = 404
             }
@@ -32,15 +44,22 @@ inputPort ProntogramServicePort
             getMessages << {
                 template = "/api/users/{userId}/messages"
                 method = "get"
+                format = "json"
+                statusCodes = 200
+                statusCodes.TypeMismatch = 400
                 statusCodes.UserUnauthorized = 401
             }
             sendMessage << {
                 template = "/api/users/{receiverUserId}/messages"
                 method = "post"
+                format = "json"
+                statusCodes = 200
+                statusCodes.TypeMismatch = 400
                 statusCodes.UserUnauthorized = 401
                 statusCodes.UserNotFound = 404
             }
         }
+        default = "default"
     }
     
 }
@@ -59,7 +78,12 @@ cset {
 main {
 
     [
-        auth_signup(UserSignUpRequest)() {
+        default(req)() {
+            httpResponse.statusCode = 204
+            httpResponse.format = "raw"
+        }   
+    ]
+    [
             if ( is_defined( global.users.(UserSignUpRequest.credentials.userId) ) ) {
                 throw (UserAlreadyExists, UserSignUpRequest.credentials.userId)
             }

@@ -1,3 +1,4 @@
+include "protocols/http.iol"
 
 type UserAuthCredentials: void {
     .userId: string
@@ -39,5 +40,6 @@ interface IProntogramService
         auth_login(UserAuthCredentials)(AuthenticatedUser) throws UserNotFound(string) UserUnauthorized(string),
         auth_logout(AuthenticatedUser)(void) throws UserUnauthorized(string),
         sendMessage(SendMessageRequest)(Message) throws UserNotFound(string) UserUnauthorized(string),
-        getMessages(AuthenticatedUser)(MessageList) throws UserUnauthorized(string)
+        getMessages(AuthenticatedUser)(MessageList) throws UserUnauthorized(string),
+        default(DefaultOperationHttpRequest)(void)
 }
