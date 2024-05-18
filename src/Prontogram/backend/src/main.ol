@@ -14,8 +14,8 @@ inputPort ProntogramServicePort
         response.headers.("Access-Control-Allow-Credentials") = "true"
         response.headers.("Access-Control-Allow-Methods") = "*"
         osc << {
-            auth_signup << {
-                template = "/api/users"
+            user_signup << {
+                template = "/api/users/{userId}"
                 method = "post"
                 format = "json"
                 statusCodes = 201
@@ -84,6 +84,7 @@ main {
         }   
     ]
     [
+        user_signup(UserSignUpRequest)() {
             if ( is_defined( global.users.(UserSignUpRequest.credentials.userId) ) ) {
                 throw (UserAlreadyExists, UserSignUpRequest.credentials.userId)
             }

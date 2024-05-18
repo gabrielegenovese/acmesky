@@ -36,7 +36,7 @@ interface IProntogramService
 {
 
     RequestResponse:
-        auth_signup(UserSignUpRequest)(void) throws UserAlreadyExists(string),
+        user_signup(UserSignUpRequest)(void) throws UserAlreadyExists(string),
         auth_login(UserAuthCredentials)(AuthenticatedUser) throws UserNotFound(string) UserUnauthorized(string),
         auth_logout(AuthenticatedUser)(void) throws UserUnauthorized(string),
         sendMessage(SendMessageRequest)(Message) throws UserNotFound(string) UserUnauthorized(string),

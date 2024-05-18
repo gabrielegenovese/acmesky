@@ -1,4 +1,3 @@
-
 {
     "auth_login": {
         "method": "post",
@@ -8,9 +7,9 @@
         "method": "post",
         "template": "/api/auth/{userId}/logout"
     },
-    "auth_signup": {
+    "user_signup": {
         "method": "post",
-        "template": "/api/users"
+        "template": "/api/users/{userId}"
     },
     "getMessages": {
         "method": "get",
