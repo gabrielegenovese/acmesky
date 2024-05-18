@@ -9,24 +9,23 @@ import (
 )
 
 type UserAuthCredentials struct {
-	UserId   string `json:"user_id"`
+	UserId   string `json:"userId"`
 	Password string `json:"password"`
 }
 
 type UserSignUpRequest struct {
-	AccountDisplayName string              `json:"display_name"`
-	Credentials        UserAuthCredentials `json:"credentials"`
+	AccountDisplayName string `json:"display_name"`
+	Password           string `json:"password"`
 }
 
 type AuthenticatedUser struct {
-	UserId string `json:"user_id"`
+	UserId string `json:"userId"`
 	Sid    string `json:"sid"`
 }
 
 type SendMessageRequest struct {
-	Sender     AuthenticatedUser `json:"sender"`
-	ReceiverId string            `json:"receiver_user_id"`
-	Content    string            `json:"content"`
+	Sender  AuthenticatedUser `json:"sender"`
+	Content string            `json:"content"`
 }
 
 type SendMessageResponse struct {
@@ -62,16 +61,16 @@ func Init() error {
 
 func SignUpAs(credentials UserAuthCredentials) error {
 
-	var PRONTOGRAM_SERVICE_ADDRESS string = os.Getenv("PRONTOGRAM_ADDRESS")
+	var PRONTOGRAM_BASEURL string = os.Getenv("PRONTOGRAM_BASEURL")
 
 	body := &UserSignUpRequest{
 		AccountDisplayName: "ACMESky",
-		Credentials:        credentials,
+		Password:           credentials.Password,
 	}
 
 	payloadBuf := new(bytes.Buffer)
 	json.NewEncoder(payloadBuf).Encode(body)
-	res, errReq := http.Post("http://"+PRONTOGRAM_SERVICE_ADDRESS+"/api/auth/signup", "application/json", payloadBuf)
+	res, errReq := http.Post(PRONTOGRAM_BASEURL+"/users/"+credentials.UserId, "application/json", payloadBuf)
 	if errReq != nil {
 		return errReq
 	}
@@ -87,14 +86,14 @@ func SignUpAs(credentials UserAuthCredentials) error {
 
 func SignInAs(credentials UserAuthCredentials) (AuthenticatedUser, error) {
 
-	var PRONTOGRAM_SERVICE_ADDRESS string = os.Getenv("PRONTOGRAM_ADDRESS")
+	var PRONTOGRAM_BASEURL string = os.Getenv("PRONTOGRAM_BASEURL")
 	var resBody AuthenticatedUser
 
 	body := &credentials
 
 	payloadBuf := new(bytes.Buffer)
 	json.NewEncoder(payloadBuf).Encode(body)
-	res, errReq := http.Post("http://"+PRONTOGRAM_SERVICE_ADDRESS+"/api/auth/login", "application/json", payloadBuf)
+	res, errReq := http.Post(PRONTOGRAM_BASEURL+"/auth/"+credentials.UserId+"/login", "application/json", payloadBuf)
 	if errReq != nil {
 		return resBody, errReq
 	}
@@ -115,7 +114,7 @@ func SignInAs(credentials UserAuthCredentials) (AuthenticatedUser, error) {
 }
 
 func SendMessage(content string, destinationUserId string) (SendMessageResponse, error) {
-	var PRONTOGRAM_SERVICE_ADDRESS string = os.Getenv("PRONTOGRAM_ADDRESS")
+	var PRONTOGRAM_BASEURL string = os.Getenv("PRONTOGRAM_BASEURL")
 	var resBody SendMessageResponse
 
 	authUser, errAuth := SignInAs(getACMESkyCredentials())
@@ -125,13 +124,12 @@ func SendMessage(content string, destinationUserId string) (SendMessageResponse,
 	}
 
 	body := &SendMessageRequest{
-		Sender:     authUser,
-		ReceiverId: destinationUserId,
-		Content:    content,
+		Sender:  authUser,
+		Content: content,
 	}
 	payloadBuf := new(bytes.Buffer)
 	json.NewEncoder(payloadBuf).Encode(body)
-	res, errSend := http.Post("http://"+PRONTOGRAM_SERVICE_ADDRESS+"/api/messages", "application/json", payloadBuf)
+	res, errSend := http.Post(PRONTOGRAM_BASEURL+"/users/"+destinationUserId+"/messages", "application/json", payloadBuf)
 
 	if errSend != nil {
 		return resBody, errSend
