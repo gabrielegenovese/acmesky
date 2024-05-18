@@ -13,7 +13,7 @@
     },
     "getMessages": {
         "method": "get",
-        "template": "/api/users/{userId}/messages?{sid}"
+        "template": "/api/users/{userId}/messages?sid={sid}"
     },
     "sendMessage": {
         "method": "post",

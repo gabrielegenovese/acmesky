@@ -1,11 +1,15 @@
-include "interface.iol"
+include "./shared.iol"
+include "./authentication.iol"
+include "./users.iol"
+include "./messages.iol"
+
 include "console.iol"
 include "string_utils.iol"
 
-inputPort ProntogramServicePort
+inputPort ProntogramService
 {
     Location: "socket://localhost:8080"
-    Interfaces: IProntogramService
+    Interfaces: Users, Authentication, Messages, Shared
     Protocol: http {
         format -> httpResponse.format
         statusCode -> httpResponse.statusCode
@@ -85,17 +89,17 @@ main {
     ]
     [
         user_signup(UserSignUpRequest)() {
-            if ( is_defined( global.users.(UserSignUpRequest.credentials.userId) ) ) {
-                throw (UserAlreadyExists, UserSignUpRequest.credentials.userId)
+            if ( is_defined( global.users.(UserSignUpRequest.userId) ) ) {
+                throw (UserAlreadyExists, UserSignUpRequest.userId)
             }
             
-            with(global.users.(UserSignUpRequest.credentials.userId)) {
-                .id = UserSignUpRequest.credentials.userId;
+            with(global.users.(UserSignUpRequest.userId)) {
+                .id = UserSignUpRequest.userId;
                 .display_name = UserSignUpRequest.display_name;
-                .password = UserSignUpRequest.credentials.password
+                .password = UserSignUpRequest.password
             }
 
-            println@Console("New user signed up: '" + global.users.(UserSignUpRequest.credentials.userId).id + "'")()
+            println@Console("New user signed up: '" + global.users.(UserSignUpRequest.userId).id + "'")()
         }
     ]
     [
