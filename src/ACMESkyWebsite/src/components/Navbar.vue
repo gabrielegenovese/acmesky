@@ -21,10 +21,10 @@
           </div>
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4">
-              <a
+              <RouterLink
                 v-for="item in navigation"
                 :key="item.name"
-                :href="item.href"
+                :to="item.href"
                 :class="[
                   item.current
                     ? 'bg-gray-900 text-white'
@@ -32,8 +32,7 @@
                   'rounded-md px-3 py-2 text-sm font-medium',
                 ]"
                 :aria-current="item.current ? 'page' : undefined"
-                >{{ item.name }}</a
-              >
+                >{{ item.name }}</RouterLink>
             </div>
           </div>
         </div>
@@ -105,20 +104,20 @@
 
     <DisclosurePanel class="sm:hidden">
       <div class="space-y-1 px-2 pb-3 pt-2">
-        <DisclosureButton
+        <RouterLink
           v-for="item in navigation"
+          as="DisclosureButton"
           :key="item.name"
-          as="a"
-          :href="item.href"
+          :to="item.href"
           :class="[
-            item.current
-              ? 'bg-gray-900 text-white'
-              : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-            'block rounded-md px-3 py-2 text-base font-medium',
-          ]"
+              item.current
+                ? 'bg-gray-900 text-white'
+                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+              'block rounded-md px-3 py-2 text-base font-medium',
+            ]"
           :aria-current="item.current ? 'page' : undefined"
-          >{{ item.name }}</DisclosureButton
-        >
+        >{{ item.name }}
+        </RouterLink>
       </div>
     </DisclosurePanel>
   </Disclosure>
@@ -137,8 +136,8 @@ import {
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
 
 const navigation = [
-  { name: "Home", href: "#", current: true },
-  { name: "Set a new interest", href: "#", current: false },
-  { name: "Buy a Flight", href: "#", current: false },
+  { name: "Home", href: "/", current: true },
+  { name: "Set a new interest", href: "/interests", current: false },
+  { name: "Buy a Flight", href: "/buy", current: false },
 ];
 </script>

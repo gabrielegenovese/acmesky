@@ -1,11 +1,12 @@
 <script setup>
 import Navbar from "./components/Navbar.vue";
-import Welcome from "./components/Welcome.vue";
 </script>
 
 <template>
   <Navbar class="" />
-  <Welcome class="" />
+  <main>
+    <RouterView />
+  </main>
 </template>
 
 <style scoped></style>
