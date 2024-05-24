@@ -1,7 +1,0 @@
-# BPMN model
-
-
-
-AAAAA
-
-## Ciao

@@ -10,4 +10,10 @@ docker compose -f docker-compose-camunda.yaml up -d
 
 ## Docs
 
-Generated with [docsify](https://docsify.js.org).
+The documentation is generated with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
+
+Arch linux installation:
+```shell
+yay -S python-mkdocs-material pymdown-extensions
+mkdocs serve
+```
