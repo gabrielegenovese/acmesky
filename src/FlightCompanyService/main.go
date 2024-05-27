@@ -35,6 +35,7 @@ func main() {
 
 	godotenv.Load(".env")
 	dbClient.InitDB()
+	defer dbClient.CloseClient()
 
 	router := gin.Default()
 	flights.Listen(router)

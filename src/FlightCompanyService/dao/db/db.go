@@ -36,15 +36,16 @@ func InitDB() {
 		if pingErr != nil {
 			err = pingErr
 			fmt.Printf("DB Connection failed: %+v\n", pingErr)
+			panic(err)
 		} else {
 			fmt.Println("DB Connection Succedeed")
 		}
 	}
 }
 
-func closeClient(client *sql.DB) {
+func CloseClient() {
 	log.Println("closing DB client")
-	_ = client.Close()
+	_ = dbInstance.Close()
 }
 
 func GetInstance() *sql.DB {
