@@ -1,6 +1,6 @@
 # ACMESky Documentation
 
-This is the documentation for the project of **Ingegneria del Software Orientata ai Servizi** for the AA 2023/2024 University of Bologna's Master Degree. The componets of the team are:
+This is the project's documentation of **Ingegneria del Software Orientata ai Servizi** for the AA 2023/2024 University of Bologna's Master Degree. The team members are:
 
 - Luca Bassi
 - Gabriele Genovese
@@ -33,6 +33,8 @@ In this case, ACMESky uses various chauffeur rental companies with which it has 
     docs/
         index.md  # The documentation homepage.
         ...       # Other markdown pages, images and other files.
+    resources/
+        ...
     src/
         ACMESkyDB/
         ACMESkyNCC/
@@ -43,8 +45,6 @@ In this case, ACMESky uses various chauffeur rental companies with which it has 
         FlightCompanyService/
         GeoDistance/
         Prontogram/
-    resources/
-        ...
 
 ## Documentation strucure
 
@@ -56,9 +56,17 @@ In this case, ACMESky uses various chauffeur rental companies with which it has 
 - SOA Structure
 - Build Instruction
 - Services
-    - ACMESky Services
-    - Prontogram
-    - GeoDistance
-    - Company
-    - NCC
-    - Bank
+  - ACMESky Services
+  - Prontogram
+  - GeoDistance
+  - Company
+  - NCC
+  - Bank
+
+## How to start
+
+To start all the infrastructure just use the following command in the root directory and wait for a bit!
+
+```shell
+docker compose up -d
+```
