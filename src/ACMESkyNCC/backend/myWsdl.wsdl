@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="mytest.test.com.wsdl" xmlns:xsd1="mytest.test.com.xsd" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="mytest.test.com.wsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xs:schema targetNamespace="mytest.test.com.xsd" xmlns:sch="mytest.test.com.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema"><xs:element name="add"><xs:complexType><xs:sequence><xs:element maxOccurs="1" minOccurs="1" name="price" type="xs:string"/><xs:element maxOccurs="1" minOccurs="1" name="name" type="xs:string"/><xs:element maxOccurs="1" minOccurs="1" name="location" type="xs:string"/></xs:sequence></xs:complexType></xs:element><xs:element name="addResponse"><xs:complexType><xs:sequence><xs:element maxOccurs="1" minOccurs="1" name="price" type="xs:string"/><xs:element maxOccurs="1" minOccurs="1" name="name" type="xs:string"/><xs:element maxOccurs="1" minOccurs="1" name="location" type="xs:string"/><xs:element maxOccurs="1" minOccurs="1" name="id" type="xs:string"/></xs:sequence></xs:complexType></xs:element><xs:element name="get"><xs:complexType><xs:sequence/></xs:complexType></xs:element><xs:complexType name="ncc"><xs:sequence><xs:element maxOccurs="1" minOccurs="1" name="price" type="xs:string"/><xs:element maxOccurs="1" minOccurs="1" name="name" type="xs:string"/><xs:element maxOccurs="1" minOccurs="1" name="location" type="xs:string"/><xs:element maxOccurs="1" minOccurs="1" name="id" type="xs:string"/></xs:sequence></xs:complexType><xs:element name="getResponse"><xs:complexType><xs:sequence><xs:element maxOccurs="unbounded" minOccurs="0" name="nccs" type="sch:ncc"/></xs:sequence></xs:complexType></xs:element><xs:element name="book"><xs:complexType><xs:sequence><xs:element maxOccurs="1" minOccurs="1" name="date" type="xs:string"/><xs:element maxOccurs="1" minOccurs="1" name="nccId" type="xs:string"/><xs:element maxOccurs="1" minOccurs="1" name="name" type="xs:string"/></xs:sequence></xs:complexType></xs:element><xs:element name="bookResponse"><xs:complexType><xs:sequence><xs:element maxOccurs="1" minOccurs="1" name="success" type="xs:boolean"/></xs:sequence></xs:complexType></xs:element><xs:element name="getId"><xs:complexType><xs:sequence><xs:element maxOccurs="1" minOccurs="1" name="value" type="xs:string"/></xs:sequence></xs:complexType></xs:element><xs:element name="error"><xs:complexType><xs:sequence><xs:element maxOccurs="1" minOccurs="1" name="message" type="xs:string"/></xs:sequence></xs:complexType></xs:element></xs:schema>
+  </wsdl:types>
+  <wsdl:message name="nccRequest">
+    <wsdl:part name="body" element="xsd1:add">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="booking">
+    <wsdl:part name="body" element="xsd1:bookResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="void">
+    <wsdl:part name="body" element="xsd1:get">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="error">
+    <wsdl:part name="body" element="xsd1:error">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="uuid">
+    <wsdl:part name="body" element="xsd1:getId">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ncc">
+    <wsdl:part name="body" element="xsd1:getIdResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="nccList">
+    <wsdl:part name="body" element="xsd1:getResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="bookingRequest">
+    <wsdl:part name="body" element="xsd1:book">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="MyInput">
+    <wsdl:operation name="add">
+      <wsdl:input message="tns:nccRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:ncc">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get">
+      <wsdl:input message="tns:void">
+    </wsdl:input>
+      <wsdl:output message="tns:nccList">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="book">
+      <wsdl:input message="tns:bookingRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:booking">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getId">
+      <wsdl:input message="tns:uuid">
+    </wsdl:input>
+      <wsdl:output message="tns:ncc">
+    </wsdl:output>
+      <wsdl:fault name="NCCNotFound" message="tns:error">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MyInputSOAPBinding" type="tns:MyInput">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="add">
+      <soap:operation soapAction="add" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get">
+      <soap:operation soapAction="get" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="book">
+      <soap:operation soapAction="book" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getId">
+      <soap:operation soapAction="getId" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NCCNotFound">
+        <soap:fault name="NCCNotFound" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MyInputService">
+    <wsdl:port name="MyInputServicePort" binding="tns:MyInputSOAPBinding">
+      <soap:address location="http://localhost:8000"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

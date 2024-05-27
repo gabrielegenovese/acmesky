@@ -1,0 +1,15 @@
+services:
+  middleware:
+    hostname: service.ncc
+    container_name: ncc_middleware
+    build: ./middleware
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+  backend:
+    container_name: ncc_backend
+    build: ./backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+      - "8001:8001"
