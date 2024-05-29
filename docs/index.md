@@ -56,12 +56,12 @@ In this case, ACMESky uses various chauffeur rental companies with which it has 
 - SOA Structure
 - Build Instruction
 - Services
-  - ACMESky Services
-  - Prontogram
-  - GeoDistance
-  - Company
-  - NCC
-  - Bank
+    - ACMESky Services
+    - Prontogram
+    - GeoDistance
+    - Company
+    - NCC
+    - Bank
 
 ## How to start
 

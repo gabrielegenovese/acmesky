@@ -12,6 +12,7 @@ The following abbreviations will be used:
 - $BK$: the Bank Service
 - $GD$: the GeoDistance Service
 - $USR_j$: a user, where $j \in \{1...M\}$
+- $NCC_k$: the NCC Service
 
 where $N$ and $M$ are natural numbers.
 
@@ -45,7 +46,7 @@ Any user $j$ can register an interest for a flight, then ACMESky can reply with 
 
 ### Buying a ticket
 
-WIP
+The user ask to buy an offer. 
 
 $(\\
 \;( \text{wantToBuy}: USR_j \to ACM )\;;\\
@@ -59,6 +60,24 @@ $(\\
 \;\;(\\
 \;\;\;(\text{paymentOk}: BK \to ACM )\;;\\
 \;\;\;(\text{bookTicket}: ACM \to FC_i )\;;\\
+\;\;\;(\\
+\;\;\;\; 1 + \\
+\;\;\;\;(\\
+\;\;\;\;\;(\text{calcGeoDistance}: ACM \to GD)\;;\\
+\;\;\;\;\;(\text{resDistance}: GD \to ACM )\;;\\
+\;\;\;\;\;(\\
+\;\;\;\;\;\;1 + \\
+\;\;\;\;\;\;(\\
+\;\;\;\;\;\;\;(\\
+\;\;\;\;\;\;\;\;(\text{calcGeoDistance}: ACM \to GD)\;;\\
+\;\;\;\;\;\;\;\;(\text{resDistance}: GD \to ACM )\\
+\;\;\;\;\;\;\;)^*\;;\\
+\;\;\;\;\;\;\;(\text{bookTransport}: ACM \to NCC_k)\;;\\
+\;\;\;\;\;\;\;(\text{resBookTransport}: NCC_k \to ACM)\;;\\
+\;\;\;\;\;\;)\\
+\;\;\;\;\;)\\
+\;\;\;\;)\\
+\;\;\;)\;;\\
 \;\;\;(\text{sendTicketData}: FC_i \to ACM )\;;\\
 \;\;\;(\text{sendTicket}: ACM \to USR_j )\;;\\
 \;\;)\\
