@@ -4,9 +4,11 @@ Here is the interal schema of the services:
 
 ![draw.io soa schema](assets/soa.png "SOA Structure")
 
+> TODO: verificare e modificare!
+
 ## Port assigned to each service
 
-TODO
+> TODO: verificare e modificare!
 
 | Service              | Port |
 | -------------------- | ---- |
