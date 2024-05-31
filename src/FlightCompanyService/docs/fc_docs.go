@@ -3,7 +3,7 @@ package docs
 
 import "github.com/swaggo/swag"
 
-const docTemplate = `{
+const docTemplatefc = `{
     "schemes": {{ marshal .Schemes }},
     "swagger": "2.0",
     "info": {
@@ -344,20 +344,20 @@ const docTemplate = `{
     }
 }`
 
-// SwaggerInfo holds exported Swagger Info so clients can modify it
-var SwaggerInfo = &swag.Spec{
+// SwaggerInfofc holds exported Swagger Info so clients can modify it
+var SwaggerInfofc = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8091",
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "FlightCompany Swagger API",
 	Description:      "This is an API specification for the FlightCompany services.",
-	InfoInstanceName: "swagger",
-	SwaggerTemplate:  docTemplate,
+	InfoInstanceName: "fc",
+	SwaggerTemplate:  docTemplatefc,
 	LeftDelim:        "{{",
 	RightDelim:       "}}",
 }
 
 func init() {
-	swag.Register(SwaggerInfo.InstanceName(), SwaggerInfo)
+	swag.Register(SwaggerInfofc.InstanceName(), SwaggerInfofc)
 }

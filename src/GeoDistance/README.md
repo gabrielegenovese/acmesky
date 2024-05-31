@@ -33,5 +33,5 @@ docker run -dp 127.0.0.1:8000:8000 geodistance:latest
 Use [swaggo](https://github.com/swaggo/swag) to generate the Swagger API documentation:
 
 ```sh
-swag i
+swag init --parseDependency --instanceName geo
 ```

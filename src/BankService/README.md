@@ -49,5 +49,5 @@ Use [swaggo](https://github.com/swaggo/swag) to generate the Swagger API documen
 
 ```sh
 cd server
-swag init --parseDependency
+swag init --parseDependency --instanceName bank 
 ```
