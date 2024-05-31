@@ -49,8 +49,8 @@ var (
 //	@Tags			ncc
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body	nccRequest	true	"NCC"
-//	@Success		200	{object}	ncc
+//	@Param			request	body		nccRequest	true	"NCC"
+//	@Success		200		{object}	ncc
 //	@Failure		400
 //	@Router			/addNCC [post]
 func add(c *gin.Context) {
@@ -129,8 +129,8 @@ func getId(c *gin.Context) {
 //	@Description	Book a NCC
 //	@Tags			booking
 //	@Produce		json
-//	@Param			request	body	bookingRequest	true	"Booking request"
-//	@Success		200	{object}	booking
+//	@Param			request	body		bookingRequest	true	"Booking request"
+//	@Success		200		{object}	booking
 //	@Failure		400
 //	@Router			/book [post]
 func book(c *gin.Context) {

@@ -1,0 +1,198 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Manage and book NCCs.",
+        "title": "NCC API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/addNCC": {
+            "post": {
+                "description": "Create a new NCC",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ncc"
+                ],
+                "summary": "New NCC",
+                "parameters": [
+                    {
+                        "description": "NCC",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.nccRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.ncc"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/book": {
+            "post": {
+                "description": "Book a NCC",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "booking"
+                ],
+                "summary": "Book a NCC",
+                "parameters": [
+                    {
+                        "description": "Booking request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.bookingRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.booking"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/getNCC": {
+            "get": {
+                "description": "Get all the NCCs",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ncc"
+                ],
+                "summary": "Get all NCCs",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/main.ncc"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/getNCC/{id}": {
+            "get": {
+                "description": "Get the NCC with the specified ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ncc"
+                ],
+                "summary": "Get a specified NCC",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "NCC ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.ncc"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.booking": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "string"
+                }
+            }
+        },
+        "main.bookingRequest": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "description": "Format: dd/MM/yyyy kk:mm:ss",
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "nccId": {
+                    "type": "string"
+                }
+            }
+        },
+        "main.ncc": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "string"
+                }
+            }
+        },
+        "main.nccRequest": {
+            "type": "object",
+            "properties": {
+                "location": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
