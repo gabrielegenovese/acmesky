@@ -79,10 +79,13 @@ $\text{buyTicket}::=(\\
 \;(\text{wantToBuy}: USR_j \to ACM)\;;\\
 \;(\text{requestPayment}: ACM \to BK)\;;\\
 \;(\text{resPaymentData}: BK \to ACM)\;;\\
-\;(\text{resDataToUser}: ACM \to USR_j)\;;\\
+\;(\text{resPaymentData}: ACM \to USR_j)\;;\\
 \;(\text{payReceipt}: USR_j \to BK)\;;\\
 \;(\\
-\;\;(\text{paymentFailed}: BK \to USR_j)\\
+\;\;(\\
+\;\;\;(\text{paymentFailed}: BK \to ACM)\;;\\
+\;\;\;(\text{sendError}: ACM \to USR_j)\\
+\;\;)\\
 \;\;+\\
 \;\;(\\
 \;\;\;(\text{paymentOk}: BK \to ACM)\;;\\
@@ -115,20 +118,21 @@ $\text{buyTicket}::=(\\
 
 where $USR_j$ is any user, $FC_i$ is any flight company and $NCC_k$ is any rental service. The opertations are:
 
-- `wantToBuy`:
-- `requestPayment`:
-- `resPaymentData`:
-- `resDataToUser`:
-- `payReceipt`:
-- `paymentFailed`:
-- `paymentOk`:
-- `bookTicket`:
-- `sendTicketData`:
-- `calcGeoDistance`:
-- `resDistance`:
-- `bookTransport`:
-- `resBookTransport`:
-- `sendTicketAndData`:
+- `wantToBuy`: a user insert a code to buy a ticket
+- `requestPayment`: ACMESky requests the generation of a new payment practice
+- `resPaymentData`: the bank creates the payment practice and return the informations
+- `resPaymentData`: ACMESky returns the information to the user and ask to pay the bill
+- `payReceipt`: the user pay with its bank details
+- `paymentFailed`: the payment has failed and ACMESky is notified
+- `sendError`: ACMESky notify the user of the failed operation
+- `paymentOk`: the payment was succesful and the user is notified
+- `bookTicket`: ACMESky asks the flight company to book the ticket
+- `sendTicketData`:  the flight comapany sends the ticket informations to ACMESky
+- `calcGeoDistance`: ACMESky asks the distance of two points to the GeoDistance service
+- `resDistance`: the GeoDistance service responds to ACMESky
+- `bookTransport`: ACMESky books a cabin for the user
+- `resBookTransport`: the rental service responds with details to ACMESky
+- `sendTicketAndData`: ACMESky sends the ticket and all the optional informations to the user
 
 ## Verifying connectedness
 
@@ -148,6 +152,8 @@ This choreography is connected because the receiver in `reqFlightInfo` is equal 
 
 ## Projections
 
+Choreographies where the participant taken in consideration is not present will be ignored.
+
 ### $ACM$
 
 $\text{proj}(\text{reqFlight}, ACM) = (\text{reqFlightInfo}@FC_i\;;\;\overline{\text{resFlightInfo}}@FC_i)$
@@ -157,19 +163,54 @@ $\text{proj}(\text{regUser}, ACM) = (\overline{\text{registerFlightInterest}}@US
 $\text{proj}(\text{lastMinOffer}, ACM) = ((\text{recvOffer}@FC_i);(\overline{\text{notifyPG}}@PG); 1;( 1 +((\text{acceptOffer}@USR_n);(\overline{\text{notifyFlightCompany}}@FC_i)))) \\
 = (\text{recvOffer}@FC_i)\;;\;(\overline{\text{notifyPG}}@PG)\;;\;(\;1\;+\;((\text{acceptOffer}@USR_n)\;;\;(\overline{\text{notifyFlightCompany}}@FC_i)))$
 
-$\text{proj}(\text{buyTicket}, ACM) = ()$
+$\text{proj}(\text{buyTicket}, ACM) = (\\
+\;(\text{wantToBuy}@USR_j)\;;\\
+\;(\overline{\text{requestPayment}@BK})\;;\\
+\;(\text{resPaymentData}@BK)\;;\\
+\;(\overline{\text{resPaymentData}@USR_j})\;;\\
+\;1\;;\\
+\;(\\
+\;\;(\\
+\;\;\;(\text{paymentFailed}@BK)\;;\\
+\;\;\;(\overline{\text{sendError}}@USR_j)\\
+\;\;)\\
+\;\;+\\
+\;\;(\\
+\;\;\;(\text{paymentOk}@BK)\;;\\
+\;\;\;(\overline{\text{bookTicket}@FC_i})\;;\\
+\;\;\;(\text{sendTicketData}@FC_i)\;;\\
+\;\;\;(\\
+\;\;\;\; 1 + \\
+\;\;\;\;(\\
+\;\;\;\;\;(\overline{\text{calcGeoDistance}@GD})\;;\\
+\;\;\;\;\;(\text{resDistance}@GD)\;;\\
+\;\;\;\;\;(\\
+\;\;\;\;\;\;1 + \\
+\;\;\;\;\;\;(\\
+\;\;\;\;\;\;\;(\\
+\;\;\;\;\;\;\;\;(\overline{\text{calcGeoDistance}@GD})\;;\\
+\;\;\;\;\;\;\;\;(\text{resDistance}@GD)\\
+\;\;\;\;\;\;\;)^*\;;\\
+\;\;\;\;\;\;\;(\overline{\text{bookTransport}@NCC_k})\;;\\
+\;\;\;\;\;\;\;(\text{resBookTransport}@NCC_k)\;;\\
+\;\;\;\;\;\;)\\
+\;\;\;\;\;)\\
+\;\;\;\;)\\
+\;\;\;)\;;\\
+\;\;\;(\overline{\text{sendTicketAndData}@USR_j})\\
+\;\;)\\
+\;)\\
+)$
 
 ### $FC_i$
 
 $\text{proj}(\text{reqFlight}, FC_i) = (\overline{\text{reqFlightInfo}}@ACM\;;\;\text{resFlightInfo}@ACM)$
 
-
-
 $\text{proj}(\text{lastMinOffer}, FC_i) = \\
 \;\;(\;(\overline{\text{recvOffer}}@ACM)\;;\;1\;;\;1\;;\;(\;1\;+\;(\;1\;;\;(\text{notifyFlightCompany}@ACM)\;))) \\
 =(\overline{\text{recvOffer}}@ACM)\;;\;(\;1\;+\;(\text{notifyFlightCompany}@ACM)$
 
-$\text{proj}(\text{buyTicket}, FC_i) = (\;1\;;\;1\;;\;1\;;\;1\;;\;1\;;\;\;(\;1\;+\;(\;1\;;\;\\
+$\text{proj}(\text{buyTicket}, FC_i) = (\;1\;;\;1\;;\;1\;;\;1\;;\;1\;;\;\;(\;(1;1)\;+\;(\;1\;;\;\\
 \;\;(\text{bookTicket}@ACM)\;;\;(\overline{\text{sendTicketData}}@ACM)\;;\\
 \;\;(\;1\;+\;(\;1\;;\;1\;;\;(\;1\;+\;\;(\;(\;1\;;\;1\;)^*;\;1;\;1\;;\;))));1))\\
 = (\text{bookTicket}@ACM) \;;\;(\overline{\text{sendTicketData}}@ACM)$
@@ -185,17 +226,17 @@ $\text{proj}(\text{lastMinOffer}, PG) = \\
 $\text{proj}(\text{buyTicket}, BK) = (\;1\;;\\
 \;(\;\text{requestPayment}@ACM)\;;\;(\overline{\text{resPaymentData}}@ACM)\;;\;1\;;\\
 \;(\text{payReceipt}@USR_j)\;;\;(\;(\overline{\text{paymentFailed}}@USR_j)\;+\;(\;(\overline{\text{paymentOk}}@USR_j)\;;\\
-1\;;\;1\;;\;(\;1\;+\;(\;1\;;\;1\;;(\;1\;+\;\;(\;(\;1\;;\;1\;)^*;1;\;\;1\;))));1))\\
+1\;;\;1\;;\;(\;(1;1)\;+\;(\;1\;;\;1\;;(\;1\;+\;\;(\;(\;1\;;\;1\;)^*;1;\;\;1\;))));1))\\
 = (\text{requestPayment}@ACM)\; ;\; (\overline{\text{resPaymentData}}@ACM)\; ;\\
 \;\;\;(\text{payReceipt}@USR_j)\;; \;(\; (\overline{\text{paymentFailed}}@USR_j)\; +\; (\overline{\text{paymentOk}}@USR_j)\;)$
 
 ### $GD$
 
-$\text{proj}(\text{buyTicket}, GD) = (\;1\;;\;1\;;\;1\;;\;1\;;\;1\;;\;(\;1\;+\;(\;1\;;\;1\;;\;1\;;\;(\;1\;+\;(\;\\
+$\text{proj}(\text{buyTicket}, GD) = (\;1\;;\;1\;;\;1\;;\;1\;;\;1\;;\;(\;(1;1)\;+\;(\;1\;;\;1\;;\;1\;;\;(\;1\;+\;(\;\\
 \;\;\;(\text{calcGeoDistance}@ACM)\;;\;(\overline{\text{resDistance}}@ACM)\;;\\
 \;\;\;(\;1\;+\;\;(\;(\;(\text{calcGeoDistance}@ACM)\;;\;(\overline{\text{resDistance}}@ACM)\;)^*;\\
 1;\;\;1\;))));1))\\
-= (\text{calcGeoDistance}@ACM)\;;\;(\overline{\text{resDistance}}@ACM)\;;\; (\;1\;+\;(\text{calcGeoDistance}@ACM)\;;\;(\overline{\text{resDistance}}@ACM)^*)$
+= (\;1\;+\;(\text{calcGeoDistance}@ACM)\;;\;(\overline{\text{resDistance}}@ACM)\;;\; (\;1\;+\;(\text{calcGeoDistance}@ACM)\;;\;(\overline{\text{resDistance}}@ACM)))$
 
 ### $USR_j$
 
@@ -205,12 +246,51 @@ $\text{proj}(\text{lastMinOffer}, USR_j) = \\
 \;\;(\;1\;;\;1\;;\;(\text{notifyUsr}@PG)\;;\;(\;1\;+\;(\;(\overline{\text{acceptOffer}}@ACM)\;;\;1\;))) \\
 =(\text{notifyUsr}@PG)\;;\;(\;1\;+\;(\overline{\text{acceptOffer}}@ACM)$
 
-$\text{proj}(\text{buyTicket}, USR_j) = ()$
+$\text{proj}(\text{buyTicket}, USR_j) = (\\
+\;(\overline{\text{wantToBuy}}@ACM)\;;\\
+\;1\;;\\
+\;1\;;\\
+\;(\text{resPaymentData}@ACM)\;;\\
+\;(\overline{\text{payReceipt}}@BK)\;;\\
+\;(\\
+\;\;(\\
+\;\;\;1\\\
+\;\;\;(\text{sendError}@ACM)\\\
+\;\;)\\
+\;\;+\\
+\;\;(\\
+\;\;\;1\;;\\
+\;\;\;1\;;\\
+\;\;\;1\;;\\
+\;\;\;(\\
+\;\;\;\; 1 + \\
+\;\;\;\;(\\
+\;\;\;\;\;1\;;\\
+\;\;\;\;\;1\;;\\
+\;\;\;\;\;(\\
+\;\;\;\;\;\;1 + \\
+\;\;\;\;\;\;(\\
+\;\;\;\;\;\;\;(\\
+\;\;\;\;\;\;\;\;1\;;\\
+\;\;\;\;\;\;\;\;1\\
+\;\;\;\;\;\;\;)^*\;;\\
+\;\;\;\;\;\;\;1\;;\\
+\;\;\;\;\;\;\;1\;;\\
+\;\;\;\;\;\;)\\
+\;\;\;\;\;)\\
+\;\;\;\;)\\
+\;\;\;)\;;\\
+\;\;\;(\text{sendTicketAndData}@ACM)\\
+\;\;)\\
+\;)\\
+)\\
+= (\overline{\text{wantToBuy}}@ACM)\;;\; (\text{resPaymentData}@ACM)\;;\;\\
+ (\overline{\text{payReceipt}}@BK)\;;\; (\;(\text{sendError}@ACM)\;+\; (\text{sendTicketAndData}@ACM)\;)$
 
 ### $NCC_k$
 
 $\text{proj}(\text{buyTicket}, NCC_k) = (\;1\;;\;1\;;\;1\;;\;1\;;\;1\;;\\
-\;\;(\;1\;+\;(\;1\;;\;1\;;\;1\;;\;(\;1\;+\;(\;1\;;\;1\;;\;(\;1\;+\;\;(\;(\;1\;;\;1\;)^*;\\
+\;\;(\;(1;1)\;+\;(\;1\;;\;1\;;\;1\;;\;(\;1\;+\;(\;1\;;\;1\;;\;(\;1\;+\;\;(\;(\;1\;;\;1\;)^*;\\
 \;\;\;\;(\text{bookTransport}@ACM);\\
 \;\;\;\;(\overline{\text{resBookTransport}}@ACM)\;;\\
 \;\;))));1)) = (\text{bookTransport}@ACM)\;;\;(\overline{\text{resBookTransport}}@ACM)$
