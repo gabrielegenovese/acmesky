@@ -30,10 +30,6 @@ theme:
         icon: material/brightness-4
         name: Switch to system preference
 
-plugins:
-  - render_swagger:
-      allow_arbitrary_locations : true
-
 markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
@@ -46,3 +42,8 @@ extra_javascript:
 extra_css:
   - stylesheets/katex.min.css
   - stylesheets/extra.css
+
+plugins:
+  - render_swagger:
+      allow_arbitrary_locations : true
+      css: https://acmesky-expuss2000-d511ae4437280f0ac43140f188bc34fa077888571f00.gitlab.io/stylesheets/swagger-ui.css
