@@ -1,3 +1,3 @@
 # Geographical distance service
 
-!!swagger ../../src/GeoDistance/docs/swagger.yaml!!
+!!swagger ../../src/GeoDistance/docs/geo_swagger.yaml!!

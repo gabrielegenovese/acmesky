@@ -1,3 +1,3 @@
 # NCC service
 
-!!swagger ../../src/ACMESkyNCC/middleware/docs/swagger.yaml!!
+!!swagger ../../src/ACMESkyNCC/middleware/docs/ncc_swagger.yaml!!
