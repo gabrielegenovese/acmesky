@@ -30,6 +30,10 @@ theme:
         icon: material/brightness-4
         name: Switch to system preference
 
+plugins:
+  - render_swagger:
+      allow_arbitrary_locations : true
+
 markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
