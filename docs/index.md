@@ -46,22 +46,7 @@ In this case, ACMESky uses various chauffeur rental companies with which it has 
         GeoDistance/
         Prontogram/
 
-## Documentation strucure
-
-- Home
-- Choreographies
-- BPMN Diagrams
-- Choreographies BPMN
-- UML
-- SOA Structure
-- Build Instruction
-- Services
-    - ACMESky Services
-    - Prontogram
-    - GeoDistance
-    - Company
-    - NCC
-    - Bank
+> TODO: controllare
 
 ## How to start
 
