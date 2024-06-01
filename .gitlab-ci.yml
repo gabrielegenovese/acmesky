@@ -7,7 +7,7 @@ stages:
 
 swag:
   image: golang:latest
-  stage: pages
+  stage: swag
   script:
   - go install -v github.com/swaggo/swag/cmd/swag@v1.16.3
   - cd src/ACMESkyService
@@ -20,7 +20,7 @@ swag:
   - swag init --parseDependency --instanceName geo
 
 pages:
-  stage: deploy
+  stage: pages
   before_script:
     - pip install -r requirements.txt
   script:
