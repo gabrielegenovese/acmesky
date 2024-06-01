@@ -10,7 +10,7 @@ swag:
   stage: swag
   script:
   - go install -v github.com/swaggo/swag/cmd/swag@v1.16.3
-  - src/ACMESkyNCC/middleware
+  - cd src/ACMESkyNCC/middleware
   - swag init --parseDependency --instanceName ncc
   - cd ../../src/ACMESkyService
   - swag init --parseDependency --instanceName acme
