@@ -1,13 +1,10 @@
 image: python:3.8-buster
 
-
-stages:
-  - swag
-  - pages
-
-swag:
+pages:
   image: golang:latest
-  stage: swag
+  stage: pages
+  before_script:
+    - pip install -r requirements.txt
   script:
   - go install -v github.com/swaggo/swag/cmd/swag@v1.16.3
   - cd src/ACMESkyNCC/middleware
@@ -20,12 +17,6 @@ swag:
   - swag init --parseDependency --instanceName fc
   - cd ../GeoDistance
   - swag init --parseDependency --instanceName geo
-
-pages:
-  stage: pages
-  before_script:
-    - pip install -r requirements.txt
-  script:
   - mkdocs build --strict --verbose
   - mv site public
   artifacts:
