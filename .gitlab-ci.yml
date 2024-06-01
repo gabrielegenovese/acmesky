@@ -6,7 +6,7 @@ stages:
   - pages
 
 swag:
-  images: golang:latest
+  image: golang:latest
   stage: pages
   script:
   - go install -v github.com/swaggo/swag/cmd/swag@v1.16.3
