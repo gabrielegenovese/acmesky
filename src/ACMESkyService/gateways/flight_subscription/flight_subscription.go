@@ -18,15 +18,18 @@ import (
 	"github.com/google/uuid"
 )
 
-// Get a list of all available airports
+type ResError struct {
+	Error string `json:"error"`
+}
+
 // @Summary      Get all airports
 // @Description  Get a list of all available airports
 // @Tags         airport
 // @Accept       json
 // @Produce      json
 // @Param        query  query     string     false  "Search query"
-// @Success      200  {array}  []entitties.Airports
-// @Failure      500  {object}  httputil.HTTPError
+// @Success      200  {array}  []entities.Airport
+// @Failure      500  {object}  ResError
 // @Router       /airports [get]
 func rest_getAirports(ctx *gin.Context) {
 
@@ -34,7 +37,7 @@ func rest_getAirports(ctx *gin.Context) {
 	airports, err := airportsDAO.GetAirports(searchQuery)
 
 	if err != nil {
-		ctx.IndentedJSON(http.StatusInternalServerError, airports)
+		ctx.IndentedJSON(http.StatusInternalServerError, ResError{Error: err.Error()})
 	} else {
 		ctx.IndentedJSON(http.StatusOK, airports)
 	}
@@ -55,8 +58,8 @@ func rest_getAirports(ctx *gin.Context) {
 // @Param travel_seats_count body int true "Count of passengers seats customer want reserve"
 // @Param travel_max_price body float32 true "Max customer total budget for depart and return offer where (depart flight price) * (travel_seats_count) + (return flight price) * (travel_seats_count) <= travel_max_price"
 // @Success      200  {object}  string
-// @Failure      400  {object}  httputil.HTTPError
-// @Failure      500  {object}  httputil.HTTPError
+// @Failure      400  {object}  ResError
+// @Failure      500  {object}  ResError
 // @Router       /subscribe [post]
 func rest_subscribeTravelPreference(context *gin.Context) {
 	var newSubRequest entities.CustomerFlightSubscriptionRequest
@@ -75,13 +78,13 @@ func rest_subscribeTravelPreference(context *gin.Context) {
 	_, err := bpmn_NotifyReceivedTravelPreference(zbClient, bpk_uuid.String(), newSubRequest)
 
 	if err != nil {
-		context.Status(http.StatusInternalServerError)
+		context.IndentedJSON(http.StatusInternalServerError, ResError{Error: err.Error()})
 	} else {
 		// waiting result
 		outVars := <-result
 
 		if _, hasError := outVars["errorCode"]; hasError {
-			context.Status(http.StatusInternalServerError)
+			context.IndentedJSON(http.StatusInternalServerError, ResError{Error: "bpmn has got an error"})
 		} else {
 			context.Status(http.StatusOK)
 		}
