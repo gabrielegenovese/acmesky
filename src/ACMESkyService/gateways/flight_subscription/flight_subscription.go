@@ -22,15 +22,15 @@ type ResError struct {
 	Error string `json:"error"`
 }
 
-// @Summary      Get all airports
-// @Description  Get a list of all available airports
-// @Tags         airport
-// @Accept       json
-// @Produce      json
-// @Param        query  query     string     false  "Search query"
-// @Success      200  {array}  []entities.Airport
-// @Failure      500  {object}  ResError
-// @Router       /airports [get]
+//	@Summary		Get all airports
+//	@Description	Get a list of all available airports
+//	@Tags			airport
+//	@Accept			json
+//	@Produce		json
+//	@Param			query	query		string	false	"Search query"
+//	@Success		200		{array}		[]entities.Airport
+//	@Failure		500		{object}	ResError
+//	@Router			/airports [get]
 func rest_getAirports(ctx *gin.Context) {
 
 	searchQuery := ctx.Query("query")
@@ -45,22 +45,15 @@ func rest_getAirports(ctx *gin.Context) {
 }
 
 // Create a Travel Preference and subscribe to notification service (a sort of Newsletter like servive)
-// @Summary      Add a Travel preference
-// @Description  Add a Travel preference and subscribe to notification service
-// @Tags         travel_preference
-// @Accept       json
-// @Param        query  query     string     false  "Search query"
-// @Param customer_prontogram_id body string true "Your prontogram username" SchemaExample(testUser)
-// @Param airport_id_origin body string true "Airport origin ID for depart"
-// @Param airport_id_destination body string true "Airport origin ID for return"
-// @Param travel_date_start body string true "Depart date in YYYY-MM-DD hh:mm:ss format" SchemaExample(2024-12-30 14:30:00)
-// @Param travel_date_end body string true "Return date in YYYY-MM-DD hh:mm:ss format" SchemaExample(2024-12-30 14:30:00)
-// @Param travel_seats_count body int true "Count of passengers seats customer want reserve"
-// @Param travel_max_price body float32 true "Max customer total budget for depart and return offer where (depart flight price) * (travel_seats_count) + (return flight price) * (travel_seats_count) <= travel_max_price"
-// @Success      200  {object}  string
-// @Failure      400  {object}  ResError
-// @Failure      500  {object}  ResError
-// @Router       /subscribe [post]
+//	@Summary		Add a Travel preference
+//	@Description	Add a Travel preference and subscribe to notification service
+//	@Tags			travel_preference
+//	@Accept			json
+//	@Param			body	body		entities.CustomerFlightSubscriptionRequest	true	"subscription data"	SchemaExample(testUser)
+//	@Success		200		{object}	string
+//	@Failure		400		{object}	ResError
+//	@Failure		500		{object}	ResError
+//	@Router			/subscribe [post]
 func rest_subscribeTravelPreference(context *gin.Context) {
 	var newSubRequest entities.CustomerFlightSubscriptionRequest
 

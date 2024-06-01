@@ -11243,7 +11243,7 @@
 }
 
 .swagger-ui .info a {
-    color: #bec0c7;
+    color: #426bff !important;
     font-family: sans-serif;
     font-size: 14px;
     transition: all .4s
