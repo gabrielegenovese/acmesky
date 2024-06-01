@@ -1,10 +1,28 @@
 image: python:3.8-buster
 
-before_script:
-  - pip install -r requirements.txt
+
+stages:
+  - swag
+  - pages
+
+swag:
+  images: golang:latest
+  stage: pages
+  script:
+  - go install -v github.com/swaggo/swag/cmd/swag@v1.16.3
+  - cd src/ACMESkyService
+  - swag init --parseDependency --instanceName acme
+  - cd ../BankService
+  - swag init --parseDependency --instanceName bank
+  - cd ../FlightCompanyService
+  - swag init --parseDependency --instanceName fc
+  - cd ../GeoDistance
+  - swag init --parseDependency --instanceName geo
 
 pages:
   stage: deploy
+  before_script:
+    - pip install -r requirements.txt
   script:
   - mkdocs build --strict --verbose
   - mv site public
