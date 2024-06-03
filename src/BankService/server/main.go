@@ -19,8 +19,8 @@ type Config struct {
 var (
 	// Default config values
 	config = Config{
-		Listen:  "0.0.0.0:8000",
-		BaseURL: "http://localhost:8000",
+		Listen:  "0.0.0.0:8001",
+		BaseURL: "http://localhost:8001",
 	}
 )
 
@@ -31,6 +31,7 @@ var (
 //	@contact.email	gabriele.genovese2@studio.unibo.it
 //	@license.name	GPLv2
 //	@license.url	https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+//	@Host			localhost:8001
 //	@BasePath		/
 func main() {
 	router := gin.Default()
