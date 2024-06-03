@@ -55,7 +55,7 @@ $\text{lastMinOffer}::=(\\
 \;( \text{notifyUsr}: PG \to USR_j )\;;\\
 \;( 1 +\\
 \;\;(\\
-\;\;\;( \text{acceptOffer} : USR_n \to ACM)\;;\\
+\;\;\;( \text{acceptOffer} : USR_j \to ACM)\;;\\
 \;\;\;( \text{notifyFlightCompany} : ACM \to FC_i)\\
 \;\;)\\
 \;)\\
@@ -183,8 +183,8 @@ $\text{proj}(\text{reqFlight}, ACM) = (\text{reqFlightInfo}@FC_i\;;\;\overline{\
 
 $\text{proj}(\text{regUser}, ACM) = (\overline{\text{registerFlightInterest}}@USR_j\;;\;(\text{resConfirm}@USR_j\;+\; \text{resError}@USR_j))$
 
-$\text{proj}(\text{lastMinOffer}, ACM) = ((\text{recvOffer}@FC_i);(\overline{\text{notifyPG}}@PG); 1;( 1 +((\text{acceptOffer}@USR_n);(\overline{\text{notifyFlightCompany}}@FC_i)))) \\
-= (\text{recvOffer}@FC_i)\;;\;(\overline{\text{notifyPG}}@PG)\;;\;(\;1\;+\;((\text{acceptOffer}@USR_n)\;;\;(\overline{\text{notifyFlightCompany}}@FC_i)))$
+$\text{proj}(\text{lastMinOffer}, ACM) = ((\text{recvOffer}@FC_i);(\overline{\text{notifyPG}}@PG); 1;( 1 +((\text{acceptOffer}@USR_j);(\overline{\text{notifyFlightCompany}}@FC_i)))) \\
+= (\text{recvOffer}@FC_i)\;;\;(\overline{\text{notifyPG}}@PG)\;;\;(\;1\;+\;((\text{acceptOffer}@USR_j)\;;\;(\overline{\text{notifyFlightCompany}}@FC_i)))$
 
 $\text{proj}(\text{buyTicket}, ACM) = (\\
 \;(\text{wantToBuy}@USR_j)\;;\\
