@@ -24,6 +24,7 @@ extra_css:
   - stylesheets/extra.css
 
 plugins:
+  - kroki
   - render_swagger:
       allow_arbitrary_locations : true
       css: https://acmesky-expuss2000-d511ae4437280f0ac43140f188bc34fa077888571f00.gitlab.io/stylesheets/swagger-ui.css
