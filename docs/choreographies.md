@@ -179,7 +179,7 @@ Choreographies where the participant taken in consideration is not present will 
 
 ### $ACM$
 
-$\text{proj}(\text{reqFlight}, ACM) = (\text{reqFlightInfo}@FC_i\;;\;\overline{\text{resFlightInfo}}@FC_i)$
+$\text{proj}(\text{reqFlight}, ACM) = (\overline{\text{reqFlightInfo}}@FC_i\;;\;\text{resFlightInfo}@FC_i)$
 
 $\text{proj}(\text{regUser}, ACM) = (\overline{\text{registerFlightInterest}}@USR_j\;;\;(\text{resConfirm}@USR_j\;+\; \text{resError}@USR_j))$
 
