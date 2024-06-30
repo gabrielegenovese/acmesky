@@ -7,11 +7,9 @@ import (
 	dbClient "flightcompany/dao/db"
 	"flightcompany/gateways/bookings"
 	"flightcompany/gateways/flights"
-
-	_ "flightcompany/docs"
-
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
+	// _ "flightcompany/docs"
+	// swaggerFiles "github.com/swaggo/files"
+	// ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 //	@title			FlightCompany Swagger API
@@ -40,6 +38,6 @@ func main() {
 	router := gin.Default()
 	flights.Listen(router)
 	bookings.Listen(router)
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	// router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run("localhost:8091")
 }
