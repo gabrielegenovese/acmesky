@@ -55,18 +55,17 @@ services:
       - acmesky_frontend
     restart: unless-stopped
 
-#  acmesky_website:
-#    depends_on:
-#      - acmesky_service
-#    hostname: www.acmesky
-#    container_name: acmesky_www_container
-#    build: ./src/ACMESkyFrontend/.
-#    image: acmesky/frontend
-#    env_file:
-#      - ./src/ACMESkyFrontend/.env
-#    ports:
-#      - "5173:5173"
-#    networks:
-#      - acmesky_backend
-#      - acmesky_frontend
-#    restart: unless-stopped
+  acmesky_website:
+    depends_on:
+      - acmesky_service
+    hostname: www.acmesky
+    container_name: acmesky_www_container
+    build: ./src/ACMESkyFrontend/.
+    image: acmesky/frontend
+    env_file:
+      - ./src/ACMESkyFrontend/.env
+    ports:
+      - "8080:8080"
+    networks:
+      - acmesky_frontend
+    restart: unless-stopped
