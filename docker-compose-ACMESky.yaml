@@ -5,7 +5,7 @@ volumes:
 
 networks:
   acmesky_camunda:
-    name: 'camunda-platform:'
+    name: 'camunda-platform'
     external: true
   acmesky_backend:
   acmesky_frontend:
