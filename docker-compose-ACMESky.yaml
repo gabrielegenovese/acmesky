@@ -1,0 +1,73 @@
+version: '3.9'
+
+volumes:
+  mysql_data:
+
+networks:
+  acmesky_camunda:
+    name: 'camunda-platform:'
+    external: true
+  acmesky_backend:
+  acmesky_frontend:
+    driver: bridge
+
+services:
+
+#  adminer:
+#    container_name: adminer_acmesky
+#    image: adminer
+#    restart: unless-stopped
+#    ports:
+#      - 8098:8080
+#    networks:
+#      - acmesky_backend
+    
+# ACMEsky sevices
+  acmesky_db:
+    hostname: db.acmesky
+    container_name: acmesky_mysql_container
+    build: ./src/ACMESkyDB/.
+    image: acmesky/db
+    env_file:
+      - ./src/ACMESkyDB/.env
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "5432:5432"
+      - "3306:3306"
+    networks:
+      - acmesky_backend
+    restart: unless-stopped
+
+  acmesky_service:
+    depends_on:
+      - acmesky_db
+    hostname: service.acmesky
+    container_name: acmesky_service_container
+    build: ./src/ACMESkyService/.
+    image: acmesky/service
+    env_file:
+      - ./src/ACMESkyService/.env
+    ports:
+      - "8090:8090"
+    networks:
+      - acmesky_backend
+      - camunda-platform
+      - acmesky_frontend
+    restart: unless-stopped
+
+#  acmesky_website:
+#    depends_on:
+#      - acmesky_service
+#    hostname: www.acmesky
+#    container_name: acmesky_www_container
+#    build: ./src/ACMESkyFrontend/.
+#    image: acmesky/frontend
+#    env_file:
+#      - ./src/ACMESkyFrontend/.env
+#    ports:
+#      - "5173:5173"
+#    networks:
+#      - acmesky_backend
+#      - acmesky_frontend
+#    restart: unless-stopped
