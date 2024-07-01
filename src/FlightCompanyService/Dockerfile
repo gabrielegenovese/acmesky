@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7-labs
 
-FROM golang:1.21.5 as builder
+FROM golang:1.21.5-alpine as builder
 
 ADD . /build
 WORKDIR /build
