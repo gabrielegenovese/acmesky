@@ -4,8 +4,7 @@ volumes:
   mysql_data:
 
 networks:
-  acmesky_camunda:
-    name: 'camunda-platform'
+  acmesky_camunda-platform:
     external: true
   acmesky_backend:
   acmesky_frontend:
@@ -52,7 +51,7 @@ services:
       - "8090:8090"
     networks:
       - acmesky_backend
-      - camunda-platform
+      - acmesky_camunda-platform
       - acmesky_frontend
     restart: unless-stopped
 

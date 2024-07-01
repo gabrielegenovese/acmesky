@@ -171,3 +171,4 @@ volumes:
 
 networks:
   camunda-platform:
+    driver: bridge
