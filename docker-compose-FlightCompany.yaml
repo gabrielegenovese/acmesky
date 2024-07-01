@@ -1,6 +1,8 @@
 networks:
   flightcompany_backend:
+    name: 'flightcompany_backend'
   flightcompany_frontend:
+    name: 'flightcompany_frontend'
     driver: bridge
   
 services:

@@ -7,7 +7,9 @@ networks:
   acmesky_camunda-platform:
     external: true
   acmesky_backend:
+    name: 'acmesky_backend'
   acmesky_frontend:
+    name: 'acmesky_frontend'
     driver: bridge
 
 services:
