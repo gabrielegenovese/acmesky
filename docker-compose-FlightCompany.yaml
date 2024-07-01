@@ -1,0 +1,44 @@
+networks:
+  flightcompany_backend:
+  flightcompany_frontend:
+    driver: bridge
+  
+services:
+#  adminer:
+#    container_name: adminer_flightcompany
+#    image: adminer
+#    restart: unless-stopped
+#    ports:
+#      - 8099:8080
+#    networks:
+#      - flightcompany_backend
+#      - flightcompany_frontend
+  
+  flightcompany_db:
+    hostname: db.flightcompany
+    container_name: flightcompany_mysql_container
+    build: ./src/FlightCompanyDB/.
+    env_file:
+      - ./src/FlightCompanyDB/.env
+    ports:
+      - "5433:5432"
+      - "3307:3306"
+    networks:
+      - flightcompany_backend
+    restart: unless-stopped
+  flightcompany_service:
+    depends_on:
+      - flightcompany_db
+    hostname: service.flightcompany
+    container_name: flightcompany_service_container
+    build: ./src/FlightCompanyService/.
+    env_file:
+      - ./src/FlightCompanyService/.env
+    ports:
+      - "8091:8091"
+    networks:
+      - flightcompany_backend
+      - flightcompany_frontend
+    restart: unless-stopped
+
+
