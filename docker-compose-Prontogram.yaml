@@ -1,0 +1,35 @@
+networks:
+  prontogram_public:
+    name: 'prontogram_public'
+    driver: bridge
+
+services:
+
+  prontogram_service:
+    hostname: service.prontogram
+    container_name: prontogram_service_container
+    build: ./src/Prontogram/backend/.
+    image: prontogram/service
+    env_file:
+      - ./src/Prontogram/backend/.env
+    ports:
+      - "8092:8092"
+    networks:
+      - prontogram_public
+    restart: unless-stopped
+
+  prontogram_website:
+    depends_on:
+      - prontogram_service
+    hostname: www.prontogram
+    container_name: prontogram_www_container
+    build: ./src/Prontogram/frontend/.
+    image: prontogram/frontend
+    env_file:
+      - ./src/Prontogram/frontend/.env
+    ports:
+      - "8079:8079"
+    networks:
+      - prontogram_public
+    restart: unless-stopped
+
