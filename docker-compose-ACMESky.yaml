@@ -8,8 +8,8 @@ networks:
     external: true
   acmesky_backend:
     name: 'acmesky_backend'
-  acmesky_frontend:
-    name: 'acmesky_frontend'
+  acmesky_public:
+    name: 'acmesky_public'
     driver: bridge
 
 services:
@@ -54,7 +54,7 @@ services:
     networks:
       - acmesky_backend
       - acmesky_camunda-platform
-      - acmesky_frontend
+      - acmesky_public
     restart: unless-stopped
 
   acmesky_website:
@@ -69,5 +69,5 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - acmesky_frontend
+      - acmesky_public
     restart: unless-stopped

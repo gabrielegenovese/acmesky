@@ -1,8 +1,8 @@
 networks:
   flightcompany_backend:
     name: 'flightcompany_backend'
-  flightcompany_frontend:
-    name: 'flightcompany_frontend'
+  flightcompany_public:
+    name: 'flightcompany_public'
     driver: bridge
   
 services:
@@ -14,7 +14,7 @@ services:
 #      - 8099:8080
 #    networks:
 #      - flightcompany_backend
-#      - flightcompany_frontend
+#      - flightcompany_public
   
   flightcompany_db:
     hostname: db.flightcompany
@@ -42,7 +42,7 @@ services:
       - "8091:8091"
     networks:
       - flightcompany_backend
-      - flightcompany_frontend
+      - flightcompany_public
     restart: unless-stopped
 
 
