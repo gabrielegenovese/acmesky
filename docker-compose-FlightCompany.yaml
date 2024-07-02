@@ -2,9 +2,9 @@ networks:
   flightcompany_backend:
     name: 'flightcompany_backend'
   flightcompany_public:
-    name: 'flightcompany_public'
-    driver: bridge
-  
+    name: 'net'
+    external: true
+
 services:
 #  adminer:
 #    container_name: adminer_flightcompany

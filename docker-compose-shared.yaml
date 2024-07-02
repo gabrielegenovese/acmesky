@@ -1,0 +1,12 @@
+networks:
+  # This is a fake public network used to connect all "public" containers
+  net:
+    driver: bridge
+    name: 'net'
+
+services:
+  removeme:
+    container_name: hello-world
+    image: hello-world
+    networks:
+      - net

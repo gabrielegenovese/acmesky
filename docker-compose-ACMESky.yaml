@@ -9,8 +9,8 @@ networks:
   acmesky_backend:
     name: 'acmesky_backend'
   acmesky_public:
-    name: 'acmesky_public'
-    driver: bridge
+    name: 'net'
+    external: true
 
 services:
 

@@ -1,7 +1,7 @@
 networks:
   prontogram_public:
-    name: 'prontogram_public'
-    driver: bridge
+    name: 'net'
+    external: true
 
 services:
 
