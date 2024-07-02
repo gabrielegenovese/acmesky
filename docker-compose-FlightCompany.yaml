@@ -20,6 +20,7 @@ services:
     hostname: db.flightcompany
     container_name: flightcompany_mysql_container
     build: ./src/FlightCompanyDB/.
+    image: flightcompany/db
     env_file:
       - ./src/FlightCompanyDB/.env
     ports:
@@ -34,6 +35,7 @@ services:
     hostname: service.flightcompany
     container_name: flightcompany_service_container
     build: ./src/FlightCompanyService/.
+    image: flightcompany/service
     env_file:
       - ./src/FlightCompanyService/.env
     ports:
