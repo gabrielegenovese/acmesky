@@ -39,5 +39,5 @@ func main() {
 	flights.Listen(router)
 	bookings.Listen(router)
 	// router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	router.Run("localhost:8091")
+	router.Run("0.0.0.0:8091")
 }

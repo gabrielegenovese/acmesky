@@ -8,7 +8,7 @@ include "string_utils.iol"
 
 inputPort ProntogramService
 {
-    Location: "socket://localhost:8092"
+    Location: "socket://0.0.0.0:8092"
     Interfaces: Users, Authentication, Messages, Shared
     Protocol: http {
         format -> httpResponse.format
