@@ -117,5 +117,5 @@ func bpmn_NotifyReceivedTravelPreference(zBClient zbc.Client, bpk string, newSub
 func Listen(router *gin.RouterGroup) {
 
 	router.GET("/airports", rest_getAirports)
-	router.PUT("/subscribe", rest_subscribeTravelPreference)
+	router.POST("/subscribe", rest_subscribeTravelPreference)
 }

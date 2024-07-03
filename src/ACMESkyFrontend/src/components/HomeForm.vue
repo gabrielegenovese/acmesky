@@ -1,25 +1,46 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import type { Airport } from "../types/Airport";
-const whereValue = ref("");
+import SubscribePreferenceDialog from "../components/SubscribePreferenceDialog.vue";
+
+const departCity = ref<string>();
+const landCity = ref<string>();
+const departAirportID = ref<string>();
+const landAirportID = ref<string>();
+
+// already normalized
+const departDate = ref<string | Date>(new Date().toISOString());
+const returnDate = ref<string | Date>();
+const budget = ref<number>();
+const seatsCount = ref<number>(1);
+
 const airports = ref([] as Airport[]);
 function openDialog() {
-	const dateStart = (<HTMLInputElement>document.getElementById("dateStart"))
-		.value;
-	const dateEnd = (<HTMLInputElement>document.getElementById("dateEnd"))
-		.value;
-	if (dateStart >= dateEnd) {
+	// departDate.value = new Date(departDate.value)
+	departDate.value = new Date(departDate.value as string)
+	returnDate.value = new Date(returnDate.value as string)
+	if (departDate.value && returnDate.value && departDate.value >= returnDate.value ) {
 		alert(
 			"You cannot travel in time: your departure must before your return",
 		);
-	} else if (
-		!airports.value.some((airport) => airport.city == whereValue.value)
-	) {
-		alert("Select a valid airport");
 	} else {
-		(<HTMLDialogElement>(
-			document.getElementById("subscribePreferenceDialog")
-		)).showModal();
+		const airport_origin = airports.value.find(airport => airport.city == departCity.value);
+		const airport_destination = airports.value.find(airport => airport.city == landCity.value);
+
+		if (!airport_origin) {
+			alert("Select a valid depart airport");
+		}
+		else if ( !airport_destination ) {
+			alert("Select a valid land airport");
+		} 
+		else {
+			departAirportID.value = airport_origin.airport_id;
+			landAirportID.value = airport_destination.airport_id;
+			
+			(<HTMLDialogElement>(
+				document.getElementById("subscribePreferenceDialog")
+			)).showModal();
+		}
 	}
 }
 onMounted(() => {
@@ -49,31 +70,56 @@ onMounted(() => {
 							type="date"
 							class="grow rounded focus:border-gray-500 focus:ring-0 focus:drop-shadow-md"
 							required
+							v-model="departDate"
 						/>
 						<input
 							id="dateEnd"
 							type="date"
 							class="grow rounded focus:border-gray-500 focus:ring-0 focus:drop-shadow-md"
 							required
+							v-model="returnDate"
 						/>
 					</div>
 				</div>
 				<div class="flex flex-col gap-2">
-					<label for="where">Where to take off??</label>
+
+					<label for="travel_origin">Where to take off ?</label>
 					<input
-						id="where"
+						id="travel_origin"
 						type="search"
-						list="airports"
-						name="where"
+						list="airports_depart"
+						name="travel_origin"
 						autocomplete="off"
 						class="rounded focus:border-gray-500 focus:ring-0 focus:drop-shadow-md"
-						v-model="whereValue"
+						v-model="departCity"
 						required
 					/>
-					<datalist id="airports">
+					<datalist id="airports_depart">
 						<option
 							v-for="airport in airports"
-							:key="`airport-${airport.airport_id}`"
+							:key="`airport-d-${airport.airport_id}`"
+							:value="airport.city"
+						>
+							{{ airport.city }} ({{ airport.name }})
+						</option>
+					</datalist>
+				</div>
+				<div class="flex flex-col gap-2">
+					<label for="travel_destination">Where to land ?</label>
+					<input
+						id="travel_destination"
+						type="search"
+						list="airports_land"
+						name="travel_destination"
+						autocomplete="off"
+						class="rounded focus:border-gray-500 focus:ring-0 focus:drop-shadow-md"
+						v-model="landCity"
+						required
+					/>
+					<datalist id="airports_land">
+						<option
+							v-for="airport in airports"
+							:key="`airport-l-${airport.airport_id}`"
 							:value="airport.city"
 						>
 							{{ airport.city }} ({{ airport.name }})
@@ -87,9 +133,31 @@ onMounted(() => {
 						type="number"
 						name="price"
 						class="rounded focus:border-gray-500 focus:ring-0 focus:drop-shadow-md"
+						v-model="budget"
 						required
 					/>
 				</div>
+				<div class="flex flex-col gap-2">
+					<label for="seatsCount">How many seats?</label>
+					<input
+						id="seatsCount"
+						type="number"
+						min="1"
+						step="1"
+						name="seatsCount"
+						class="rounded focus:border-gray-500 focus:ring-0 focus:drop-shadow-md"
+						v-model="seatsCount"
+						required
+					/>
+				</div>
+				<SubscribePreferenceDialog
+					v-bind:budget="budget"
+					v-bind:departDate="(departDate as Date)"
+					v-bind:returnDate="(returnDate as Date)"
+					v-bind:departAirportID="departAirportID"
+					v-bind:landAirportID="landAirportID"
+					v-bind:seatsCount="seatsCount"
+				/>
 				<input
 					class="rounded bg-sky-600 p-2 text-white hover:bg-sky-500 hover:drop-shadow-xl"
 					type="submit"
