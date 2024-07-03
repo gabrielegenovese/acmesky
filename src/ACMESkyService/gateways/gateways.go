@@ -14,7 +14,7 @@ func Listen() {
 		flight_subscription.Listen(v1)
 	}
 
-	r.Run("localhost:8090")
+	r.Run("0.0.0.0:8090")
 }
 
 func CORSMiddleware() gin.HandlerFunc {

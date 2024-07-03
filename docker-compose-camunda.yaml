@@ -12,6 +12,7 @@
 services:
 
   zeebe: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#zeebe
+    hostname: zeebe
     image: camunda/zeebe:${CAMUNDA_PLATFORM_VERSION}
     container_name: zeebe_${CAMUNDA_PLATFORM_VERSION}
     ports:
@@ -171,3 +172,4 @@ volumes:
 
 networks:
   camunda-platform:
+    driver: bridge
