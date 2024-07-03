@@ -9,16 +9,14 @@ const departAirportID = ref<string>();
 const landAirportID = ref<string>();
 
 // already normalized
-const departDate = ref<string | Date>(new Date().toISOString());
-const returnDate = ref<string | Date>();
+const departDate = ref<Date>(new Date());
+const returnDate = ref<Date>();
 const budget = ref<number>();
 const seatsCount = ref<number>(1);
 
 const airports = ref([] as Airport[]);
 function openDialog() {
 	// departDate.value = new Date(departDate.value)
-	departDate.value = new Date(departDate.value as string)
-	returnDate.value = new Date(returnDate.value as string)
 	if (departDate.value && returnDate.value && departDate.value >= returnDate.value ) {
 		alert(
 			"You cannot travel in time: your departure must before your return",
@@ -70,14 +68,16 @@ onMounted(() => {
 							type="date"
 							class="grow rounded focus:border-gray-500 focus:ring-0 focus:drop-shadow-md"
 							required
-							v-model="departDate"
+							:value="departDate.toISOString().slice(0,10)"
+							@input="departDate = new Date($event as any)"
 						/>
 						<input
 							id="dateEnd"
 							type="date"
 							class="grow rounded focus:border-gray-500 focus:ring-0 focus:drop-shadow-md"
 							required
-							v-model="returnDate"
+							:value="returnDate?.toISOString().slice(0,10)"
+							@input="returnDate = new Date($event as any)"
 						/>
 					</div>
 				</div>
