@@ -33,6 +33,7 @@ func main() {
 	godotenv.Overload("dev.env")
 
 	dbClient.InitDB()
+	travelPrefWorker.DeployBPMNDefinitions()
 	workers := travelPrefWorker.RegisterWorkers()
 	workers = append(workers, flightMatcher.RegisterWorkers()...)
 	defer zbSingleton.UnregisterWorkers(workers)

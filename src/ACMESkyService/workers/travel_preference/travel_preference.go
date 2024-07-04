@@ -9,11 +9,35 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/worker"
 )
+
+func DeployBPMNDefinitions() {
+	client := *zbSingleton.GetInstance()
+	strPathsToDeploy := os.Getenv("BPMN_DEFINITIONS")
+	if strPathsToDeploy != "" {
+		paths := strings.Split(strPathsToDeploy, ",")
+
+		ctx, cancelFn := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancelFn()
+		command := client.NewDeployResourceCommand()
+		for _, pathname := range paths {
+			command = command.AddResourceFile(pathname)
+		}
+
+		res, err := command.Send(ctx)
+		if err != nil {
+			log.Println(fmt.Errorf("[BPMNERROR] failed to deploy BPMN resources. Deployed %d/%d, cause: %s", len(res.GetDeployments()), len(paths), err))
+		} else {
+			log.Printf("[BPMN] Deployed successfully all %d resources\n", len(res.GetDeployments()))
+		}
+	}
+}
 
 func RegisterWorkers() []worker.JobWorker {
 	client := *zbSingleton.GetInstance()

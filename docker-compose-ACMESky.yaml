@@ -51,6 +51,8 @@ services:
       - ./src/ACMESkyService/.env
     ports:
       - "8090:8090"
+    volumes:
+      - ./resources/bpmn:/bpmn:ro
     networks:
       - acmesky_backend
       - acmesky_camunda-platform
