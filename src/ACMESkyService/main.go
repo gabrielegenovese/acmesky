@@ -30,6 +30,7 @@ import (
 //	@externalDocs.url			https://swagger.io/resources/open-api/
 func main() {
 	godotenv.Load(".env")
+	godotenv.Overload("dev.env")
 
 	dbClient.InitDB()
 	workers := travelPrefWorker.RegisterWorkers()
