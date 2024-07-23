@@ -156,19 +156,19 @@ This choreography is connected because the receiver in `recvOffer` is equal to t
 
 This choreography is connected because:
 
-- the receiver in `wantToBuy` is equal to the sender in `requestPayment`; 
-- the receiver in `requestPayment` is equal to the sender in `resPaymentData`; 
-- the receiver in `resPaymentData` is equal to the sender in `payReceipt`; 
-- the receiver in `payReceipt` is equal in both operation's senders (`paymentFailed` and `paymentOk`); 
-- the receiver in `paymentFailed` is equal to the sender in `sendError`; 
-- the receiver in `sendError` is equal to the sender in `sendTicketAndData`; 
-- the receiver in `paymentOk` is equal to the sender in `bookTicket`; 
-- the receiver in `bookTicket` is equal to the sender in `sendTicketData`; 
-- the receiver in `sendTicketData` is equal to the sender in `calcGeoDistance`; 
-- the receiver in `sendTicketData` is equal to the sender in `sendTicketAndData`; 
-- the receiver in `calcGeoDistance` is equal to the sender in `resDistance`; 
-- the receiver in `resDistance` is equal to the sender in `bookTransport`; 
-- the receiver in `resDistance` is equal to the sender in `sendTicketAndData`; 
+- the receiver in `wantToBuy` is equal to the sender in `requestPayment`;
+- the receiver in `requestPayment` is equal to the sender in `resPaymentData`;
+- the receiver in `resPaymentData` is equal to the sender in `payReceipt`;
+- the receiver in `payReceipt` is equal in both operation's senders (`paymentFailed` and `paymentOk`);
+- the receiver in `paymentFailed` is equal to the sender in `sendError`;
+- the receiver in `sendError` is equal to the sender in `sendTicketAndData`;
+- the receiver in `paymentOk` is equal to the sender in `bookTicket`;
+- the receiver in `bookTicket` is equal to the sender in `sendTicketData`;
+- the receiver in `sendTicketData` is equal to the sender in `calcGeoDistance`;
+- the receiver in `sendTicketData` is equal to the sender in `sendTicketAndData`;
+- the receiver in `calcGeoDistance` is equal to the sender in `resDistance`;
+- the receiver in `resDistance` is equal to the sender in `bookTransport`;
+- the receiver in `resDistance` is equal to the sender in `sendTicketAndData`;
 - the receiver in `resBookTransport` is equal to the sender in `sendTicketAndData`.
 
 This choreography is connected for the **sender** pattern $(b=c)$, so the entire choreography is connected.

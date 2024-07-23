@@ -23,23 +23,25 @@ docker-compose \
 ```
 
 - Camunda
-    - [Operate](http://localhost:8081)
-    - [Tasklist](http://localhost:8082)
+  - [Operate](http://localhost:8081)
+  - [Tasklist](http://localhost:8082)
 - ACMESky
-    - [Frontend](http://localhost:8080)
-    - [API](http://localhost:8090)
+  - [Frontend](http://localhost:8080)
+  - [API](http://localhost:8090)
 - FlightCompany:
-    - [API](http://localhost:8091)
+  - [API](http://localhost:8091)
 - Prontogram
-    - [Frontend](http://localhost:8079)
-    - [API](http://localhost:8092)
+  - [Frontend](http://localhost:8079)
+  - [API](http://localhost:8092)
 
 ## Docs
 
 The documentation is generated with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
 
 Arch linux installation:
+
 ```shell
 yay -S python-mkdocs-material pymdown-extensions
+pip install mkdocs-render-swagger-plugin mkdocs-kroki-plugin mkdocs-plugin-inline-svg mkdocs-glightbox --break-system-packages
 mkdocs serve
 ```

@@ -4,7 +4,7 @@
   <bpmn2:message id="Message_1kiplj0" />
   <bpmn2:message id="Message_0qfyis6" />
   <bpmn2:message id="Message_1p84a7u" />
-  <bpmn2:message id="Message_046my8o" name="Last Min offer" />
+  <bpmn2:message id="Message_046my8o" name="Last Minute offer" />
   <bpmn2:choreography id="PizzaDelivery">
     <bpmn2:participant id="Participant_06qakjv" name="ACMESky" />
     <bpmn2:participant id="Participant_0mgz9si" name="ACMESKy" />
@@ -57,7 +57,7 @@
       <bpmn2:participantRef>Participant_06qakjv</bpmn2:participantRef>
       <bpmn2:messageFlowRef>MessageFlow_1twzx73</bpmn2:messageFlowRef>
     </bpmn2:choreographyTask>
-    <bpmn2:sequenceFlow id="Flow_18r7u33" name="yes" sourceRef="Gateway_0tt8hst" targetRef="ChoreographyTask_0nshwpn" />
+    <bpmn2:sequenceFlow id="Flow_18r7u33" name="Yes" sourceRef="Gateway_0tt8hst" targetRef="ChoreographyTask_0nshwpn" />
     <bpmn2:choreographyTask id="ChoreographyTask_13smr82" name="Notify Flight Company" initiatingParticipantRef="Participant_06qakjv">
       <bpmn2:incoming>Flow_16ee8w8</bpmn2:incoming>
       <bpmn2:outgoing>Flow_051t3qw</bpmn2:outgoing>
@@ -67,7 +67,7 @@
     </bpmn2:choreographyTask>
     <bpmn2:sequenceFlow id="Flow_16ee8w8" sourceRef="ChoreographyTask_0nshwpn" targetRef="ChoreographyTask_13smr82" />
     <bpmn2:sequenceFlow id="Flow_051t3qw" sourceRef="ChoreographyTask_13smr82" targetRef="Event_01zqjv0" />
-    <bpmn2:sequenceFlow id="Flow_1tlluwv" name="no" sourceRef="Gateway_0tt8hst" targetRef="Event_01zqjv0" />
+    <bpmn2:sequenceFlow id="Flow_1tlluwv" name="No" sourceRef="Gateway_0tt8hst" targetRef="Event_01zqjv0" />
     <bpmn2:endEvent id="Event_01zqjv0">
       <bpmn2:incoming>Flow_051t3qw</bpmn2:incoming>
       <bpmn2:incoming>Flow_1tlluwv</bpmn2:incoming>
@@ -140,7 +140,7 @@
         <di:waypoint x="655" y="330" />
         <di:waypoint x="719" y="330" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="661" y="312" width="18" height="14" />
+          <dc:Bounds x="662" y="312" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ChoreographyTask_13smr82_di" bpmnElement="ChoreographyTask_13smr82">
@@ -166,7 +166,7 @@
         <di:waypoint x="1080" y="260" />
         <di:waypoint x="1080" y="312" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="603" y="283" width="13" height="14" />
+          <dc:Bounds x="602" y="283" width="15" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_1u8tgr7_di" bpmnElement="Event_01zqjv0">

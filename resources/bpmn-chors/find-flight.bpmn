@@ -1,55 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="_tTv5YOycEeiHGOQ2NkJZNQ" targetNamespace="http://bpmn.io/schema/bpmn">
-  <bpmn2:message id="Message_1l2clpz" name="Response" />
+  <bpmn2:message id="Message_1lbrlxy" name="Error" />
+  <bpmn2:message id="Message_1scmpgz" name="Data" />
+  <bpmn2:message id="Message_0sn6zqi" />
+  <bpmn2:message id="Message_19muwnk" />
   <bpmn2:message id="Message_1pam53q" name="flight data" />
   <bpmn2:choreography id="PizzaDelivery">
     <bpmn2:participant id="Participant_06qakjv" name="User" />
     <bpmn2:participant id="Participant_0mgz9si" name="ACMESky" />
     <bpmn2:participant id="Participant_0537iz2" name="Delivery Boy" />
-    <bpmn2:messageFlow id="MessageFlow_0910ini" sourceRef="Participant_0mgz9si" targetRef="Participant_06qakjv" messageRef="Message_1l2clpz" />
+    <bpmn2:messageFlow id="MessageFlow_0av0h4x" sourceRef="Participant_06qakjv" targetRef="Participant_0mgz9si" messageRef="Message_1lbrlxy" />
+    <bpmn2:messageFlow id="MessageFlow_0ssmnsx" sourceRef="Participant_06qakjv" targetRef="Participant_0mgz9si" messageRef="Message_1scmpgz" />
+    <bpmn2:messageFlow id="MessageFlow_0m4jahc" sourceRef="Participant_0mgz9si" targetRef="Participant_06qakjv" messageRef="Message_0sn6zqi" />
+    <bpmn2:messageFlow id="MessageFlow_1dhrnjp" sourceRef="Participant_0mgz9si" targetRef="Participant_06qakjv" messageRef="Message_19muwnk" />
     <bpmn2:messageFlow id="MessageFlow_0nzo41l" sourceRef="Participant_06qakjv" targetRef="Participant_0mgz9si" messageRef="Message_1pam53q" />
     <bpmn2:startEvent id="StartEvent_00yy9i8">
       <bpmn2:outgoing>SequenceFlow_0dy5er9</bpmn2:outgoing>
     </bpmn2:startEvent>
     <bpmn2:choreographyTask id="ChoreographyTask_0hy9n0g" name="Ask what flight are available" initiatingParticipantRef="Participant_06qakjv">
       <bpmn2:incoming>SequenceFlow_0dy5er9</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_036yo13</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_1kuio3e</bpmn2:outgoing>
       <bpmn2:participantRef>Participant_06qakjv</bpmn2:participantRef>
       <bpmn2:participantRef>Participant_0mgz9si</bpmn2:participantRef>
-      <bpmn2:messageFlowRef>MessageFlow_0910ini</bpmn2:messageFlowRef>
       <bpmn2:messageFlowRef>MessageFlow_0nzo41l</bpmn2:messageFlowRef>
     </bpmn2:choreographyTask>
     <bpmn2:sequenceFlow id="SequenceFlow_0dy5er9" sourceRef="StartEvent_00yy9i8" targetRef="ChoreographyTask_0hy9n0g" />
-    <bpmn2:sequenceFlow id="SequenceFlow_036yo13" sourceRef="ChoreographyTask_0hy9n0g" targetRef="EndEvent_1lv264w" />
-    <bpmn2:endEvent id="EndEvent_1lv264w">
-      <bpmn2:incoming>SequenceFlow_036yo13</bpmn2:incoming>
+    <bpmn2:sequenceFlow id="Flow_1kuio3e" sourceRef="ChoreographyTask_0hy9n0g" targetRef="Gateway_0nqlvbe" />
+    <bpmn2:exclusiveGateway id="Gateway_0nqlvbe" name="Successful?">
+      <bpmn2:incoming>Flow_1kuio3e</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0g2z1u9</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_0k2do34</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:choreographyTask id="ChoreographyTask_1ra6g5z" name="Send information" initiatingParticipantRef="Participant_0mgz9si">
+      <bpmn2:incoming>Flow_0g2z1u9</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0n7pw4i</bpmn2:outgoing>
+      <bpmn2:participantRef>Participant_0mgz9si</bpmn2:participantRef>
+      <bpmn2:participantRef>Participant_06qakjv</bpmn2:participantRef>
+      <bpmn2:messageFlowRef>MessageFlow_0ssmnsx</bpmn2:messageFlowRef>
+      <bpmn2:messageFlowRef>MessageFlow_1dhrnjp</bpmn2:messageFlowRef>
+    </bpmn2:choreographyTask>
+    <bpmn2:sequenceFlow id="Flow_0g2z1u9" name="Yes" sourceRef="Gateway_0nqlvbe" targetRef="ChoreographyTask_1ra6g5z" />
+    <bpmn2:choreographyTask id="ChoreographyTask_1fo3zii" name="Send error" initiatingParticipantRef="Participant_0mgz9si">
+      <bpmn2:incoming>Flow_0k2do34</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_04imufd</bpmn2:outgoing>
+      <bpmn2:participantRef>Participant_0mgz9si</bpmn2:participantRef>
+      <bpmn2:participantRef>Participant_06qakjv</bpmn2:participantRef>
+      <bpmn2:messageFlowRef>MessageFlow_0av0h4x</bpmn2:messageFlowRef>
+      <bpmn2:messageFlowRef>MessageFlow_0m4jahc</bpmn2:messageFlowRef>
+    </bpmn2:choreographyTask>
+    <bpmn2:sequenceFlow id="Flow_0k2do34" name="No" sourceRef="Gateway_0nqlvbe" targetRef="ChoreographyTask_1fo3zii" />
+    <bpmn2:endEvent id="Event_1au9ph2">
+      <bpmn2:incoming>Flow_04imufd</bpmn2:incoming>
+      <bpmn2:incoming>Flow_0n7pw4i</bpmn2:incoming>
     </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="Flow_04imufd" sourceRef="ChoreographyTask_1fo3zii" targetRef="Event_1au9ph2" />
+    <bpmn2:sequenceFlow id="Flow_0n7pw4i" sourceRef="ChoreographyTask_1ra6g5z" targetRef="Event_1au9ph2" />
   </bpmn2:choreography>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_Choreography_1" bpmnElement="PizzaDelivery">
       <bpmndi:BPMNShape id="StartEvent_00yy9i8_di" bpmnElement="StartEvent_00yy9i8">
-        <dc:Bounds x="234" y="350" width="36" height="36" />
+        <dc:Bounds x="204" y="350" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ChoreographyTask_0hy9n0g_di" bpmnElement="ChoreographyTask_0hy9n0g">
-        <dc:Bounds x="320" y="328" width="100" height="80" />
+        <dc:Bounds x="290" y="328" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1847k4t" bpmnElement="Participant_06qakjv" isMessageVisible="true" participantBandKind="top_initiating" choreographyActivityShape="ChoreographyTask_0hy9n0g_di">
-        <dc:Bounds x="320" y="328" width="100" height="20" />
+        <dc:Bounds x="290" y="328" width="100" height="20" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_0l74hmr" bpmnElement="Participant_0mgz9si" isMessageVisible="true" participantBandKind="bottom_non_initiating" choreographyActivityShape="ChoreographyTask_0hy9n0g_di">
-        <dc:Bounds x="320" y="388" width="100" height="20" />
+        <dc:Bounds x="290" y="388" width="100" height="20" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0dy5er9_di" bpmnElement="SequenceFlow_0dy5er9">
-        <di:waypoint x="270" y="368" />
-        <di:waypoint x="319" y="368" />
+        <di:waypoint x="240" y="368" />
+        <di:waypoint x="289" y="368" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="SequenceFlow_036yo13_di" bpmnElement="SequenceFlow_036yo13">
-        <di:waypoint x="421" y="368" />
-        <di:waypoint x="472" y="368" />
+      <bpmndi:BPMNEdge id="Flow_1kuio3e_di" bpmnElement="Flow_1kuio3e">
+        <di:waypoint x="391" y="368" />
+        <di:waypoint x="475" y="368" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="EndEvent_1lv264w_di" bpmnElement="EndEvent_1lv264w">
-        <dc:Bounds x="472" y="350" width="36" height="36" />
+      <bpmndi:BPMNShape id="Gateway_03w7w2x_di" bpmnElement="Gateway_0nqlvbe" isMarkerVisible="true">
+        <dc:Bounds x="475" y="343" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="420" y="343" width="60" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ChoreographyTask_1ra6g5z_di" bpmnElement="ChoreographyTask_1ra6g5z">
+        <dc:Bounds x="610" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1w21jya" bpmnElement="Participant_0mgz9si" isMessageVisible="false" participantBandKind="top_initiating" choreographyActivityShape="ChoreographyTask_1ra6g5z_di">
+        <dc:Bounds x="610" y="240" width="100" height="20" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1egadc0" bpmnElement="Participant_06qakjv" isMessageVisible="true" participantBandKind="bottom_non_initiating" choreographyActivityShape="ChoreographyTask_1ra6g5z_di">
+        <dc:Bounds x="610" y="300" width="100" height="20" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0g2z1u9_di" bpmnElement="Flow_0g2z1u9">
+        <di:waypoint x="500" y="343" />
+        <di:waypoint x="500" y="280" />
+        <di:waypoint x="609" y="280" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="506" y="309" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ChoreographyTask_1fo3zii_di" bpmnElement="ChoreographyTask_1fo3zii">
+        <dc:Bounds x="610" y="420" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0vw9pjs" bpmnElement="Participant_0mgz9si" isMessageVisible="false" participantBandKind="top_initiating" choreographyActivityShape="ChoreographyTask_1fo3zii_di">
+        <dc:Bounds x="610" y="420" width="100" height="20" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1ltuj00" bpmnElement="Participant_06qakjv" isMessageVisible="true" participantBandKind="bottom_non_initiating" choreographyActivityShape="ChoreographyTask_1fo3zii_di">
+        <dc:Bounds x="610" y="480" width="100" height="20" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0k2do34_di" bpmnElement="Flow_0k2do34">
+        <di:waypoint x="500" y="393" />
+        <di:waypoint x="500" y="460" />
+        <di:waypoint x="609" y="460" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="508" y="424" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1au9ph2_di" bpmnElement="Event_1au9ph2">
+        <dc:Bounds x="792" y="350" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_04imufd_di" bpmnElement="Flow_04imufd">
+        <di:waypoint x="711" y="460" />
+        <di:waypoint x="810" y="460" />
+        <di:waypoint x="810" y="386" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0n7pw4i_di" bpmnElement="Flow_0n7pw4i">
+        <di:waypoint x="711" y="280" />
+        <di:waypoint x="810" y="280" />
+        <di:waypoint x="810" y="350" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
       <dc:Font name="arial" size="9" />
