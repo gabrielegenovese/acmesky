@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TinySOA="http:///schemas/TinySOA/_c3UCcLIeEealFoL0yAyV8Q/1" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http:///schemas/TinySOA/_c3UCcLIeEealFoL0yAyV8Q/1 TinySOA.profile.uml#_c3UpgLIeEealFoL0yAyV8Q">
+  <uml:Model xmi:id="_0lrQsFAfEe-AH9NqiThiXg" name="acmesky">
+    <ownedComment xmi:type="uml:Comment" xmi:id="__l2OAFApEe-5kL3aKkSWHw">
+      <body>Register a user interest
+</body>
+    </ownedComment>
+    <packagedElement xmi:type="uml:Package" xmi:id="_t5hP0FAhEe-5kL3aKkSWHw" name="User">
+      <packagedElement xmi:type="uml:Package" xmi:id="_H2AnAFAiEe-5kL3aKkSWHw" name="UserTask">
+        <packagedElement xmi:type="uml:Interface" xmi:id="_amm_QFAiEe-5kL3aKkSWHw" name="SetInterestOperation">
+          <ownedOperation xmi:type="uml:Operation" xmi:id="_isLYMFAiEe-5kL3aKkSWHw" name="setInterestData" concurrency="concurrent"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="_r3-_cFAtEe-5kL3aKkSWHw" name="setError"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="_oZTTEFAiEe-5kL3aKkSWHw" name="SetInterestOperation" visibility="public">
+          <ownedOperation xmi:type="uml:Operation" xmi:id="_R9J5UFAmEe-5kL3aKkSWHw" name="setInterest" concurrency="concurrent"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="_u3ZW4FAtEe-5kL3aKkSWHw" name="setError"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Dependency" xmi:id="_YK_b8FAjEe-5kL3aKkSWHw" client="_gzy9cFAmEe-5kL3aKkSWHw" supplier="_awqg4FAnEe-5kL3aKkSWHw"/>
+        <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_KSGO8FAiEe-5kL3aKkSWHw">
+          <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_KSG2AFAiEe-5kL3aKkSWHw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <references xmi:type="ecore:EPackage" href="TinySOA.profile.uml#_c3UpgLIeEealFoL0yAyV8Q"/>
+          </eAnnotations>
+          <appliedProfile xmi:type="uml:Profile" href="TinySOA.profile.uml#_eL5hsLIcEealFoL0yAyV8Q"/>
+        </profileApplication>
+      </packagedElement>
+      <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_xnRT8FAhEe-5kL3aKkSWHw">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_xnR7AFAhEe-5kL3aKkSWHw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+          <references xmi:type="ecore:EPackage" href="TinySOA.profile.uml#_c3UpgLIeEealFoL0yAyV8Q"/>
+        </eAnnotations>
+        <appliedProfile xmi:type="uml:Profile" href="TinySOA.profile.uml#_eL5hsLIcEealFoL0yAyV8Q"/>
+      </profileApplication>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_B7MRkFAmEe-5kL3aKkSWHw" name="ACMESky">
+      <packagedElement xmi:type="uml:Package" xmi:id="_UJAs4FAmEe-5kL3aKkSWHw" name="ACMESky Tasks">
+        <packagedElement xmi:type="uml:Interface" xmi:id="_gzy9cFAmEe-5kL3aKkSWHw" name="GetInterestOperation">
+          <ownedOperation xmi:type="uml:Operation" xmi:id="_gzy9cVAmEe-5kL3aKkSWHw" name="setInterest" concurrency="concurrent"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="_oa7RcFAnEe-5kL3aKkSWHw" name="registerInterest"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="_awqg4FAnEe-5kL3aKkSWHw" name="GetInterestOperation" visibility="public">
+          <ownedOperation xmi:type="uml:Operation" xmi:id="_awqg4VAnEe-5kL3aKkSWHw" name="setInterest" concurrency="concurrent"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="_prdFMFAnEe-5kL3aKkSWHw" name="registerInterest"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Dependency" xmi:id="_xDj7MFAnEe-5kL3aKkSWHw" client="_amm_QFAiEe-5kL3aKkSWHw" supplier="_oZTTEFAiEe-5kL3aKkSWHw"/>
+        <packagedElement xmi:type="uml:Dependency" xmi:id="_8oW0EFAnEe-5kL3aKkSWHw" client="_awqg4FAnEe-5kL3aKkSWHw" supplier="_amm_QFAiEe-5kL3aKkSWHw"/>
+        <packagedElement xmi:type="uml:Dependency" xmi:id="_zTo1gFApEe-5kL3aKkSWHw" client="_qAGDAFAoEe-5kL3aKkSWHw" supplier="_yVfAoFAoEe-5kL3aKkSWHw"/>
+        <packagedElement xmi:type="uml:Dependency" xmi:id="_1zSu0FApEe-5kL3aKkSWHw" client="_awqg4FAnEe-5kL3aKkSWHw" supplier="_qAGDAFAoEe-5kL3aKkSWHw"/>
+        <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_YNEYMFAmEe-5kL3aKkSWHw">
+          <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_YNEYMVAmEe-5kL3aKkSWHw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <references xmi:type="ecore:EPackage" href="TinySOA.profile.uml#_c3UpgLIeEealFoL0yAyV8Q"/>
+          </eAnnotations>
+          <appliedProfile xmi:type="uml:Profile" href="TinySOA.profile.uml#_eL5hsLIcEealFoL0yAyV8Q"/>
+        </profileApplication>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Package" xmi:id="_YqsIUFAmEe-5kL3aKkSWHw" name="ACMESky Entities">
+        <packagedElement xmi:type="uml:Interface" xmi:id="_qAGDAFAoEe-5kL3aKkSWHw" name="Interest">
+          <ownedOperation xmi:type="uml:Operation" xmi:id="_qAGDAVAoEe-5kL3aKkSWHw" name="setInterest" concurrency="concurrent"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="_qAGDAlAoEe-5kL3aKkSWHw" name="registerInterest"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="_vr_O0FAoEe-5kL3aKkSWHw" name="saveInterest"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="_yVfAoFAoEe-5kL3aKkSWHw" name="Interest">
+          <ownedOperation xmi:type="uml:Operation" xmi:id="_35e_QFApEe-5kL3aKkSWHw" name="saveInterest"/>
+        </packagedElement>
+        <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_YqsIUVAmEe-5kL3aKkSWHw">
+          <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_YqsIUlAmEe-5kL3aKkSWHw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+            <references xmi:type="ecore:EPackage" href="TinySOA.profile.uml#_c3UpgLIeEealFoL0yAyV8Q"/>
+          </eAnnotations>
+          <appliedProfile xmi:type="uml:Profile" href="TinySOA.profile.uml#_eL5hsLIcEealFoL0yAyV8Q"/>
+        </profileApplication>
+      </packagedElement>
+    </packagedElement>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_lrJVoFAgEe-5kL3aKkSWHw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_lrOOIFAgEe-5kL3aKkSWHw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="TinySOA.profile.uml#_c3UpgLIeEealFoL0yAyV8Q"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="TinySOA.profile.uml#_eL5hsLIcEealFoL0yAyV8Q"/>
+    </profileApplication>
+  </uml:Model>
+  <TinySOA:Tasks xmi:id="_LYZvsFAiEe-5kL3aKkSWHw" base_Package="_H2AnAFAiEe-5kL3aKkSWHw"/>
+  <TinySOA:ServiceInterface xmi:id="_de8eUFAiEe-5kL3aKkSWHw" base_Interface="_amm_QFAiEe-5kL3aKkSWHw"/>
+  <TinySOA:Expose xmi:id="_90YUkFAiEe-5kL3aKkSWHw"/>
+  <TinySOA:Capability xmi:id="_W5nToFAjEe-5kL3aKkSWHw" base_Class="_oZTTEFAiEe-5kL3aKkSWHw"/>
+  <TinySOA:Expose xmi:id="_btM-cFAjEe-5kL3aKkSWHw" base_Dependency="_YK_b8FAjEe-5kL3aKkSWHw"/>
+  <TinySOA:Tasks xmi:id="_dZdkkFAmEe-5kL3aKkSWHw" base_Package="_UJAs4FAmEe-5kL3aKkSWHw"/>
+  <TinySOA:Entities xmi:id="_est8MFAmEe-5kL3aKkSWHw" base_Package="_YqsIUFAmEe-5kL3aKkSWHw"/>
+  <TinySOA:ServiceInterface xmi:id="_gz5EEFAmEe-5kL3aKkSWHw" base_Interface="_gzy9cFAmEe-5kL3aKkSWHw"/>
+  <TinySOA:Capability xmi:id="_awrvElAnEe-5kL3aKkSWHw" base_Class="_awqg4FAnEe-5kL3aKkSWHw"/>
+  <TinySOA:Expose xmi:id="_xDkiR1AnEe-5kL3aKkSWHw" base_Dependency="_xDj7MFAnEe-5kL3aKkSWHw"/>
+  <TinySOA:ServiceInterface xmi:id="_qAH4NVAoEe-5kL3aKkSWHw" base_Interface="_qAGDAFAoEe-5kL3aKkSWHw"/>
+  <TinySOA:Expose xmi:id="_zTqDoFApEe-5kL3aKkSWHw" base_Dependency="_zTo1gFApEe-5kL3aKkSWHw"/>
+  <TinySOA:Capability xmi:id="_T6NfEFAqEe-5kL3aKkSWHw" base_Class="_yVfAoFAoEe-5kL3aKkSWHw"/>
+</xmi:XMI>

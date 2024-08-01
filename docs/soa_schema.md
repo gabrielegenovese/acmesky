@@ -2,7 +2,7 @@
 
 Here is the interal schema of the services:
 
-![draw.io soa schema](assets/soa.png "SOA Structure"){ width="100" }
+![draw.io soa schema](assets/soa.png "SOA Structure")
 
 > TODO: verificare e modificare!
 
