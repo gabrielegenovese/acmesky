@@ -10,11 +10,11 @@ In this section, the SOA modeling for the ACMESky organization is presented usin
 
 ## Requesting flights
 
-> TODO
+![uml req flights](assets/uml/req-flights.png "req flights")
+
+> TODO: description
 
 ## Registering a user's interest
-
-The following diagram highlights the capabilities identified from the BPMN diagram "User Interest Registration" and the interfaces that expose them.
 
 ![uml reg interest](assets/uml/reg-inter.png "reg interest")
 
@@ -24,8 +24,12 @@ Additionally, another capability, `SetInterestOperation`, was identified for the
 
 ## Receiving and notify last-minute offers
 
-> TODO
+![uml last min](assets/uml/last-min.png "last min")
+
+> TODO: description
 
 ## Buying a ticket
 
-> TODO
+![uml buy ticket](assets/uml/buy-tickets.png "buy ticket")
+
+> TODO: description

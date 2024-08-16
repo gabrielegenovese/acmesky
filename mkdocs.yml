@@ -24,6 +24,7 @@ extra_css:
   - stylesheets/extra.css
 
 plugins:
+  - search
   - glightbox # image zoom
   - inline-svg #include svg
   - kroki # import bpmn schema
