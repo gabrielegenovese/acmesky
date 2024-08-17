@@ -2,12 +2,12 @@ FROM golang:latest
 
 WORKDIR /app
 
-COPY ./* ./
+COPY go.mod main.go .env ./
 
 RUN go mod tidy
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o /main
 
-EXPOSE 8000
+EXPOSE 8093
 
 CMD ["/main"]

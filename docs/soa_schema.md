@@ -12,12 +12,17 @@ Here is the interal schema of the services:
 
 | Service              | Port |
 | -------------------- | ---- |
-| ACMESkyWeb           | 80   |
-| ACMESkyService       |      |
-| ACMESkyDB            |      |
+| ACMESkyWeb           | 8080 |
+| ACMESkyService       | 8090 |
+| ACMESkyDB            | 3306 |
 | ACMESkyNCC           |      |
-| BankSerivce          |      |
-| FlightCompanyService |      |
-| FlightCompanyDB      |      |
-| GeoDistance          |      |
-| Prontogram           |      |
+| BankWeb              | 8083 |
+| BankSerivice         | 8083 |
+| BankDb               | 3308 |
+| FlightCompanyService | 8091 |
+| FlightCompanyDB      | 3307 |
+| GeoDistance          | 8093 |
+| ProntogramWeb        | 8079 |
+| ProntogramService    | 8092 |
+| Operate              | 8081 |
+| Tasklist             | 8082 |

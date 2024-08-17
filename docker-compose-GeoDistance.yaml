@@ -1,0 +1,19 @@
+networks:
+  geodistance_public:
+    name: 'net'
+    external: true
+
+services:
+
+  geodistance_service:
+    hostname: service.geodistance
+    container_name: geodistance_service_container
+    build: ./src/GeoDistance/
+    image: geodistance/service
+    env_file:
+      - ./src/GeoDistance/.env
+    ports:
+      - "8093:8093"
+    networks:
+      - geodistance_public
+    restart: unless-stopped

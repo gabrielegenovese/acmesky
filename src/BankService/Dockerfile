@@ -8,6 +8,6 @@ RUN go mod tidy
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o /main
 
-EXPOSE 8000
+EXPOSE 8094
 
 CMD ["/main"]

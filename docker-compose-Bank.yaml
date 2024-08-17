@@ -1,0 +1,48 @@
+networks:
+  bank_backend:
+    name: "bank_backend"
+  bank_public:
+    name: "net"
+    external: true
+
+services:
+  bank_db:
+    hostname: db.bank
+    container_name: bank_postgre_container
+    image: postgres
+    restart: unless-stopped
+    ports:
+      - 3308:3308
+    networks:
+      - bank_backend
+    environment:
+      POSTGRES_USER: acmebank
+      POSTGRES_PASSWORD: acmebank
+
+  bank_service:
+    depends_on:
+      - bank_db
+    hostname: service.bank
+    container_name: bank_service_container
+    build: ./src/BankService/server/.
+    image: bank/service
+    ports:
+      - "8094:8094"
+    networks:
+      - bank_backend
+      - bank_public
+    restart: unless-stopped
+
+  bank_website:
+    depends_on:
+      - bank_service
+    hostname: www.bank
+    container_name: bank_www_container
+    build: ./src/BankService/client/.
+    image: bank/frontend
+    ports:
+      - "8083:8083"
+    networks:
+      - bank_backend
+      - bank_public
+    restart: unless-stopped

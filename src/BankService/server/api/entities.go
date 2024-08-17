@@ -15,6 +15,7 @@ type Payment struct {
 	User        string       `json:"user"`
 	Description string       `json:"description"`
 	Amount      uint32       `json:"amount"`
+	Link        string       `json:"link"`
 	Paid        bool         `json:"paid"`
 }
 

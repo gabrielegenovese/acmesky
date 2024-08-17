@@ -14,25 +14,26 @@ type Config struct {
 	Listen  string `toml:"listen"`
 	BaseURL string `toml:"base_url"`
 	DbURI   string `toml:"db_uri" required:"true"`
+	Port    string `toml:"port" required:"true"`
 }
 
 var (
 	// Default config values
 	config = Config{
-		Listen:  "0.0.0.0:8001",
-		BaseURL: "http://localhost:8001",
+		Listen:  "0.0.0.0:",
+		BaseURL: "http://localhost:",
 	}
 )
 
-//	@title			Bank Service API
-//	@version		1.0
-//	@description	This is a minimal microservice to act as a bank.
-//	@contact.name	Gabriele Genovese
-//	@contact.email	gabriele.genovese2@studio.unibo.it
-//	@license.name	GPLv2
-//	@license.url	https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-//	@Host			localhost:8001
-//	@BasePath		/
+// @title			Bank Service API
+// @version		1.0
+// @description	This is a minimal microservice to act as a bank.
+// @contact.name	Gabriele Genovese
+// @contact.email	gabriele.genovese2@studio.unibo.it
+// @license.name	GPLv2
+// @license.url	https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+// @Host			localhost:8001
+// @BasePath		/
 func main() {
 	router := gin.Default()
 
@@ -60,7 +61,7 @@ func main() {
 	router.GET("/payment/:id", api.GetPaymentById)
 	router.DELETE("/payment/:id", api.DelPaymentById)
 
-	router.Run(config.Listen)
+	router.Run(config.Listen + config.Port)
 }
 
 func CORSMiddleware() gin.HandlerFunc {

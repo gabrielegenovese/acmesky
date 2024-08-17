@@ -11,7 +11,7 @@ This service calculates the distance between two points (coordinate or address).
 ## Use example
 
 ```sh
-http://localhost:8000/distance?from=Bologna&to=Milan
+curl -X GET -i 'http://localhost:8093/distance?from=Bologna&to=Milan'
 ```
 
 ## How to start it
@@ -26,8 +26,8 @@ go run main.go
 Docker:
 
 ```sh
-docker build . -t geodistance
-docker run -dp 127.0.0.1:8000:8000 geodistance:latest
+docker build . -t geodistance/service
+docker run -dp 127.0.0.1:8093:8093 geodistance/service:latest
 ```
 
 Use [swaggo](https://github.com/swaggo/swag) to generate the Swagger API documentation:

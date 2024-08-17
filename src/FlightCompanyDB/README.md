@@ -1,15 +1,15 @@
 # FlightCompany Database
 
-## Run
+## Docker
+
+### Run
 
 ```sh
 docker compose -f ./docker-compose.yaml up -d --force-recreate --build
 ```
 
-## Generate docs
-
-generate OpenAPI swagger files in ./docs
+### Build
 
 ```sh
-swag init
+docker build . -t flightcompany/db
 ```

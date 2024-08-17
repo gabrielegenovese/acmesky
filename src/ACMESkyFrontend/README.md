@@ -1,5 +1,7 @@
 # ACMESkyFrontend
 
+## Run
+
 Install dependencies:
 
 ```sh
@@ -22,4 +24,10 @@ Compile and minify for production:
 
 ```sh
 npm run build
+```
+
+## Docker build
+
+```bash
+docker build . -t acmesky/frontend
 ```

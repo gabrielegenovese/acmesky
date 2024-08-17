@@ -1,8 +1,11 @@
 # Prontogram
 
-Avvio delle componenti frontend e backend con docker compose
+## Docker
+
+### Run
+
+Start frontend and backend with docker compose
 
 ```bash
 docker compose -f docker-compose.yaml up -d
 ```
-

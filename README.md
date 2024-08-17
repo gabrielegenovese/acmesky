@@ -19,6 +19,8 @@ docker-compose \
     -f docker-compose-ACMESky.yaml \
     -f docker-compose-FlightCompany.yaml \
     -f docker-compose-Prontogram.yaml \
+    -f docker-compose-GeoDistance.yaml \
+    -f docker-compose-Bank.yaml \
     up -d
 ```
 

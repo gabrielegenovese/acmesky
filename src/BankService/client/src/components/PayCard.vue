@@ -1,18 +1,55 @@
 <script setup lang="ts">
-const props = defineProps<{ uuid: String }>();
+import { ref, watch } from "vue";
+import type { Payment } from "../types/Payment";
+import { useRoute } from "vue-router";
+
+const BASEURL = import.meta.env.VITE_BASEURL;
+
+const route = useRoute();
+const data = ref<Payment | null>(null);
+const id = route.params.id;
+watch(() => route.params.id, fetchData, { immediate: true });
+
+async function fetchData() {
+  const ENDPOINT = BASEURL + "/payment/" + id;
+  let res = await fetch(ENDPOINT);
+  const response = await res.json();
+  if (response.res) {
+    alert("Error: " + response.res);
+    return;
+  }
+  data.value = response as Payment;
+  if (route.query.redirecturi) {
+    if (!data.value.id) {
+      window.location.replace(route.query.redirecturi as string);
+    }
+    if (data.value.paid) {
+      console.log("already payed");
+      window.location.replace(route.query.redirecturi as string);
+    }
+  } else {
+    data.value = null;
+  }
+}
 
 const pay = async () => {
-  const id = props.uuid;
-  let res = await fetch("http://localhost:3000/payment/pay/" + id, {
+  const ENDPOINT = BASEURL + "/payment/pay/" + id;
+  let res = await fetch(ENDPOINT, {
     method: "POST",
   });
   const data = await res.json();
   console.log(data);
+  if (data.res == "Done") {
+      window.location.replace(route.query.redirecturi as string);
+  } else {
+    alert("Error: " + data.res);
+  }
 };
 </script>
 
 <template>
   <div
+    v-if="data"
     class="min-w-screen min-h-screen bg-gray-200 flex items-center justify-center px-5 pb-10 pt-16"
   >
     <div
@@ -27,9 +64,13 @@ const pay = async () => {
         </div>
       </div>
       <div class="mb-10">
-        <h1 class="text-center font-bold text-xl uppercase">
-          ACME BANK PAYMENT SERVICE
-        </h1>
+        <h1 class="text-center font-bold text-xl uppercase">ACME BANK PAYMENT SERVICE</h1>
+      </div>
+      <div class="text-lg mb-2">
+        <p class="font-bold">Info</p>
+        <p class="">Amount: {{ data.amount }}</p>
+        <p class="">User: {{ data.user }}</p>
+        <p class="">Description: {{ data.description }}</p>
       </div>
       <div class="mb-3 flex -mx-2">
         <div class="px-2">
@@ -49,12 +90,7 @@ const pay = async () => {
         </div>
         <div class="px-2">
           <label for="type2" class="flex items-center cursor-pointer">
-            <input
-              type="radio"
-              class="form-radio h-5 w-5 text-indigo-500"
-              name="type"
-              id="type2"
-            />
+            <input type="radio" class="form-radio h-5 w-5 text-indigo-500" name="type" id="type2" />
             <img
               src="https://www.sketchappsources.com/resources/source-image/PayPalCard.png"
               class="h-8 ml-3"
@@ -147,6 +183,8 @@ const pay = async () => {
       </div>
     </div>
   </div>
+
+  <dib v-else>Payment not exist or redirecturi not inserted😢</dib>
 </template>
 
 <style scoped>
@@ -216,8 +254,7 @@ const pay = async () => {
   }
 }
 
-@media print and (-ms-high-contrast: active),
-  print and (-ms-high-contrast: none) {
+@media print and (-ms-high-contrast: active), print and (-ms-high-contrast: none) {
   .form-select {
     padding-right: 0.75rem;
   }
