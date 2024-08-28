@@ -1,9 +1,37 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import MessageBubble from "./MessageBubble.vue";
 const props = defineProps({
 	username: String,
 	profileImage: String,
 });
+const messages = ref([]);
+function getMessages() {
+	if (localStorage.userId) {
+		fetch(
+			import.meta.env.VITE_PRONTOGRAM_SERVICE_API +
+				"/users/" +
+				localStorage.userId +
+				"/getMessages",
+			{
+				method: "POST",
+				headers: {
+					Accept: "application/json",
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					userId: localStorage.userId,
+					sid: localStorage.sid,
+				}),
+			},
+		)
+			.then((response) => response.json())
+			.then((json) => {
+				messages.value = json.messages.reverse();
+			});
+	}
+}
+setInterval(getMessages, 3000);
 </script>
 
 <template>
@@ -20,6 +48,9 @@ const props = defineProps({
 			style="background-image: url(/images/doodle.png)"
 		>
 			<div class="flex grow flex-col-reverse content-end overflow-y-auto">
+				<MessageBubble v-for="message in messages" time="13:00">{{
+					message.content
+				}}</MessageBubble>
 				<MessageBubble time="13:00"
 					>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
 					sed do eiusmod tempor incididunt ut labore et dolore magna
@@ -77,7 +108,9 @@ const props = defineProps({
 					type="text"
 					placeholder="Message"
 				/>
-				<button class="rounded-r-xl bg-sky-500 px-4 text-white">
+				<button
+					class="rounded-r-xl bg-sky-600 px-4 text-white hover:bg-sky-500"
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"

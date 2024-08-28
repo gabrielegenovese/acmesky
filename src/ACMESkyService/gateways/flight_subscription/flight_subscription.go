@@ -5,6 +5,8 @@ import (
 	airportsDAO "acmesky/dao/impl/airports"
 	zbSingleton "acmesky/workers"
 	chanBPRepo "acmesky/workers/utils/channel_bp_repository"
+	"bytes"
+	"encoding/json"
 
 	"context"
 	"fmt"
@@ -61,6 +63,9 @@ func rest_subscribeTravelPreference(context *gin.Context) {
 		context.Status(http.StatusBadRequest)
 		return
 	}
+	
+	data, _ := json.Marshal(newSubRequest)
+	http.Post("http://localhost:8080/newInterest", "application/json", bytes.NewReader(data))
 
 	zbClient := *zbSingleton.GetInstance()
 	// Business Process Key

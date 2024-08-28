@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ChatPreview from "../components/ChatPreview.vue";
 import Chat from "../components/Chat.vue";
+import LoginDialog from "../components/LoginDialog.vue";
 const chats = [
 	{
 		username: "ACMESky",
@@ -19,12 +20,36 @@ const chats = [
 		previewText: "saturday night beer?",
 	},
 ];
+function logout() {
+	fetch(
+		import.meta.env.VITE_PRONTOGRAM_SERVICE_API +
+			"/users/" +
+			localStorage.username +
+			"/logout",
+		{
+			method: "POST",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				//TODO
+			}),
+		},
+	).then((response) => {
+		delete localStorage.userId;
+		delete localStorage.sid;
+		window.location.reload();
+	});
+}
 </script>
 
 <template>
 	<main class="flex flex-row">
 		<div class="basis-1/8 flex flex-col gap-4 border-r-2 p-4">
-			<h1 class="flex flex-row items-center gap-2 text-xl font-bold">
+			<h1
+				class="flex flex-row items-center justify-around gap-2 text-xl font-bold"
+			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
@@ -40,6 +65,23 @@ const chats = [
 					/>
 				</svg>
 				Prontogram
+				<button @click="logout">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="size-6"
+					>
+						<title>Logout</title>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+						/>
+					</svg>
+				</button>
 			</h1>
 			<input
 				type="search"
@@ -60,4 +102,5 @@ const chats = [
 			class="basis-7/8 grow"
 		/>
 	</main>
+	<LoginDialog />
 </template>

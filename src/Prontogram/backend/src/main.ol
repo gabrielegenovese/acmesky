@@ -46,8 +46,8 @@ inputPort ProntogramService
             }
             // get stored messages
             getMessages << {
-                template = "/api/users/{userId}/messages"
-                method = "get"
+                template = "/api/users/{userId}/getMessages"
+                method = "post"
                 format = "json"
                 statusCodes = 200
                 statusCodes.TypeMismatch = 400

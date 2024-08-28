@@ -17,24 +17,30 @@ const seatsCount = ref<number>(1);
 const airports = ref([] as Airport[]);
 function openDialog() {
 	// departDate.value = new Date(departDate.value)
-	if (departDate.value && returnDate.value && departDate.value >= returnDate.value ) {
+	if (
+		departDate.value &&
+		returnDate.value &&
+		departDate.value >= returnDate.value
+	) {
 		alert(
 			"You cannot travel in time: your departure must before your return",
 		);
 	} else {
-		const airport_origin = airports.value.find(airport => airport.city == departCity.value);
-		const airport_destination = airports.value.find(airport => airport.city == landCity.value);
+		const airport_origin = airports.value.find(
+			(airport) => airport.city == departCity.value,
+		);
+		const airport_destination = airports.value.find(
+			(airport) => airport.city == landCity.value,
+		);
 
 		if (!airport_origin) {
 			alert("Select a valid depart airport");
-		}
-		else if ( !airport_destination ) {
+		} else if (!airport_destination) {
 			alert("Select a valid land airport");
-		} 
-		else {
+		} else {
 			departAirportID.value = airport_origin.airport_id;
 			landAirportID.value = airport_destination.airport_id;
-			
+
 			(<HTMLDialogElement>(
 				document.getElementById("subscribePreferenceDialog")
 			)).showModal();
@@ -67,22 +73,19 @@ onMounted(() => {
 							id="dateStart"
 							type="date"
 							class="grow rounded focus:border-gray-500 focus:ring-0 focus:drop-shadow-md"
+							v-model="departDate"
 							required
-							:value="departDate.toISOString().slice(0,10)"
-							@input="departDate = new Date($event as any)"
 						/>
 						<input
 							id="dateEnd"
 							type="date"
 							class="grow rounded focus:border-gray-500 focus:ring-0 focus:drop-shadow-md"
+							v-model="returnDate"
 							required
-							:value="returnDate?.toISOString().slice(0,10)"
-							@input="returnDate = new Date($event as any)"
 						/>
 					</div>
 				</div>
 				<div class="flex flex-col gap-2">
-
 					<label for="travel_origin">Where to take off ?</label>
 					<input
 						id="travel_origin"
@@ -151,12 +154,12 @@ onMounted(() => {
 					/>
 				</div>
 				<SubscribePreferenceDialog
-					v-bind:budget="budget"
-					v-bind:departDate="(departDate as Date)"
-					v-bind:returnDate="(returnDate as Date)"
-					v-bind:departAirportID="departAirportID"
-					v-bind:landAirportID="landAirportID"
-					v-bind:seatsCount="seatsCount"
+					:budget="budget"
+					:departDate="departDate as Date"
+					:returnDate="returnDate as Date"
+					:departAirportID="departAirportID"
+					:landAirportID="landAirportID"
+					:seatsCount="seatsCount"
 				/>
 				<input
 					class="rounded bg-sky-600 p-2 text-white hover:bg-sky-500 hover:drop-shadow-xl"
