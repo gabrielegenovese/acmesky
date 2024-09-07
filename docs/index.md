@@ -28,30 +28,54 @@ In this case, ACMESky uses various chauffeur rental companies with which it has 
 
 ## Project layout
 
-    mkdocs.yml    # The configuration file.
-    docker-compose.yaml
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+This is the structure of the project's folder.
+
+    docs/               # Documentation contents
+    docker-compose/     # All docker compose files
+    src/                # All microservices codebase
     resources/
-        ...
-    src/
-        ACMESkyDB/
-        ACMESkyNCC/
-        ACMESkyService/
-        ACMESkyWebSite/
-        BankService/
-        FlightCompanyDB/
-        FlightCompanyService/
-        GeoDistance/
-        Prontogram/
+        uml/            # UML source files
+        bpmn/           # BPMN source files
+        bpmn-chors/     # BPMN Choreography source files
+    requirements.txt    # Documentation requirements
+    mkdocs.yml          # Documentation config file
 
-> TODO: controllare
+## Deploy using Docker compose
 
-## How to start
+To start all the infrastructure just use the following commands in the root directory and wait for a bit!
 
-To start all the infrastructure just use the following command in the root directory and wait for a bit!
+If running locally as demo you must run the following docker-compose command first as setup:
+This will create a fake shared network which allow all other container to comunicate each to others.
 
-```shell
-docker compose up -d
+```bash
+docker-compose -f docker-compose-shared.yaml up -d
 ```
+
+Deploy all platforms compose
+
+```bash
+docker-compose \
+    -f docker-compose-camunda.yaml \
+    -f docker-compose-ACMESky.yaml \
+    -f docker-compose-FlightCompany.yaml \
+    -f docker-compose-Prontogram.yaml \
+    -f docker-compose-GeoDistance.yaml \
+    -f docker-compose-Bank.yaml \
+    up -d
+```
+
+- Camunda
+  - [Operate](http://localhost:8081)
+  - [Tasklist](http://localhost:8082)
+- ACMESky
+  - [Frontend](http://localhost:8080)
+  - [API](http://localhost:8090)
+- FlightCompany
+  - [API](http://localhost:8091)
+- Prontogram
+  - [Frontend](http://localhost:8079)
+  - [API](http://localhost:8092)
+
+## Docs
+
+The documentation is generated with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).

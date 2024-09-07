@@ -1,4 +1,5 @@
-cd src/ACMESkyNCC/middleware
+# generate the swagger documentation of all the Golang projects
+cd ../src/ACMESkyNCC/middleware
 go mod tidy
 swag init --parseDependency --instanceName ncc
 swag fmt

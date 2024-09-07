@@ -1,6 +1,6 @@
 # ACMEsky
 
-Progetto di Ingegneria del Software Orientata ai Servizi A.A. 2023/2024
+Project for the Ingegneria del Software Orientata ai Servizi AA 2023/2024's course.
 
 ## Deploy using Docker compose
 
@@ -30,7 +30,7 @@ docker-compose \
 - ACMESky
   - [Frontend](http://localhost:8080)
   - [API](http://localhost:8090)
-- FlightCompany:
+- FlightCompany
   - [API](http://localhost:8091)
 - Prontogram
   - [Frontend](http://localhost:8079)
@@ -39,11 +39,3 @@ docker-compose \
 ## Docs
 
 The documentation is generated with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
-
-Arch linux installation:
-
-```shell
-yay -S python-mkdocs-material pymdown-extensions
-pip install mkdocs-render-swagger-plugin mkdocs-kroki-plugin mkdocs-plugin-inline-svg mkdocs-glightbox --break-system-packages
-mkdocs serve
-```
