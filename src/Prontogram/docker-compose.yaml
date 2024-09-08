@@ -16,23 +16,23 @@ services:
       - prontogram
     restart: unless-stopped
   
-  prontogram_swagger:
-    hostname: swagger.prontogram
-    container_name: prontogram_swagger
-    build:
-      context: .
-      dockerfile: ./swagger.Dockerfile
-      args:
-        - PRONTOGRAM_SERVICE_HOST=${PRONTOGRAM_SERVICE_HOST}
-    env_file:
-      - .env
-    ports:
-      - "$PRONTOGRAM_SWAGGER_PORT:8080"
-    networks:
-      - prontogram
-    restart: unless-stopped
-    depends_on:
-      - prontogram_service
+#  prontogram_swagger:
+#    hostname: swagger.prontogram
+#    container_name: prontogram_swagger
+#    build:
+#      context: .
+#      dockerfile: ./swagger.Dockerfile
+#      args:
+#        - PRONTOGRAM_SERVICE_HOST=${PRONTOGRAM_SERVICE_HOST}
+#    env_file:
+#      - .env
+#    ports:
+#      - "$PRONTOGRAM_SWAGGER_PORT:8080"
+#    networks:
+#      - prontogram
+#    restart: unless-stopped
+#    depends_on:
+#      - prontogram_service
 networks:
   prontogram:
     driver: bridge

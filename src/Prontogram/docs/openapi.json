@@ -1,0 +1,362 @@
+{
+    "basePath": "\/",
+    "paths": {
+        "/api/auth/{userId}/logout": {
+            "post": {
+                "produces": [
+                    "application\/json"
+                ],
+                "description": "Logout user and destroy the invalid SID",
+                "operationId": "auth_logout",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Type mismatch on request"
+                    },
+                    "401": {
+                      "description": "User unauthorized"  
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "sid": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "in": "body",
+                        "name": "body",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "consumes": [
+                    "application\/json"
+                ]
+            }
+        },
+        "/api/users/{receiverUserId}/messages": {
+            "post": {
+                "produces": [
+                    "application\/json"
+                ],
+                "description": "Send a message to a destination User from the current logged User",
+                "operationId": "sendMessage",
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "$ref": "#\/definitions\/Message"
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Type mismatch on request"
+                    },
+                    "401": {
+                      "description": "User unauthorized"  
+                    },
+                    "404": {
+                        "description": "Destination User not found"
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "receiverUserId",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "sender": {
+                                    "$ref": "#\/definitions\/AuthenticatedUser"
+                                },
+                                "content": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "in": "body",
+                        "name": "body",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Messages"
+                ],
+                "consumes": [
+                    "application\/json"
+                ]
+            }
+        },
+        "/api/users/{userId}/messages": {
+            "get": {
+                "produces": [
+                    "application\/json"
+                ],
+                "description": "Read the unread messagges from the User inbox",
+                "operationId": "getMessages",
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "$ref": "#\/definitions\/MessageList"
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Type mismatch on request"
+                    },
+                    "401": {
+                      "description": "User unauthorized"  
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "sid",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Messages"
+                ],
+                "consumes": [
+                    "application\/json"
+                ]
+            }
+        },
+        "/api/auth/{userId}/login": {
+            "post": {
+                "produces": [
+                    "application\/json"
+                ],
+                "description": "Login as User using its credentials and start a session",
+                "operationId": "auth_login",
+                "responses": {
+                    "200": {
+                        "schema": {
+                            "$ref": "#\/definitions\/AuthenticatedUser"
+                        },
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Type mismatch on request"
+                    },
+                    "401": {
+                      "description": "User unauthorized"  
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "password": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "in": "body",
+                        "name": "body",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "consumes": [
+                    "application\/json"
+                ]
+            }
+        },
+        "/api/users/{userId}": {
+            "post": {
+                "produces": [
+                    "application\/json"
+                ],
+                "description": "Create a User providing also credentials",
+                "operationId": "user_signup",
+                "responses": {
+                    "201": {
+                        "description": "User created successfully"
+                    },
+                    "400": {
+                        "description": "Type mismatch on request"
+                    },
+                    "403": {
+                      "description": "User already exists"  
+                    },
+                    "404": {
+                        "description": "resource not found"
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "password": {
+                                    "type": "string"
+                                },
+                                "display_name": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "in": "body",
+                        "name": "body",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "consumes": [
+                    "application\/json"
+                ]
+            }
+        }
+    },
+    "host": "localhost:8092",
+    "definitions": {
+        "Message": {
+            "type": "object",
+            "properties": {
+                "sender_userId": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "receiverUserId": {
+                    "type": "string"
+                }
+            }
+        },
+        "AuthenticatedUser": {
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "string"
+                },
+                "sid": {
+                    "type": "string"
+                }
+            }
+        },
+        "SendMessageRequest": {
+            "type": "object",
+            "properties": {
+                "sender": {
+                    "$ref": "#\/definitions\/AuthenticatedUser"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "receiverUserId": {
+                    "type": "string"
+                }
+            }
+        },
+        "UserSignUpRequest": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "display_name": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "string"
+                }
+            }
+        },
+        "UserAuthCredentials": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "string"
+                }
+            }
+        },
+        "MessageList": {
+            "type": "object",
+            "properties": {
+                "messages": {
+                    "type": "array",
+                    "items": {
+                        "minItems": 0,
+                        "$ref": "#\/definitions\/Message"
+                    }
+                }
+            }
+        }
+    },
+    "swagger": "2.0",
+    "info": {
+        "description": "The Prontogram service provide simples APIs to send and receive messages to the users inboxes",
+        "title": "ProntogramService API",
+        "version": "1"
+    },
+    "tags": [
+        {
+            "name": "Users",
+            "description": "User operations"
+        },
+        {
+            "name": "Authentication",
+            "description": "Operations about an authenticated user session"
+        },
+        {
+            "name": "Messages",
+            "description": "Messaging operations allowed by an authenticated user"
+        }
+    ]
+}
