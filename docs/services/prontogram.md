@@ -2,4 +2,4 @@
 
 ## Swagger Documentation
 
-!!swagger ../../src/Prontogram/docs/pg_swagger.yaml!!
+!!swagger ../../src/Prontogram/docs/openapi.json!!
