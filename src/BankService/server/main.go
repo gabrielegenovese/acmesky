@@ -56,7 +56,7 @@ func main() {
 
 	router.Use(CORSMiddleware())
 
-	router.PUT("/payment/new", api.NewPayment)
+	router.POST("/payment/new", api.NewPayment)
 	router.POST("/payment/pay/:id", api.PayPaymentById)
 	router.GET("/payment/:id", api.GetPaymentById)
 	router.DELETE("/payment/:id", api.DelPaymentById)

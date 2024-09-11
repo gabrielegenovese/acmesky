@@ -10,6 +10,7 @@ const props = defineProps<{
 	seatsCount: number | undefined;
 }>();
 const prontogramID = ref(null);
+const prontogramCreateAccountUrl = import.meta.env.VITE_PRONTOGRAM + "/create";
 
 function subscribePreference() {
 	fetch(import.meta.env.VITE_SKY_SERVICE_API + "/subscribe", {
@@ -57,6 +58,12 @@ function subscribePreference() {
 				type="submit"
 				value="Subscribe"
 			/>
+			<a
+				:href="prontogramCreateAccountUrl"
+				target="_blank"
+				class="text-sky-600 hover:text-sky-500"
+				>Don't have an account? Create one</a
+			>
 		</form>
 		<form method="dialog" class="absolute right-10 top-0">
 			<button class="fixed m-2 rounded-full bg-gray-200">

@@ -2,22 +2,22 @@
 
 <template>
 	<dialog
-		id="useCouponDialog"
+		id="useOfferCodeDialog"
 		class="w-1/3 rounded p-4 backdrop:bg-gray-900/75"
 	>
-		<form class="flex flex-col gap-2" @submit.prevent="">
-			<label for="prontogram-id">Enter your coupon</label>
+		<form class="flex flex-col gap-2" action="offer">
+			<label for="prontogram-id">Enter your offer code</label>
 			<input
 				type="text"
-				id="coupon"
+				id="offerCode"
 				class="rounded focus:border-gray-500 focus:ring-0 focus:drop-shadow-md"
-				name="coupon"
+				name="offerCode"
 				required
 			/>
 			<input
 				class="mx-auto rounded bg-sky-600 p-2 text-white hover:bg-sky-500 hover:drop-shadow-xl"
 				type="submit"
-				value="Use coupon"
+				value="Use offer code"
 			/>
 		</form>
 		<form method="dialog" class="absolute right-10 top-0">

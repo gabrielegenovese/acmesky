@@ -13,6 +13,7 @@ func AddFlights(flights []entities.Flight) error {
 
 	db := dbClient.GetInstance()
 
+	db.Exec("SET foreign_key_checks = 0")
 	sqlStr := "REPLACE INTO Flights" +
 		" (CompanyFlightID, CompanyID, PassengerFlightPrice, AvailableSeats, AirportOriginID, AirportDestinationID, DepartDatetime, ArrivalDatetime)" +
 		" VALUES "
@@ -20,7 +21,7 @@ func AddFlights(flights []entities.Flight) error {
 
 	for _, f := range flights {
 		sqlStr += "(?, ?, ?, ?, ?, ?, ?, ?),"
-		vals = append(vals, f.FlightID, f.FlightCompanyID, f.FlightPrice, f.AvailableSeats, f.AirportOriginID, f.AirportDestinationID, f.DepartDatetime, f.ArrivalDatetime)
+		vals = append(vals, f.FlightID, 1, f.FlightPrice, f.AvailableSeats, f.AirportOriginID, f.AirportDestinationID, f.DepartDatetime, f.ArrivalDatetime)
 	}
 	//trim the last ,
 	sqlStr = sqlStr[0 : len(sqlStr)-1]
@@ -35,6 +36,7 @@ func AddFlights(flights []entities.Flight) error {
 	//format all vals at once
 	_, err = stmt.Exec(vals...)
 
+	db.Exec("SET foreign_key_checks = 1")
 	if err != nil {
 		return fmt.Errorf("[DBERROR] addFlights: %v", err)
 	}

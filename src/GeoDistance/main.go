@@ -148,6 +148,6 @@ func main() {
 		log.Fatal(err)
 	}
 	http.HandleFunc("/distance", calcDistance)
-	log.Println("Listing for requests at http://localhost:8000/distance")
+	log.Println("Listing for requests at http://localhost:" + os.Getenv("PORT") + "/distance")
 	log.Fatal(http.ListenAndServe("0.0.0.0:"+os.Getenv("PORT"), nil))
 }

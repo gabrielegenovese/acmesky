@@ -1,0 +1,2 @@
+curl -X POST --data '{"airport_origin_id": "1", "airport_destination_id": "2", "depart_datetime": "2024-10-08 14:00:00", "arrival_datetime": "2024-10-08 14:30:00", "flight_price": 128.25, "available_seats_count": 12}' http://0.0.0.0:8091/flights
+curl -X POST --data '{"airport_origin_id": "2", "airport_destination_id": "1", "depart_datetime": "2024-10-10 16:00:00", "arrival_datetime": "2024-10-10 16:30:00", "flight_price": 30.20, "available_seats_count": 12}' http://0.0.0.0:8091/flights

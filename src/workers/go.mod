@@ -5,6 +5,7 @@ go 1.22
 require (
 	github.com/camunda/zeebe/clients/go/v8 v8.5.0
 	github.com/gin-gonic/gin v1.10.0
+	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 )
 

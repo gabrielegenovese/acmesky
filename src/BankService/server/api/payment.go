@@ -16,7 +16,7 @@ import (
 // @Param			request	body		PaymentReq	true	"payment data"
 // @Success		200		{object}	Payment
 // @Failure		400		{object}	Res
-// @Router			/payment/new [put]
+// @Router			/payment/new [post]
 func NewPayment(c *gin.Context) {
 	db := util.GetDb()
 
@@ -33,7 +33,7 @@ func NewPayment(c *gin.Context) {
 		User:        data.User,
 		Description: data.Description,
 		Amount:      data.Amount,
-		Link:        "http://localhost:8083/pay/" + id.String() + "?redirecturi=",
+		Link:        "http://localhost:5175" + "/pay/" + id.String() + "?redirecturi=", // FIXME hardcoded URL
 		Paid:        false,
 	}
 	if err := db.Save(&pay).Error; err != nil {
@@ -74,6 +74,7 @@ func PayPaymentById(c *gin.Context) {
 		return
 	}
 
+	http.Get("http://localhost:8080" + "/paymentCompleted/" + userid) // FIXME Hardcoded URL
 	c.JSON(http.StatusOK, Res{Res: "Done"})
 }
 

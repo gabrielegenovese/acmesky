@@ -160,3 +160,78 @@ func GetReservedOffer(offerCode int64) (entities.ReservedOffer, error) {
 	}
 	return reservedOffer, nil
 }
+
+func GetOfferBundle(offerCode int64) ([]entities.Flight, error) {
+	db := dbClient.GetInstance()
+	var flights []entities.Flight
+
+	if db == nil {
+		fmt.Println("ERROR NIL")
+	}
+
+	rows, err := db.Query(
+		"SELECT CompanyFlightID, CompanyID"+
+			" FROM OffersBundles"+
+			" WHERE OfferCode = ?",
+		offerCode,
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("GetReservedOffer: %v", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var flight entities.Flight
+		if err := rows.Scan(&flight.FlightID, &flight.FlightCompanyID); err != nil {
+			return nil, fmt.Errorf("GetReservedOffer: %v", err)
+		}
+		flights = append(flights, flight)
+	}
+	if err := rows.Err(); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("GetReservedOffer: NOT_FOUND")
+		}
+		return nil, fmt.Errorf("GetReservedOffer: %v", err)
+	}
+	return flights, nil
+}
+
+func GetTravelPreference(travelPreferenceId int64) (entities.CustomerFlightSubscription, error) {
+	db := dbClient.GetInstance()
+	var pref entities.CustomerFlightSubscription
+	var rows *sql.Rows
+	var err error
+	var query string
+
+	if db == nil {
+		fmt.Println("ERROR NIL")
+	}
+
+	rows, err = db.Query(
+		"SELECT TravelPreferenceID, AirportOriginID, AirportDestinationID, DATE_FORMAT(TravelDateStart, '%Y-%m-%d %H:%i:%S'), DATE_FORMAT(TravelDateEnd, '%Y-%m-%d %H:%i:%S'), SeatsCount, Budget, ProntogramID" +
+			" FROM TravelPreferences" +
+			" WHERE TravelPreferenceID = ?" +
+			" ORDER BY TravelDateStart ASC",
+			travelPreferenceId,
+	)
+
+	if err != nil {
+		return pref, fmt.Errorf("GetAllPreferences %q: %v", query, err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		if err := rows.Scan(&pref.TravelPreferenceID, &pref.AirportOriginID, &pref.AirportDestinationID, &pref.DateStartISO8601, &pref.DateEndISO8601, &pref.SeatsCount, &pref.Budget, &pref.ProntogramID); err != nil {
+			return pref, fmt.Errorf("GetAllPreferences %q: %v", query, err)
+		}
+		return pref, nil
+	}
+	if err := rows.Err(); err != nil {
+		if err == sql.ErrNoRows {
+			return pref, nil
+		}
+		return pref, fmt.Errorf("GetAllPreferences %q: %v", query, err)
+	}
+	return pref, nil
+}

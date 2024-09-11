@@ -9,6 +9,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"strings"
 	"time"
@@ -131,6 +132,7 @@ func HandleResponseTravelPreference(client worker.JobClient, job entities.Job) {
 	_, err := client.NewCompleteJobCommand().
 		JobKey(job.Key).
 		Send(ctx)
+	http.Get(os.Getenv("WORKERS_API") + "/newInterestSaved/" + vars["customer_prontogram_id"].(string))
 
 	if err != nil {
 		log.Println(fmt.Errorf("[BPMNERROR] failed to create command to complete job [%d] due to [%s]", job.Key, err))
