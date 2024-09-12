@@ -2,13 +2,14 @@ package main
 
 import (
 	_ "acmeskyncc/docs"
-	"github.com/gin-gonic/gin"
-	"github.com/swaggo/files"
-	"github.com/swaggo/gin-swagger"
-	"github.com/tiaguinho/gosoap"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/tiaguinho/gosoap"
 )
 
 type nccRequest struct {

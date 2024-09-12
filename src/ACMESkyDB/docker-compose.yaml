@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   acmesky_db:
     hostname: db.acmesky
@@ -16,7 +14,7 @@ services:
       - acmesky
     restart: unless-stopped
 
-# temp for dev
+  # temp for dev
   phpmyadmin:
     container_name: phpmyadmin_container
     image: phpmyadmin

@@ -22,15 +22,15 @@ type ResError struct {
 	Error string `json:"error"`
 }
 
-//	@Summary		Get all airports
-//	@Description	Get a list of all available airports
-//	@Tags			airport
-//	@Accept			json
-//	@Produce		json
-//	@Param			query	query		string	false	"Search query"
-//	@Success		200		{array}		[]entities.Airport
-//	@Failure		500		{object}	ResError
-//	@Router			/airports [get]
+// @Summary		Get all airports
+// @Description	Get a list of all available airports
+// @Tags			airport
+// @Accept			json
+// @Produce		json
+// @Param			query	query		string	false	"Search query"
+// @Success		200		{array}		[]entities.Airport
+// @Failure		500		{object}	ResError
+// @Router			/airports [get]
 func rest_getAirports(ctx *gin.Context) {
 
 	searchQuery := ctx.Query("query")
@@ -45,6 +45,7 @@ func rest_getAirports(ctx *gin.Context) {
 }
 
 // Create a Travel Preference and subscribe to notification service (a sort of Newsletter like servive)
+//
 //	@Summary		Add a Travel preference
 //	@Description	Add a Travel preference and subscribe to notification service
 //	@Tags			travel_preference
@@ -115,7 +116,6 @@ func bpmn_NotifyReceivedTravelPreference(zBClient zbc.Client, bpk string, newSub
 }
 
 func Listen(router *gin.RouterGroup) {
-
 	router.GET("/airports", rest_getAirports)
 	router.POST("/subscribe", rest_subscribeTravelPreference)
 }
