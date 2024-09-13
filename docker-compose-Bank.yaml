@@ -27,6 +27,7 @@ services:
     build: ./src/BankService/.
     image: bank/service
     ports:
+      - "5431:5432"
       - "8094:8094"
     networks:
       - bank_backend

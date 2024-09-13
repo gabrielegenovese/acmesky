@@ -1,2 +1,2 @@
-db_uri = "host=localhost user=acmebank password=acmebank dbname=acmebank port=5434 sslmode=disable TimeZone=Europe/Rome"
+db_uri = "host=db.bank user=acmebank password=acmebank dbname=acmebank port=5432 sslmode=disable TimeZone=Europe/Rome"
 port = "8094"
