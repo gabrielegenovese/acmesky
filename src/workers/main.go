@@ -60,7 +60,7 @@ func main() {
 	}
 	// deploy process
 	util.Ctx = context.Background()
-	response, err := util.ZbClient.NewDeployResourceCommand().AddResourceFile("../../resources/acmesky.bpmn").Send(util.Ctx)
+	response, err := util.ZbClient.NewDeployResourceCommand().AddResourceFile("./acmesky.bpmn").Send(util.Ctx)
 	if err != nil {
 		panic(err)
 	}

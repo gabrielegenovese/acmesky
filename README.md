@@ -20,7 +20,9 @@ docker-compose \
     -f docker-compose-FlightCompany.yaml \
     -f docker-compose-Prontogram.yaml \
     -f docker-compose-GeoDistance.yaml \
+    -f docker-compose-NCC.yaml \
     -f docker-compose-Bank.yaml \
+    -f docker-compose-workers.yaml \
     up -d
 ```
 
