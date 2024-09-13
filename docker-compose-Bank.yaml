@@ -24,7 +24,7 @@ services:
       - bank_db
     hostname: service.bank
     container_name: bank_service_container
-    build: ./src/BankService/server/.
+    build: ./src/BankService/.
     image: bank/service
     ports:
       - "8094:8094"

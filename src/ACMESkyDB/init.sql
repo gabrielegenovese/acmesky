@@ -32,7 +32,6 @@ VALUES
     (18, "Aeroporto di Francoforte", "Francoforte"),
     (19, "Aeroporto di Madrid Barajas", "Madrid"),
     (20, "Aeroporto di Dubai", "Dubai"),
-    (20, "Aeroporto di Dubai", "Dubai"),
     (21, "Aeroporto di Tokyo Narita", "Tokyo"),
     (22, "Aeroporto di Sydney Kingsford Smith", "Sydney"),
     (23, "Aeroporto di San Francisco", "San Francisco"),

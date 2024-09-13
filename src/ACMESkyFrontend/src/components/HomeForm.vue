@@ -155,8 +155,8 @@ onMounted(() => {
 				</div>
 				<SubscribePreferenceDialog
 					:budget="budget"
-					:departDate="departDate as Date"
-					:returnDate="returnDate as Date"
+					:departDate="departDate"
+					:returnDate="returnDate"
 					:departAirportID="departAirportID"
 					:landAirportID="landAirportID"
 					:seatsCount="seatsCount"

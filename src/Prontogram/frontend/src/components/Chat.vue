@@ -49,6 +49,7 @@ setInterval(getMessages, 3000);
 		>
 			<div class="flex grow flex-col-reverse content-end overflow-y-auto">
 				<MessageBubble v-for="message in messages" time="13:00">{{
+					// @ts-ignore
 					message.content
 				}}</MessageBubble>
 				<MessageBubble time="13:00"
