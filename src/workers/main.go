@@ -14,6 +14,7 @@ import (
 	"workers/ncc"
 	"workers/prontogram"
 	"workers/user"
+	"workers/newclient"
 	"workers/util"
 
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
@@ -25,17 +26,11 @@ import (
 
 var readyClose = make(chan struct{})
 
-var api = "http://localhost:8080"
-
 func main() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	// ncc_backend_api, ok := os.LookupEnv("NCC_BACKEND_API")
-	// if !ok {
-	// 	ncc_backend_api = "http://localhost"
-	// }
 	resp, err := http.Post(os.Getenv("PRONTOGRAM_API")+"/api/auth/prontogram/login", "application/json", bytes.NewBuffer([]byte(`{"userId": "prontogram", "password": "sicurissima"}`)))
 	if err != nil {
 		log.Fatal(err)
@@ -44,7 +39,7 @@ func main() {
 	log.Println(util.ProntogramUser)
 
 	router := gin.Default()
-	router.POST("/newInterest", user.NewInterest)
+	router.POST("/newInterest", newclient.NewInterest)
 	router.GET("/buyOffer/:id", user.BuyOffer)
 	router.POST("/searchNCC", user.SearchNCC)
 	router.GET("/newInterestSaved/:id", acmesky.NewInterestSaved)
@@ -67,8 +62,9 @@ func main() {
 
 	fmt.Println("Response: ", response.String())
 
-	util.ZbClient.NewJobWorker().JobType("NewInterest").Handler(user.NewInterestHandler).Open()
-	util.ZbClient.NewJobWorker().JobType("SendNewInterest").Handler(user.SendNewInterestHandler).Open()
+	util.ZbClient.NewJobWorker().JobType("NewInterest").Handler(newclient.NewInterestHandler).Open()
+	util.ZbClient.NewJobWorker().JobType("SendNewInterest").Handler(newclient.SendNewInterestHandler).Open()
+
 	util.ZbClient.NewJobWorker().JobType("SelectOffer").Handler(user.SelectOfferHandler).Open()
 	util.ZbClient.NewJobWorker().JobType("SendBookFlight").Handler(user.SendBookFlightHandler).Open()
 	util.ZbClient.NewJobWorker().JobType("CalculateDistance").Handler(user.CalculateDistanceHandler).Open()
