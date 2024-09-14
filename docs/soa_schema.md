@@ -13,8 +13,8 @@ Here is the interal schema of the Service Oriented Architecture:
 | ACMESkyDB            | [3306](http://localhost:3306) |
 | ACMESkyNCC           | [8089](http://localhost:8089) |
 | BankWeb              | [8083](http://localhost:8083) |
-| BankSerivice         | [8094](http://localhost:8094) |
-| BankDb               | [3308](http://localhost:3308) |
+| BankService          | [8094](http://localhost:8094) |
+| BankDB               | [3308](http://localhost:3308) |
 | FlightCompanyService | [8091](http://localhost:8091) |
 | FlightCompanyDB      | [3307](http://localhost:3307) |
 | GeoDistance          | [8093](http://localhost:8093) |

@@ -160,10 +160,9 @@ onMounted(async () => {
 		</button>
 	</div>
 	<div
-		v-if="payment.amount > 10"
+		v-if="payment.amount > 1000"
 		class="mx-auto flex max-w-prose flex-col gap-2 p-4 text-center"
 	>
-		<!-- FIXME -->
 		<p class="text-xl">
 			You can book a NCC for free!<br />What's your address?
 		</p>
