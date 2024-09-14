@@ -30,15 +30,15 @@ In this case, ACMESky uses various chauffeur rental companies with which it has 
 
 This is the structure of the project's folder.
 
-    docs/               # Documentation contents
-    docker-compose/     # All docker compose files
-    src/                # All microservices codebase
+    docs/                           # Documentation contents
+    src/                            # All microservices codebase
     resources/
-        uml/            # UML source files
-        bpmn/           # BPMN source files
-        bpmn-chors/     # BPMN Choreography source files
-    requirements.txt    # Documentation requirements
-    mkdocs.yml          # Documentation config file
+        uml/                        # UML source files
+        bpmn/                       # BPMN source files
+        bpmn-chors/                 # BPMN Choreography source files
+    docker-compose-[service].yaml   # All docker compose files
+    requirements.txt                # Documentation requirements
+    mkdocs.yml                      # Documentation config file
 
 ## Deploy using Docker compose
 
@@ -63,18 +63,6 @@ docker-compose \
     -f docker-compose-Bank.yaml \
     up -d
 ```
-
-- Camunda
-  - [Operate](http://localhost:8081)
-  - [Tasklist](http://localhost:8082)
-- ACMESky
-  - [Frontend](http://localhost:8080)
-  - [API](http://localhost:8090)
-- FlightCompany
-  - [API](http://localhost:8091)
-- Prontogram
-  - [Frontend](http://localhost:8079)
-  - [API](http://localhost:8092)
 
 ## Docs
 

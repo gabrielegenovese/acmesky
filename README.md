@@ -26,18 +26,6 @@ docker-compose \
     up -d
 ```
 
-- Camunda
-  - [Operate](http://localhost:8081)
-  - [Tasklist](http://localhost:8082)
-- ACMESky
-  - [Frontend](http://localhost:8080)
-  - [API](http://localhost:8090)
-- FlightCompany
-  - [API](http://localhost:8091)
-- Prontogram
-  - [Frontend](http://localhost:8079)
-  - [API](http://localhost:8092)
-
 ## Docs
 
 The documentation is generated with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
