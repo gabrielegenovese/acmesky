@@ -1,6 +1,6 @@
 # SOA Schema
 
-Here is the interal schema of the services:
+Here is the interal schema of the Service Oriented Architecture:
 
 ![draw.io soa schema](assets/soa.png "SOA Structure")
 
@@ -20,6 +20,6 @@ Here is the interal schema of the services:
 | GeoDistance          | [8093](http://localhost:8093) |
 | ProntogramWeb        | [8079](http://localhost:8079) |
 | ProntogramService    | [8092](http://localhost:8092) |
-| Operate              | [8092](http://localhost:8092) |
+| Operate              | [8081](http://localhost:8081) |
 | Tasklist             | [8082](http://localhost:8082) |
 | Workers              | [8080](http://localhost:8080) |
