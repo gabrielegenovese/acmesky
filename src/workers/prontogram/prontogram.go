@@ -37,8 +37,6 @@ func SendNewMessageHandler(client worker.JobClient, job entities.Job) {
 	}
 	data, _ := json.Marshal(messageRest)
 	http.Post(os.Getenv("PRONTOGRAM_API")+"/api/users/prontogram/messages", "application/json", bytes.NewReader(data))
-	message, _ := util.ZbClient.NewPublishMessageCommand().MessageName("MessageNewMessage").CorrelationKey("correlation").VariablesFromMap(variables)
-	_, err = message.Send(util.Ctx)
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
 	if err != nil {
