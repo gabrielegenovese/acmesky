@@ -2,7 +2,7 @@ networks:
   # This is a fake public network used to connect all "public" containers
   net:
     driver: bridge
-    name: 'net'
+    name: net
 
 services:
   removeme:
