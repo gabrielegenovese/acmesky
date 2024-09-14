@@ -27,7 +27,7 @@ func CreateNewPaymentHandler(client worker.JobClient, job entities.Job) {
 	log.Println("Start job", jobKey, "of type", job.Type)
 
 	paymentRequest := util.PaymentReq{
-		User: variables["prontogramID"].(string),
+		User: variables["prontogramId"].(string),
 		Description: variables["offerCode"].(string),
 		Amount: variables["totalPrice"].(float64),
 	}

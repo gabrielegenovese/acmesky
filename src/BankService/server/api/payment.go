@@ -33,7 +33,7 @@ func NewPayment(c *gin.Context) {
 		User:        data.User,
 		Description: data.Description,
 		Amount:      data.Amount,
-		Link:        "http://localhost:5175" + "/pay/" + id.String() + "?redirecturi=", // FIXME hardcoded URL
+		Link:        "http://localhost:8083" + "/pay/" + id.String() + "?redirecturi=", // FIXME hardcoded URL
 		Paid:        false,
 	}
 	if err := db.Save(&pay).Error; err != nil {
@@ -74,7 +74,7 @@ func PayPaymentById(c *gin.Context) {
 		return
 	}
 
-	http.Get("http://localhost:8080" + "/paymentCompleted/" + userid) // FIXME Hardcoded URL
+	http.Get("http://service.workers:8080" + "/paymentCompleted/" + userid) // FIXME Hardcoded URL
 	c.JSON(http.StatusOK, Res{Res: "Done"})
 }
 

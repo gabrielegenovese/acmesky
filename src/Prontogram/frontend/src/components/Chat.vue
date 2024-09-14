@@ -27,7 +27,9 @@ function getMessages() {
 		)
 			.then((response) => response.json())
 			.then((json) => {
-				messages.value = json.messages.reverse();
+				if (json.messages) {
+					messages.value = json.messages.reverse();
+				}
 			});
 	}
 }

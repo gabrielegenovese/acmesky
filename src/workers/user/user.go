@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"workers/util"
 
@@ -133,9 +134,18 @@ func CalculateDistanceHandler(client worker.JobClient, job entities.Job) {
 	// Wait for use
 	util.NCCSearchRequests[variables["paymentId"].(string)] = make(chan util.NCCSearchRequest)
 	nccSearchRequest := <-util.NCCSearchRequests[variables["paymentId"].(string)]
-	response, _ := http.Get(os.Getenv("DISTANCE_API") + "/distance?from=" + nccSearchRequest.Address + "&to=" + nccSearchRequest.AirportAddress)
+	response, err := http.Get(os.Getenv("DISTANCE_API") + "/distance?from=" + url.QueryEscape(nccSearchRequest.Address) + "&to=" + url.QueryEscape(nccSearchRequest.AirportAddress))
+	if err != nil {
+		util.FailJob(client, job)
+		return
+	}
 	var distance util.DistanceResBody
-	json.NewDecoder(response.Body).Decode(&distance)
+	err = json.NewDecoder(response.Body).Decode(&distance)
+	if err != nil {
+		log.Println("Error JSON: ", err.Error())
+		util.FailJob(client, job)
+		return
+	}
 	variables["distance"] = distance.Value
 	variables["address"] = nccSearchRequest.Address
 

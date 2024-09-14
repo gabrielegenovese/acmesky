@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY ./src/* ./
 
-EXPOSE ${PRONTOGRAM_SERVICE_PORT}
+EXPOSE 8092
 
 ENTRYPOINT [ "jolie", "main.ol" ]

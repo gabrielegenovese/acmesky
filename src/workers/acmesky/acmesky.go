@@ -104,7 +104,7 @@ func SendNewOffertHandler(client worker.JobClient, job entities.Job) {
 		json.NewDecoder(response.Body).Decode(&offers)
 		for _, offer := range offers {
 			variables := make(map[string]interface{})
-			variables["prontogramID"] = offer.TravelPreference.ProntogramID
+			variables["prontogramId"] = offer.TravelPreference.ProntogramID
 			variables["offerCode"] = fmt.Sprintf("%d", offer.OfferCode)
 			message, err := util.ZbClient.NewPublishMessageCommand().MessageName("MessageNewOffert").CorrelationKey("correlation").VariablesFromMap(variables)
 			_, err = message.Send(util.Ctx)

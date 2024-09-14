@@ -105,14 +105,14 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_18lmgvy" sourceRef="Event_0l6tful" targetRef="Event_1cdqwx6" />
     <bpmn:sequenceFlow id="Flow_098zoxw" sourceRef="Gateway_0eas1o4" targetRef="Event_1cdqwx6">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=(payment &gt; 1000 and distance &lt; 30000) = false</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=(totalPrice &gt; 1000 and distance &lt; 30000) = false</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_06e4hjl" sourceRef="Activity_17650k1" targetRef="Event_0m7xfqf" />
     <bpmn:sequenceFlow id="Flow_19e1i5g" sourceRef="Event_1byxjq1" targetRef="Activity_17650k1" />
     <bpmn:sequenceFlow id="Flow_0urqlyi" sourceRef="Event_0bumcy5" targetRef="Activity_0kylkgh" />
     <bpmn:sequenceFlow id="Flow_1yomam4" sourceRef="Activity_0kylkgh" targetRef="Gateway_0eas1o4" />
     <bpmn:sequenceFlow id="Flow_1j7zn5u" name="Yes" sourceRef="Gateway_0eas1o4" targetRef="Event_1f9g70q">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=payment &gt; 1000 and distance &lt; 30000</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=totalPrice &gt; 1000 and distance &lt; 30000</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmn:process id="Acmesky" isExecutable="true">
@@ -290,7 +290,7 @@
   <bpmn:process id="Bank" isExecutable="true">
     <bpmn:endEvent id="Event_009y1fg" name="Send receipt">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="MessageSendReceipt" />
+        <zeebe:taskDefinition type="SendReceipt" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_13rsb02</bpmn:incoming>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1h06a5a" />
@@ -806,15 +806,17 @@
         <di:waypoint x="520" y="560" />
         <di:waypoint x="602" y="560" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_03zxftf_di" bpmnElement="Flow_03zxftf">
-        <di:waypoint x="1260" y="541" />
-        <di:waypoint x="1260" y="812" />
+      <bpmndi:BPMNEdge id="Flow_095tool_di" bpmnElement="Flow_095tool">
+        <di:waypoint x="1080" y="958" />
+        <di:waypoint x="1080" y="1060" />
+        <di:waypoint x="910" y="1060" />
+        <di:waypoint x="910" y="1182" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_05ywbfv_di" bpmnElement="Flow_05ywbfv">
-        <di:waypoint x="1450" y="752" />
-        <di:waypoint x="1450" y="705" />
-        <di:waypoint x="1390" y="705" />
-        <di:waypoint x="1390" y="658" />
+      <bpmndi:BPMNEdge id="Flow_1eg80lc_di" bpmnElement="Flow_1eg80lc">
+        <di:waypoint x="910" y="1482" />
+        <di:waypoint x="910" y="1280" />
+        <di:waypoint x="560" y="1280" />
+        <di:waypoint x="560" y="998" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0rjgm8s_di" bpmnElement="Flow_0rjgm8s">
         <di:waypoint x="1440" y="249" />
@@ -828,6 +830,10 @@
         <di:waypoint x="2260" y="288" />
         <di:waypoint x="2260" y="512" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03zxftf_di" bpmnElement="Flow_03zxftf">
+        <di:waypoint x="1260" y="541" />
+        <di:waypoint x="1260" y="812" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0mb86i7_di" bpmnElement="Flow_0mb86i7">
         <di:waypoint x="1530" y="812" />
         <di:waypoint x="1530" y="430" />
@@ -840,17 +846,11 @@
         <di:waypoint x="1590" y="720" />
         <di:waypoint x="1590" y="812" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_095tool_di" bpmnElement="Flow_095tool">
-        <di:waypoint x="1080" y="958" />
-        <di:waypoint x="1080" y="1060" />
-        <di:waypoint x="910" y="1060" />
-        <di:waypoint x="910" y="1182" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1eg80lc_di" bpmnElement="Flow_1eg80lc">
-        <di:waypoint x="910" y="1482" />
-        <di:waypoint x="910" y="1280" />
-        <di:waypoint x="560" y="1280" />
-        <di:waypoint x="560" y="998" />
+      <bpmndi:BPMNEdge id="Flow_05ywbfv_di" bpmnElement="Flow_05ywbfv">
+        <di:waypoint x="1450" y="752" />
+        <di:waypoint x="1450" y="705" />
+        <di:waypoint x="1390" y="705" />
+        <di:waypoint x="1390" y="658" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0dnuxj8_di" bpmnElement="Flow_0dnuxj8">
         <di:waypoint x="620" y="578" />

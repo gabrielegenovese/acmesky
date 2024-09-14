@@ -32,7 +32,7 @@ func SendNewMessageHandler(client worker.JobClient, job entities.Job) {
 	util.OfferSelected[variables["offerCode"].(string)] = make(chan struct{})
 	messageRest := Message{
 		Sender:         util.ProntogramUser,
-		ReceiverUserId: variables["prontogramID"].(string),
+		ReceiverUserId: variables["prontogramId"].(string),
 		Content:        "OfferCode: " + variables["offerCode"].(string),
 	}
 	data, _ := json.Marshal(messageRest)

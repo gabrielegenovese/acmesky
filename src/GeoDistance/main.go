@@ -91,6 +91,8 @@ func format_query(from string, to string) *url.URL {
 func calcDistance(w http.ResponseWriter, req *http.Request) {
 	from_param := req.URL.Query().Get("from")
 	to_param := req.URL.Query().Get("to")
+	log.Println("From: ", from_param)
+	log.Println("To: ", to_param)
 
 	url := format_query(from_param, to_param)
 
@@ -122,6 +124,7 @@ func calcDistance(w http.ResponseWriter, req *http.Request) {
 				Value:    valueDistance,
 				Status:   statusDistance,
 			}
+			log.Println("Response: ", elemBody)
 			writeRes(w, elemBody)
 		} else {
 			sendError(w)
