@@ -3,8 +3,14 @@ package flight_subscription
 import (
 	"acmesky/dao/entities"
 	airportsDAO "acmesky/dao/impl/airports"
-	zbSingleton "acmesky/workers"
-	chanBPRepo "acmesky/workers/utils/channel_bp_repository"
+	travelPreferenceDAO "acmesky/dao/impl/travel_preference"
+	"io"
+
+	// zbSingleton "acmesky/workers"
+	// chanBPRepo "acmesky/workers/utils/channel_bp_repository"
+	"bytes"
+	"encoding/json"
+	"os"
 
 	"context"
 	"fmt"
@@ -15,7 +21,7 @@ import (
 	"github.com/camunda/zeebe/clients/go/v8/pkg/pb"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+	// "github.com/google/uuid"
 )
 
 type ResError struct {
@@ -62,28 +68,40 @@ func rest_subscribeTravelPreference(context *gin.Context) {
 		context.Status(http.StatusBadRequest)
 		return
 	}
-
-	zbClient := *zbSingleton.GetInstance()
-	// Business Process Key
-	bpk_uuid := uuid.New()
-	chanBPRepo.SetContext(bpk_uuid.String())
-	result := chanBPRepo.GetContext(bpk_uuid.String())
-
-	_, err := bpmn_NotifyReceivedTravelPreference(zbClient, bpk_uuid.String(), newSubRequest)
-
+	data, _ := json.Marshal(newSubRequest)
+	resp, _ := http.Post(os.Getenv("WORKERS_API") + "/newInterest", "application/json", bytes.NewReader(data))
+	body, _ := io.ReadAll(resp.Body)
+	uuid := string(body)
+	
+	_, err := travelPreferenceDAO.AddCustomerSubscribtionPreference(newSubRequest)
 	if err != nil {
 		context.IndentedJSON(http.StatusInternalServerError, ResError{Error: err.Error()})
 	} else {
-		// waiting result
-		outVars := <-result
-
-		if _, hasError := outVars["errorCode"]; hasError {
-			context.IndentedJSON(http.StatusInternalServerError, ResError{Error: "bpmn has got an error"})
-		} else {
-			context.Status(http.StatusOK)
-		}
+		http.Get(os.Getenv("WORKERS_API") + "/newInterestSaved/" + uuid)
+		context.Status(http.StatusOK)
 	}
-	chanBPRepo.UnsetContext(bpk_uuid.String())
+
+	// zbClient := *zbSingleton.GetInstance()
+	// // Business Process Key
+	// bpk_uuid := uuid.New()
+	// chanBPRepo.SetContext(bpk_uuid.String())
+	// result := chanBPRepo.GetContext(bpk_uuid.String())
+	//
+	// _, err := bpmn_NotifyReceivedTravelPreference(zbClient, bpk_uuid.String(), newSubRequest)
+	//
+	// if err != nil {
+	// 	context.IndentedJSON(http.StatusInternalServerError, ResError{Error: err.Error()})
+	// } else {
+	// 	// waiting result
+	// 	outVars := <-result
+	//
+	// 	if _, hasError := outVars["errorCode"]; hasError {
+	// 		context.IndentedJSON(http.StatusInternalServerError, ResError{Error: "bpmn has got an error"})
+	// 	} else {
+	// 		context.Status(http.StatusOK)
+	// 	}
+	// }
+	// chanBPRepo.UnsetContext(bpk_uuid.String())
 }
 
 func bpmn_NotifyReceivedTravelPreference(zBClient zbc.Client, bpk string, newSubRequest entities.CustomerFlightSubscriptionRequest) (*pb.PublishMessageResponse, error) {

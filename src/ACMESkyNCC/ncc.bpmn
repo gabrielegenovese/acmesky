@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_10k32hu" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0">
+  <bpmn:process id="ncc" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1647bcl</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_1l21cbu" name="Add NCC">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="addNCC" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1647bcl</bpmn:incoming>
+      <bpmn:outgoing>Flow_0o90dwp</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1647bcl" sourceRef="StartEvent_1" targetRef="Activity_1l21cbu" />
+    <bpmn:endEvent id="Event_0f280vp">
+      <bpmn:incoming>Flow_05dwvbx</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0o90dwp" sourceRef="Activity_1l21cbu" targetRef="Activity_0lzwpn9" />
+    <bpmn:sequenceFlow id="Flow_05dwvbx" sourceRef="Activity_0lzwpn9" targetRef="Event_0f280vp" />
+    <bpmn:serviceTask id="Activity_0lzwpn9" name="Get NCC">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="getNCC" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0o90dwp</bpmn:incoming>
+      <bpmn:outgoing>Flow_05dwvbx</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ncc">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1l21cbu_di" bpmnElement="Activity_1l21cbu">
+        <dc:Bounds x="280" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0f280vp_di" bpmnElement="Event_0f280vp">
+        <dc:Bounds x="622" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1aya2ri_di" bpmnElement="Activity_0lzwpn9">
+        <dc:Bounds x="450" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1647bcl_di" bpmnElement="Flow_1647bcl">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="280" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0o90dwp_di" bpmnElement="Flow_0o90dwp">
+        <di:waypoint x="380" y="117" />
+        <di:waypoint x="450" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05dwvbx_di" bpmnElement="Flow_05dwvbx">
+        <di:waypoint x="550" y="117" />
+        <di:waypoint x="622" y="117" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

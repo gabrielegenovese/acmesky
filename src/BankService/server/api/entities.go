@@ -14,15 +14,15 @@ type Payment struct {
 	DeletedAt   sql.NullTime `json:"deleted_at" gorm:"index"`
 	User        string       `json:"user"`
 	Description string       `json:"description"`
-	Amount      uint32       `json:"amount"`
+	Amount      float64      `json:"amount"`
 	Link        string       `json:"link"`
 	Paid        bool         `json:"paid"`
 }
 
 type PaymentReq struct {
-	User        string `json:"user"`
-	Description string `json:"description"`
-	Amount      uint32 `json:"amount"`
+	User        string  `json:"user"`
+	Description string  `json:"description"`
+	Amount      float64 `json:"amount"`
 }
 
 type Res struct {

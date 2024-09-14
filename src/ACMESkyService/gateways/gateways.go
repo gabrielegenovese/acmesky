@@ -2,6 +2,7 @@ package gateways
 
 import (
 	"acmesky/gateways/flight_subscription"
+	"acmesky/gateways/flight_matcher"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,6 +13,7 @@ func Listen() {
 	v1 := r.Group("/api/v1")
 	{
 		flight_subscription.Listen(v1)
+		flight_matcher.Listen(v1)
 	}
 
 	r.Run("0.0.0.0:8090")

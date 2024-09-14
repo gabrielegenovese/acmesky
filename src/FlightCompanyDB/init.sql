@@ -13,7 +13,32 @@ INSERT INTO Airports
     (AirportID,Name,City)
 VALUES
     (1,"Aeroporto di Bologna-Guglielmo Marconi","Bologna"),
-    (2,"Aeroporto del Salento", "Brindisi");
+    (2,"Aeroporto del Salento", "Brindisi"),
+    (3,"Aeroporto di Roma Fiumicino", "Roma"),
+    (4,"Aeroporto di Milano Malpensa", "Milano"),
+    (5, "Aeroporto di Amsterdam Schiphol", "Amsterdam"),
+    (6, "Aeroporto di Los Angeles", "Los Angeles"),
+    (7, "Aeroporto di Venezia Marco Polo", "Venezia"),
+    (8, "Aeroporto di Napoli Capodichino", "Napoli"),
+    (9, "Aeroporto di Bergamo Orio al Serio", "Bergamo"),
+    (10, "Aeroporto di Torino Caselle", "Torino"),
+    (11, "Aeroporto di Singapore Changi", "Singapore"),
+    (12, "Aeroporto di Palermo Falcone e Borsellino", "Palermo"),
+    (13, "Aeroporto di Catania Fontanarossa", "Catania"),
+    (14, "Aeroporto di Firenze Peretola", "Firenze"),
+    (15, "Aeroporto di Parigi Charles de Gaulle", "Parigi"),
+    (16, "Aeroporto di Londra Heathrow", "Londra"),
+    (17, "Aeroporto di New York John F. Kennedy", "New York"),
+    (18, "Aeroporto di Francoforte", "Francoforte"),
+    (19, "Aeroporto di Madrid Barajas", "Madrid"),
+    (20, "Aeroporto di Dubai", "Dubai"),
+    (20, "Aeroporto di Dubai", "Dubai"),
+    (21, "Aeroporto di Tokyo Narita", "Tokyo"),
+    (22, "Aeroporto di Sydney Kingsford Smith", "Sydney"),
+    (23, "Aeroporto di San Francisco", "San Francisco"),
+    (24, "Aeroporto di Istanbul", "Istanbul"),
+    (25, "Aeroporto di Zurigo", "Zurigo"),
+    (26, "Aeroporto di Mosca Sheremetyevo", "Mosca");
 
 CREATE TABLE Flights (
     FlightID int NOT NULL AUTO_INCREMENT,

@@ -1,0 +1,22 @@
+networks:
+  acmesky_camunda-platform:
+    external: true
+  workers_public:
+    name: 'net'
+    external: true
+
+services:
+
+  workers_service:
+    hostname: service.workers
+    container_name: workers_service_container
+    build: ./src/workers/.
+    image: camunda/workers
+    env_file:
+      - ./src/workers/.env
+    ports:
+      - "8080:8080"
+    networks:
+      - acmesky_camunda-platform
+      - workers_public
+    restart: unless-stopped

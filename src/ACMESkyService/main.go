@@ -5,10 +5,10 @@ import (
 
 	dbClient "acmesky/dao/db"
 	"acmesky/gateways"
-	"acmesky/services/notification/prontogram"
-	zbSingleton "acmesky/workers"
-	flightMatcher "acmesky/workers/flight_matcher"
-	travelPrefWorker "acmesky/workers/travel_preference"
+	// "acmesky/services/notification/prontogram"
+	// zbSingleton "acmesky/workers"
+	// flightMatcher "acmesky/workers/flight_matcher"
+	// travelPrefWorker "acmesky/workers/travel_preference"
 )
 
 //	@title			ACMESky Swagger API
@@ -33,12 +33,12 @@ func main() {
 	godotenv.Overload("dev.env")
 
 	dbClient.InitDB()
-	travelPrefWorker.DeployBPMNDefinitions()
-	workers := travelPrefWorker.RegisterWorkers()
-	workers = append(workers, flightMatcher.RegisterWorkers()...)
-	defer zbSingleton.UnregisterWorkers(workers)
-
-	prontogram.Init()
+	// travelPrefWorker.DeployBPMNDefinitions()
+	// workers := travelPrefWorker.RegisterWorkers()
+	// workers = append(workers, flightMatcher.RegisterWorkers()...)
+	// defer zbSingleton.UnregisterWorkers(workers)
+	//
+	// prontogram.Init()
 
 	gateways.Listen()
 }

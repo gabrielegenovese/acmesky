@@ -1,0 +1,21 @@
+networks:
+  ncc_public:
+    name: 'net'
+    external: true
+
+services:
+
+  ncc_middleware:
+    hostname: service.ncc
+    container_name: ncc_middleware
+    build: ./src/ACMESkyNCC/middleware/.
+    restart: unless-stopped
+    ports:
+      - "8089:8089"
+  ncc_backend:
+    container_name: ncc_backend
+    build: ./src/ACMESkyNCC/backend/.
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+      - "8001:8001"

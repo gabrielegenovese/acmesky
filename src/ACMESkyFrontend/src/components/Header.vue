@@ -1,6 +1,8 @@
 <script setup lang="ts">
-function openUseCouponDialog() {
-	(<HTMLDialogElement>document.getElementById("useCouponDialog")).showModal();
+function openUseOfferCodeDialog() {
+	(<HTMLDialogElement>(
+		document.getElementById("useOfferCodeDialog")
+	)).showModal();
 }
 </script>
 
@@ -69,9 +71,9 @@ function openUseCouponDialog() {
 		</nav>
 		<button
 			class="mx-2 my-2 rounded-full border border-2 bg-sky-500 px-4 font-bold text-white hover:bg-sky-400 hover:drop-shadow"
-			@click="openUseCouponDialog"
+			@click="openUseOfferCodeDialog"
 		>
-			Use coupon
+			Use offer code
 		</button>
 	</header>
 </template>
