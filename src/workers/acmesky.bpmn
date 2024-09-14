@@ -11,7 +11,7 @@
     <bpmn:participant id="Participant_1adfsbr" name="Prontogram" processRef="Prontogram" />
     <bpmn:participant id="Participant_0vz8407" name="FlightCompany" processRef="FlightCompany" />
     <bpmn:participant id="Participant_1q2yj3i" name="Bank" processRef="Bank" />
-    <bpmn:participant id="Participant_1ezousj" name="NCC" processRef="Process_0f84bna" />
+    <bpmn:participant id="Participant_1ezousj" name="NCC" processRef="NCC" />
     <bpmn:participant id="Participant_0wozy07" name="New client" processRef="NewClient" />
     <bpmn:messageFlow id="Flow_095tool" sourceRef="Event_0pfyxy1" targetRef="Event_1gippu4" />
     <bpmn:messageFlow id="Flow_1eg80lc" sourceRef="Event_1y193o6" targetRef="Event_1h4rvi0" />
@@ -335,7 +335,7 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0h1dy47" sourceRef="Activity_0k9n3mb" targetRef="Activity_0ijmurc" />
   </bpmn:process>
-  <bpmn:process id="Process_0f84bna" isExecutable="true">
+  <bpmn:process id="NCC" isExecutable="true">
     <bpmn:startEvent id="Event_0vnhkor">
       <bpmn:outgoing>Flow_19a42hb</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_13majug" messageRef="Message_16d2ila" />

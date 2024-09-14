@@ -175,6 +175,7 @@ func SearchNCC(c *gin.Context) {
 		return
 	}
 	util.NCCSearchRequests[nccRequest.PaymentId] <- nccRequest
+	util.NCCResponses[nccRequest.PaymentId] = make(chan util.NCCResponse)
 	ncc := <- util.NCCResponses[nccRequest.PaymentId]
 	c.IndentedJSON(http.StatusOK, ncc)
 }

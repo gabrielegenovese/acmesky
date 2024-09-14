@@ -1,4 +1,6 @@
 networks:
+  ncc_backend:
+    name: 'ncc_backend'
   ncc_public:
     name: 'net'
     external: true
@@ -12,6 +14,9 @@ services:
     restart: unless-stopped
     ports:
       - "8089:8089"
+    networks:
+      - ncc_public
+      - ncc_backend
   ncc_backend:
     container_name: ncc_backend
     build: ./src/ACMESkyNCC/backend/.
@@ -19,3 +24,5 @@ services:
     ports:
       - "8000:8000"
       - "8001:8001"
+    networks:
+      - ncc_backend

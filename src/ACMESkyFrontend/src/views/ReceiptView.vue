@@ -52,7 +52,11 @@ async function searchNCC() {
 	})
 		.then((response) => response.json())
 		.then((json) => {
-			nearestNCC.value = json[0]; // TODO find the nearest
+			fetch(import.meta.env.VITE_NCC_API + "/getNCC/" + json.NearestNCC)
+				.then((response) => response.json())
+				.then((json) => {
+					nearestNCC.value = json;
+				});
 		});
 }
 
@@ -175,6 +179,6 @@ onMounted(async () => {
 		>
 			Book
 		</button>
-		<NCCCard v-if="nearestNCC" :ncc="nearestNCC" />
+		<NCCCard v-if="nearestNCC.id" :ncc="nearestNCC" />
 	</div>
 </template>

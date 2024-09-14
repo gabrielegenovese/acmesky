@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"workers/util"
 
@@ -26,12 +27,17 @@ func NearestNCCHandler(client worker.JobClient, job entities.Job) {
 	log.Println("Start job", jobKey, "of type", job.Type)
 
 	response, err := http.Get(os.Getenv("NCC_API") + "/getNCC")
-	var nccs []util.NCC
+	if err != nil {
+		log.Println("Error: ", err.Error())
+		util.FailJob(client, job)
+		return
+	}
+	nccs := make([]util.NCC, 0)
 	minDistance := 99999
 	var nearestNCC util.NCC
 	json.NewDecoder(response.Body).Decode(&nccs)
 	for _, ncc := range nccs {
-		response, _ := http.Get(os.Getenv("DISTANCE_API") + "/distance?from=" + ncc.Location + "&to=" + variables["address"].(string))
+		response, _ := http.Get(os.Getenv("DISTANCE_API") + "/distance?from=" + url.QueryEscape(ncc.Location) + "&to=" + url.QueryEscape(variables["address"].(string)))
 		var distance util.DistanceResBody
 		json.NewDecoder(response.Body).Decode(&distance)
 		if distance.Value < minDistance {
