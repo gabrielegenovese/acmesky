@@ -219,7 +219,7 @@
     <bpmn:startEvent id="Event_0yw5xy0" name="Every day">
       <bpmn:outgoing>Flow_189tuan</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_14mm66r">
-        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">0 0/59 * * * ?</bpmn:timeCycle>
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">0 0/1 * * * ?</bpmn:timeCycle>
       </bpmn:timerEventDefinition>
     </bpmn:startEvent>
     <bpmn:startEvent id="Event_0p9dfa1" name="Receive new interest">
