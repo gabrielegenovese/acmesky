@@ -22,7 +22,7 @@ All the following choreographies constitute a single parallel choreography. They
 
 ### Requesting flights
 
-> ACMESky should ask to every flight company what are the available flights.
+> ACMESky should ask to every flight company what are the available flights. This task is executed every hour.
 
 $\text{reqFlight}::=(\text{reqFlightInfo} : ACM \to FC_i)\;;\;(\text{resFlightInfo} : FC_i \to ACM)$
 
@@ -36,8 +36,6 @@ where $i$ can be any flight company and the operations are:
 > ACMESky should register if a user is interested in an air route.
 
 $\text{regUser}::=(\\ \; (\text{registerFlightInterest}: USR_j \to ACM) \;; \\ \;((\text{resConfirm}: ACM \to USR_j) \,+ (\text{resError}: ACM \to USR_j))\\ )^*$
-
-> TODO: controllare che avvenga veramente così
 
 where $j$ can be any users who want to register an interest for a flight, then ACMESky can reply with a confirmation or an error. The operations are:
 
@@ -60,8 +58,6 @@ $\text{lastMinOffer}::=(\\
 \;\;)\\
 \;)\\
 )^*$
-
-> TODO: controllare che avvenga veramente così
 
 This choreography is valid for each flight company $i$ and for each user $n$ that want to know about last-minute offers. The operations are:
 
@@ -114,8 +110,6 @@ $\text{buyTicket}::=(\\
 \;)\\
 )^*$
 
-> TODO: controllare che avvenga veramente così
-
 where $USR_j$ is any user, $FC_i$ is any flight company and $NCC_k$ is any rental service. The opertations are:
 
 - `wantToBuy`: a user insert a code to buy a ticket
@@ -135,8 +129,6 @@ where $USR_j$ is any user, $FC_i$ is any flight company and $NCC_k$ is any renta
 - `sendTicketAndData`: ACMESky sends the ticket and all the optional informations to the user
 
 ## Verifying connectedness
-
-> TODO: controllare
 
 We will analyse the connectedness of the separeted choreographies because there are no codition for parallel composition.
 

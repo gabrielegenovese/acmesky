@@ -1,7 +1,5 @@
 # BPMN Choreographies
 
-> TODO: verificare e correggere!
-
 The choreographies in bpmn format are inserted below. They follow the formal choreographies in an identical way.
 
 ## Requesting flight's information
