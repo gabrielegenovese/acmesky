@@ -24,7 +24,11 @@ async function searchNCC() {
 		.then((json) => {
 			airports.value = json;
 		});
-	await fetch(import.meta.env.VITE_FLIGHT_COMPANY_API + "/flight/" + offer.value.depart_flight.flight_id)
+	await fetch(
+		import.meta.env.VITE_FLIGHT_COMPANY_API +
+			"/flight/" +
+			offer.value.depart_flight.flight_id,
+	)
 		.then((response) => response.json())
 		.then((json) => {
 			originAirport.value = <Airport>(
@@ -44,7 +48,7 @@ async function searchNCC() {
 			prontogramId: offer.value.travel_preference.customer_prontogram_id,
 			address: address.value,
 			airportAddress: originAirport.value.city, // TODO Address
-		})
+		}),
 	})
 		.then((response) => response.json())
 		.then((json) => {
@@ -156,8 +160,15 @@ onMounted(async () => {
 		class="mx-auto flex max-w-prose flex-col gap-2 p-4 text-center"
 	>
 		<!-- FIXME -->
-		<p class="text-xl">You can book a NCC for free!<br>What's your address?</p>
-		<input id="address" v-model="address"  type="text" class="rounded focus:border-gray-500 focus:ring-0 focus:drop-shadow-md">
+		<p class="text-xl">
+			You can book a NCC for free!<br />What's your address?
+		</p>
+		<input
+			id="address"
+			v-model="address"
+			type="text"
+			class="rounded focus:border-gray-500 focus:ring-0 focus:drop-shadow-md"
+		/>
 		<button
 			@click="searchNCC"
 			class="rounded bg-sky-600 p-2 text-white hover:bg-sky-500"

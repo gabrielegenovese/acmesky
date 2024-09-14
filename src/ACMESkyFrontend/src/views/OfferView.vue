@@ -12,12 +12,19 @@ const totalPrice = computed(() => {
 });
 
 function buy() {
-	fetch(import.meta.env.VITE_WORKERS_API + "/buyOffer/" + offer.value.offer_code)
+	fetch(
+		import.meta.env.VITE_WORKERS_API +
+			"/buyOffer/" +
+			offer.value.offer_code,
+	)
 		.then((response) => response.json())
 		.then((json) => {
 			if (json.success) {
-			window.location.href =
-				json.payment_link + window.origin + "/receipt?payment=" + json.payment_id;
+				window.location.href =
+					json.payment_link +
+					window.origin +
+					"/receipt?payment=" +
+					json.payment_id;
 			} else {
 				alert("Buy error");
 			}

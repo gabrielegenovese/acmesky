@@ -14,7 +14,7 @@ const props = defineProps<{
 	>
 		<p class="text-xl font-bold">{{ props.ncc.name }}</p>
 		<p>{{ props.ncc.location }}</p>
-		<div class="flex flex-row gap-2 mx-auto">
+		<div class="mx-auto flex flex-row gap-2">
 			<span class="line-through">{{ props.ncc.price }} €</span>
 			<span class="text-red-500">Free!</span>
 		</div>

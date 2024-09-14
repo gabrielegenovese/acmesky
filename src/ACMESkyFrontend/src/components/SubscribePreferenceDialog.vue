@@ -28,6 +28,15 @@ function subscribePreference() {
 			travel_max_price: props.budget,
 			travel_seats_count: props.seatsCount,
 		}),
+	}).then((response) => {
+		if (response.ok) {
+			alert("Preference saved");
+			(<HTMLDialogElement>(
+				document.getElementById("subscribePreferenceDialog")
+			)).close();
+		} else {
+			alert("An error occured");
+		}
 	});
 }
 </script>
