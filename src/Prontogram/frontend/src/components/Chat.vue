@@ -50,10 +50,12 @@ setInterval(getMessages, 3000);
 			style="background-image: url(/images/doodle.png)"
 		>
 			<div class="flex grow flex-col-reverse content-end overflow-y-auto">
-				<MessageBubble v-for="message in messages" time="13:00">{{
-					// @ts-ignore
-					message.content
-				}}</MessageBubble>
+				<MessageBubble v-for="message in messages" time="13:00"
+				>
+				<p v-html="//@ts-ignore
+					message.content"
+				></p>
+				</MessageBubble>
 				<MessageBubble time="13:00"
 					>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
 					sed do eiusmod tempor incididunt ut labore et dolore magna
