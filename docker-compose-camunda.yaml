@@ -10,7 +10,6 @@
 # See docker-compose.yml for a configuration that also includes Optimize, Identity, and Keycloak.
 
 services:
-
   zeebe: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#zeebe
     hostname: zeebe
     image: camunda/zeebe:${CAMUNDA_PLATFORM_VERSION}
@@ -30,7 +29,7 @@ services:
       - "JAVA_TOOL_OPTIONS=-Xms512m -Xmx512m"
     restart: unless-stopped
     healthcheck:
-      test: [ "CMD-SHELL", "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/9600' || exit 1" ]
+      test: ["CMD-SHELL", "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/9600' || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 5
@@ -54,7 +53,7 @@ services:
       - management.endpoints.web.exposure.include=health
       - management.endpoint.health.probes.enabled=true
     healthcheck:
-      test: [ "CMD-SHELL", "wget -O - -q 'http://localhost:8080/actuator/health/readiness'" ]
+      test: ["CMD-SHELL", "wget -O - -q 'http://localhost:8080/actuator/health/readiness'"]
       interval: 30s
       timeout: 1s
       retries: 5
@@ -78,7 +77,7 @@ services:
       - management.endpoints.web.exposure.include=health
       - management.endpoint.health.probes.enabled=true
     healthcheck:
-      test: [ "CMD-SHELL", "wget -O - -q 'http://localhost:8080/actuator/health/readiness'" ]
+      test: ["CMD-SHELL", "wget -O - -q 'http://localhost:8080/actuator/health/readiness'"]
       interval: 30s
       timeout: 1s
       retries: 5
@@ -103,7 +102,7 @@ services:
       - management.endpoints.web.exposure.include=health
       - management.endpoint.health.probes.enabled=true
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:8080/actuator/health/readiness" ]
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health/readiness"]
       interval: 30s
       timeout: 1s
       retries: 5
@@ -134,7 +133,7 @@ services:
         hard: -1
     restart: unless-stopped
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:9200/_cat/health | grep -q green" ]
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cat/health | grep -q green"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -156,7 +155,7 @@ services:
       - elasticsearch
     profiles:
       - kibana
-  
+
   comverter:
     image: ghcr.io/camunda-community-hub/camunda-7-to-8-migration/diagram-converter:latest
     container_name: camunda-diagram-converter

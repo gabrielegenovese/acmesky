@@ -2,11 +2,10 @@ networks:
   acmesky_camunda-platform:
     external: true
   workers_public:
-    name: 'net'
+    name: "net"
     external: true
 
 services:
-
   workers_service:
     hostname: service.workers
     container_name: workers_service_container

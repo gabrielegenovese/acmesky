@@ -4,6 +4,8 @@ Here is the interal schema of the Service Oriented Architecture:
 
 ![draw.io soa schema](assets/soa.png "SOA Structure")
 
+Only a single Flight Company and NCC instance are created.
+
 ## Port assigned to each service
 
 | Service              | Port                          |

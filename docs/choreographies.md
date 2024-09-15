@@ -18,7 +18,7 @@ where $N$, $M$ and $P$ are natural numbers.
 
 ## Choreography
 
-All the following choreographies constitute a single parallel choreography. They are divided for readability.
+All the following choreographies are part of a single parallel choreography. They are divided in four choreography for readability.
 
 ### Requesting flights
 

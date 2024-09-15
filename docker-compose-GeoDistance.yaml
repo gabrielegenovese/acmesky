@@ -1,10 +1,9 @@
 networks:
   geodistance_public:
-    name: 'net'
+    name: "net"
     external: true
 
 services:
-
   geodistance_service:
     hostname: service.geodistance
     container_name: geodistance_service_container

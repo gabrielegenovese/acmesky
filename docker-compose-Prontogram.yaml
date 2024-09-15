@@ -1,10 +1,9 @@
 networks:
   prontogram_public:
-    name: 'net'
+    name: "net"
     external: true
 
 services:
-
   prontogram_service:
     hostname: service.prontogram
     container_name: prontogram_service_container
@@ -32,4 +31,3 @@ services:
     networks:
       - prontogram_public
     restart: unless-stopped
-

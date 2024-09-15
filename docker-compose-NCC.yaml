@@ -1,12 +1,11 @@
 networks:
   ncc_backend:
-    name: 'ncc_backend'
+    name: "ncc_backend"
   ncc_public:
-    name: 'net'
+    name: "net"
     external: true
 
 services:
-
   ncc_middleware:
     hostname: service.ncc
     container_name: ncc_middleware

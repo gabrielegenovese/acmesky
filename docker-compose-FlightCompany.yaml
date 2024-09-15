@@ -1,21 +1,21 @@
 networks:
   flightcompany_backend:
-    name: 'flightcompany_backend'
+    name: "flightcompany_backend"
   flightcompany_public:
-    name: 'net'
+    name: "net"
     external: true
 
 services:
-#  adminer:
-#    container_name: adminer_flightcompany
-#    image: adminer
-#    restart: unless-stopped
-#    ports:
-#      - 8099:8080
-#    networks:
-#      - flightcompany_backend
-#      - flightcompany_public
-  
+  #  adminer:
+  #    container_name: adminer_flightcompany
+  #    image: adminer
+  #    restart: unless-stopped
+  #    ports:
+  #      - 8099:8080
+  #    networks:
+  #      - flightcompany_backend
+  #      - flightcompany_public
+
   flightcompany_db:
     hostname: db.flightcompany
     container_name: flightcompany_mysql_container
@@ -44,5 +44,3 @@ services:
       - flightcompany_backend
       - flightcompany_public
     restart: unless-stopped
-
-

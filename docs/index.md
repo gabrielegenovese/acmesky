@@ -31,11 +31,11 @@ In this case, ACMESky uses various chauffeur rental companies with which it has 
 This is the structure of the project's folder.
 
     docs/                           # Documentation contents
-    src/                            # All microservices codebase
     resources/
-        uml/                        # UML source files
         bpmn/                       # BPMN source files
         bpmn-chors/                 # BPMN Choreography source files
+        uml/                        # UML source files
+    src/                            # All microservices codebase
     docker-compose-[service].yaml   # All docker compose files
     requirements.txt                # Documentation requirements
     mkdocs.yml                      # Documentation config file
@@ -60,10 +60,12 @@ docker-compose \
     -f docker-compose-FlightCompany.yaml \
     -f docker-compose-Prontogram.yaml \
     -f docker-compose-GeoDistance.yaml \
+    -f docker-compose-NCC.yaml \
     -f docker-compose-Bank.yaml \
+    -f docker-compose-workers.yaml \
     up -d
 ```
 
 ## Docs
 
-The documentation is generated with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
+This documentation is generated with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).

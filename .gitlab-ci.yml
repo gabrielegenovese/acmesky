@@ -7,32 +7,32 @@ stages:
 swag:
   stage: swag
   script:
-  - go install -v github.com/swaggo/swag/cmd/swag@latest
-  - cd src/ACMESkyNCC/middleware
-  - swag init --parseDependency --instanceName ncc
-  - cd ../../ACMESkyService
-  - swag init --parseDependency --instanceName acme
-  - cd ../BankService/server
-  - swag init --parseDependency --instanceName bank
-  - cd ../../FlightCompanyService
-  - swag init --parseDependency --instanceName fc
-  - cd ../GeoDistance
-  - swag init --parseDependency --instanceName geo
+    - go install -v github.com/swaggo/swag/cmd/swag@latest
+    - cd src/ACMESkyNCC/middleware
+    - swag init --parseDependency --instanceName ncc
+    - cd ../../ACMESkyService
+    - swag init --parseDependency --instanceName acme
+    - cd ../BankService/server
+    - swag init --parseDependency --instanceName bank
+    - cd ../../FlightCompanyService
+    - swag init --parseDependency --instanceName fc
+    - cd ../GeoDistance
+    - swag init --parseDependency --instanceName geo
   artifacts:
     paths:
-    - docs
-    - src
-    
+      - docs
+      - src
+
 pages:
   image: python:latest
   stage: pages
   before_script:
     - pip install -r requirements.txt
   script:
-  - mkdocs build --strict --verbose
-  - mv site public
+    - mkdocs build --strict --verbose
+    - mv site public
   artifacts:
     paths:
-    - public
+      - public
   only:
     - main
