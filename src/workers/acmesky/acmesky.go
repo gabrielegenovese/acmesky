@@ -103,10 +103,11 @@ func SendNewOffertHandler(client worker.JobClient, job entities.Job) {
 		offers := make([]util.Offer, 0)
 		json.NewDecoder(response.Body).Decode(&offers)
 		for _, offer := range offers {
-			variables := make(map[string]interface{})
-			variables["prontogramId"] = offer.TravelPreference.ProntogramID
-			variables["offerCode"] = fmt.Sprintf("%d", offer.OfferCode)
-			message, err := util.ZbClient.NewPublishMessageCommand().MessageName("MessageNewOffert").CorrelationKey(variables["offerCode"].(string)).VariablesFromMap(variables)
+			offerParams := util.SendMessageParams{
+				Offer:     offer,
+				OfferCode: fmt.Sprintf("%d", offer.OfferCode),
+			}
+			message, err := util.ZbClient.NewPublishMessageCommand().MessageName("MessageNewOffert").CorrelationKey(offerParams.OfferCode).VariablesFromObject(offerParams)
 			_, err = message.Send(util.Ctx)
 			if err != nil {
 				util.FailJob(client, job)
@@ -137,13 +138,13 @@ func bookFlight(flightID string, prontogramID string, seats uint) (string, float
 	fmt.Println("Depart func: ", flightID)
 	flightIDint, _ := strconv.ParseInt(flightID, 10, 64)
 	bookingRequest := util.FlightBooking{
-		FlightID: flightIDint,
-		CustomerName: prontogramID,
+		FlightID:        flightIDint,
+		CustomerName:    prontogramID,
 		CustomerSurname: prontogramID,
-		SeatsCount: int(seats),
+		SeatsCount:      int(seats),
 	}
 	data, _ := json.Marshal(bookingRequest)
-	response, _ := http.Post(os.Getenv("FLIGHT_COMPANY_API") + "/bookings/", "application/json", bytes.NewReader(data))
+	response, _ := http.Post(os.Getenv("FLIGHT_COMPANY_API")+"/bookings/", "application/json", bytes.NewReader(data))
 	if response.StatusCode == 200 {
 		var booking util.FlightBooking
 		json.NewDecoder(response.Body).Decode(&booking)
@@ -262,7 +263,7 @@ func UnbookFlightHandler(client worker.JobClient, job entities.Job) {
 	}
 
 	httpClient := &http.Client{}
-	req, err := http.NewRequest("DELETE", os.Getenv("ACMESKY_SERVICE_API") + "/" + variables["departBooking"].(string), nil)
+	req, err := http.NewRequest("DELETE", os.Getenv("ACMESKY_SERVICE_API")+"/"+variables["departBooking"].(string), nil)
 	_, err = httpClient.Do(req)
 
 	if err != nil {
@@ -270,7 +271,7 @@ func UnbookFlightHandler(client worker.JobClient, job entities.Job) {
 		return
 	}
 
-	req, err = http.NewRequest("DELETE", os.Getenv("ACMESKY_SERVICE_API") + "/" + variables["returnBooking"].(string), nil)
+	req, err = http.NewRequest("DELETE", os.Getenv("ACMESKY_SERVICE_API")+"/"+variables["returnBooking"].(string), nil)
 	_, err = httpClient.Do(req)
 
 	if err != nil {

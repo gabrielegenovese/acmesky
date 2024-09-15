@@ -61,6 +61,12 @@ type FlightBooking struct {
 	SeatsCount      int    `json:"passengers_count" example:"2"`
 }
 
+type Airport struct {
+	AirportID string `json:"airport_id"`
+	Name      string `json:"name"`
+	City      string `json:"city"`
+}
+
 type Payment struct {
 	ID          uuid.UUID    `json:"id" gorm:"primarykey"`
 	CreatedAt   time.Time    `json:"created_at"`
@@ -74,21 +80,21 @@ type Payment struct {
 }
 
 type PaymentReq struct {
-	User        string `json:"user"`
-	Description string `json:"description"`
+	User        string  `json:"user"`
+	Description string  `json:"description"`
 	Amount      float64 `json:"amount"`
 }
 
 type BuyResult struct {
-	PaymentLink     string `json:"payment_link"`
-	PaymentID       string `json:"payment_id"`
-	Success         bool   `json:"success"`
+	PaymentLink string `json:"payment_link"`
+	PaymentID   string `json:"payment_id"`
+	Success     bool   `json:"success"`
 }
 
 type NCCSearchRequest struct {
-	PaymentId     string `json:"paymentId"`
-	ProntogramId  string `json:"prontogramId"`
-	Address       string `json:"address"`
+	PaymentId      string `json:"paymentId"`
+	ProntogramId   string `json:"prontogramId"`
+	Address        string `json:"address"`
 	AirportAddress string `json:"airportAddress"`
 }
 
@@ -114,6 +120,11 @@ type DistanceResBody struct {
 	Distance string `json:"distance"`
 	Value    int    `json:"value"`
 	Status   string `json:"status"`
+}
+
+type SendMessageParams struct {
+	Offer     Offer  `json:"offer"`
+	OfferCode string `json:"offerCode" example:"2"`
 }
 
 var ZbClient zbc.Client
