@@ -12,9 +12,9 @@ import (
 	"workers/bank"
 	"workers/flightcompany"
 	"workers/ncc"
+	"workers/newclient"
 	"workers/prontogram"
 	"workers/user"
-	"workers/newclient"
 	"workers/util"
 
 	"github.com/camunda/zeebe/clients/go/v8/pkg/entities"
@@ -39,6 +39,7 @@ func main() {
 	log.Println(util.ProntogramUser)
 
 	router := gin.Default()
+	router.Use(CORSMiddleware())
 	router.POST("/newInterest", newclient.NewInterest)
 	router.GET("/buyOffer/:id", user.BuyOffer)
 	router.POST("/searchNCC", user.SearchNCC)
@@ -100,6 +101,22 @@ func main() {
 	// jobWorkerAddNCC.AwaitClose()
 	// jobWorkerGetNCC.Close()
 	// jobWorkerGetNCC.AwaitClose()
+}
+
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
 }
 
 func genericHandler(client worker.JobClient, job entities.Job) {
