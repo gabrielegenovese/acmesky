@@ -1,3 +1,7 @@
 [data-md-color-scheme=slate] {
   --md-default-bg-color: #1e1e2e;
 }
+
+img {
+  background-color: white;
+}
