@@ -33,7 +33,7 @@ for i in range(35, 1000):
     while(first == second):
         second = random.randint(1, 20)
     depart = random_date("9/9/2024 1:30 PM", "1/1/2025 4:50 AM", random.random())
-    arrival = datetime.strptime(random_date(depart, "1/1/2026 4:50 AM", random.random()), '%m/%d/%Y %I:%M %p')
+    arrival = datetime.strptime(random_date(depart, "1/1/2025 4:50 AM", random.random()), '%m/%d/%Y %I:%M %p')
     f.write(f"({i}, {first}, {second}, {datetime.strptime(depart, '%m/%d/%Y %I:%M %p')}, {arrival}, {random.randint(50,100)}, {round(random.uniform(40,500), 2)}),\n")
 
 f.write(f"(1000, {first}, {second}, {datetime.strptime(depart, '%m/%d/%Y %I:%M %p')}, {arrival}, {random.randint(50,100)}, {round(random.uniform(40,500), 2)});\n")
