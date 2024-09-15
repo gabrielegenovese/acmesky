@@ -13,6 +13,8 @@ const offer = ref({} as Offer);
 const nearestNCC = ref({} as NCC);
 const originAirport = ref({} as Airport);
 const address = ref("");
+const nccSearched = ref(false);
+const nccNotFound = ref(false);
 
 function print() {
 	window.print();
@@ -23,6 +25,7 @@ async function searchNCC() {
 		alert("Insert your address");
 		return;
 	}
+	nccSearched.value = true;
 	await fetch(import.meta.env.VITE_SKY_SERVICE_API + "/airports")
 		.then((response) => response.json())
 		.then((json) => {
@@ -56,11 +59,17 @@ async function searchNCC() {
 	})
 		.then((response) => response.json())
 		.then((json) => {
-			fetch(import.meta.env.VITE_NCC_API + "/getNCC/" + json.NearestNCC)
-				.then((response) => response.json())
-				.then((json) => {
-					nearestNCC.value = json;
-				});
+			if (json.success) {
+				fetch(
+					import.meta.env.VITE_NCC_API + "/getNCC/" + json.NearestNCC,
+				)
+					.then((response) => response.json())
+					.then((json) => {
+						nearestNCC.value = json;
+					});
+			} else {
+				nccNotFound.value = true;
+			}
 		});
 }
 
@@ -177,11 +186,13 @@ onMounted(async () => {
 			class="rounded focus:border-gray-500 focus:ring-0 focus:drop-shadow-md"
 		/>
 		<button
+			v-if="!nccSearched"
 			@click="searchNCC"
 			class="rounded bg-sky-600 p-2 text-white hover:bg-sky-500"
 		>
 			Book
 		</button>
 		<NCCCard v-if="nearestNCC.id" :ncc="nearestNCC" />
+		<p v-if="nccNotFound">No NCC found</p>
 	</div>
 </template>

@@ -147,6 +147,12 @@ func CalculateDistanceHandler(client worker.JobClient, job entities.Job) {
 		return
 	}
 	variables["distance"] = distance.Value
+	if distance.Value >= 30000 {
+		util.NCCResponses[variables["paymentId"].(string)] <- util.NCCResponse{
+			Success: false,
+			NearestNCC: "",
+		}
+	}
 	variables["address"] = nccSearchRequest.Address
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
