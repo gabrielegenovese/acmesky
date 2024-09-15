@@ -26,6 +26,13 @@ docker-compose \
     up -d
 ```
 
+Add Some "Noleggio Con Conducente" (NCC) entries
+
+```bash
+
+bash ./src/ACMESkyNCC/client/init.sh
+```
+
 ## Docs
 
 The documentation can be viewd [here](https://acmesky-expuss2000-d511ae4437280f0ac43140f188bc34fa077888571f00.gitlab.io/) and it's generated with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
