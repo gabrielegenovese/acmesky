@@ -111,7 +111,7 @@ func GetSolutionsFromPreference(pref entities.CustomerFlightSubscriptionRequest)
 	returnDatetimeEnd = returnDatetimeEnd.Add(24 * time.Hour).Truncate(24 * time.Hour)
 
 	rows, err = db.Query(
-		"SELECT DEPART_F.CompanyFlightID, DEPART_F.CompanyID, RETURN_F.CompanyFlightID, RETURN_F.CompanyID"+
+		"SELECT DEPART_F.CompanyFlightID, DEPART_F.CompanyID, DEPART_F.PassengerFlightPrice, DEPART_F.DepartDatetime, DEPART_F.ArrivalDatetime, DEPART_F.AirportOriginID, DEPART_F.AirportDestinationID, RETURN_F.CompanyFlightID, RETURN_F.CompanyID, RETURN_F.PassengerFlightPrice, RETURN_F.DepartDatetime, RETURN_F.ArrivalDatetime, RETURN_F.AirportOriginID, RETURN_F.AirportDestinationID"+
 			" FROM"+
 			" 	(SELECT CompanyFlightID, CompanyID, PassengerFlightPrice, AvailableSeats, AirportOriginID, AirportDestinationID, DepartDatetime, ArrivalDatetime FROM Flights WHERE AirportOriginID = ? and AirportDestinationID = ? AND AvailableSeats >= ? AND (STR_TO_DATE(?, '%Y-%m-%d %H:%i:%S') <= DepartDatetime AND DepartDatetime < STR_TO_DATE(?, '%Y-%m-%d %H:%i:%S') ) ) AS DEPART_F"+
 			" INNER JOIN"+
@@ -134,8 +134,8 @@ func GetSolutionsFromPreference(pref entities.CustomerFlightSubscriptionRequest)
 		var departFlight entities.Flight
 		var returnFlight entities.Flight
 		if err := rows.Scan(
-			&departFlight.FlightID, &departFlight.FlightCompanyID,
-			&returnFlight.FlightID, &returnFlight.FlightCompanyID,
+			&departFlight.FlightID, &departFlight.FlightCompanyID, &departFlight.FlightPrice, &departFlight.DepartDatetime, &departFlight.ArrivalDatetime, &departFlight.AirportOriginID, &departFlight.AirportDestinationID,
+			&returnFlight.FlightID, &returnFlight.FlightCompanyID, &returnFlight.FlightPrice, &returnFlight.DepartDatetime, &returnFlight.ArrivalDatetime, &returnFlight.AirportOriginID, &returnFlight.AirportDestinationID,
 		); err != nil {
 			return nil, fmt.Errorf("flightsByPreference: %v", err)
 		}
