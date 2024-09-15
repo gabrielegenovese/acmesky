@@ -75,6 +75,8 @@ func main() {
 	util.ZbClient.NewJobWorker().JobType("SendNewOffert").Handler(acmesky.SendNewOffertHandler).Open()
 	util.ZbClient.NewJobWorker().JobType("BookFlight").Handler(acmesky.BookFlightHandler).Open()
 	util.ZbClient.NewJobWorker().JobType("SendNewPayment").Handler(acmesky.SendNewPaymentHandler).Open()
+	util.ZbClient.NewJobWorker().JobType("UnbookFlight").Handler(acmesky.UnbookFlightHandler).Open()
+	util.ZbClient.NewJobWorker().JobType("SendUnbookFlight").Handler(acmesky.SendUnbookFlightHandler).Open()
 
 	util.ZbClient.NewJobWorker().JobType("CreateNewPayment").Handler(bank.CreateNewPaymentHandler).Open()
 	util.ZbClient.NewJobWorker().JobType("ExecutePayment").Handler(bank.ExecutePaymentHandler).Open()

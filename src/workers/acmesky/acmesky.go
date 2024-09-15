@@ -250,3 +250,84 @@ func SendNewPaymentHandler(client worker.JobClient, job entities.Job) {
 	log.Println("Successfully completed job")
 }
 
+func UnbookFlightHandler(client worker.JobClient, job entities.Job) {
+	jobKey := job.GetKey()
+
+	variables, err := job.GetVariablesAsMap()
+	if err != nil {
+		// failed to handle job as we require the variables
+		util.FailJob(client, job)
+		return
+	}
+
+	httpClient := &http.Client{}
+	req, err := http.NewRequest("DELETE", os.Getenv("ACMESKY_SERVICE_API") + "/" + variables["departBooking"].(string), nil)
+	_, err = httpClient.Do(req)
+
+	if err != nil {
+		util.FailJob(client, job)
+		return
+	}
+
+	req, err = http.NewRequest("DELETE", os.Getenv("ACMESKY_SERVICE_API") + "/" + variables["returnBooking"].(string), nil)
+	_, err = httpClient.Do(req)
+
+	if err != nil {
+		util.FailJob(client, job)
+		return
+	}
+
+	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
+	if err != nil {
+		// failed to set the updated variables
+		util.FailJob(client, job)
+		return
+	}
+
+	log.Println("Complete job", jobKey, "of type", job.Type)
+
+	ctx := context.Background()
+	_, err = request.Send(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	log.Println("Successfully completed job")
+}
+
+func SendUnbookFlightHandler(client worker.JobClient, job entities.Job) {
+	jobKey := job.GetKey()
+
+	variables, err := job.GetVariablesAsMap()
+	if err != nil {
+		// failed to handle job as we require the variables
+		util.FailJob(client, job)
+		return
+	}
+
+	log.Println("Start job", jobKey, "of type", job.Type)
+	message, err := util.ZbClient.NewPublishMessageCommand().MessageName("MessageUnbookFlight").CorrelationKey(variables["offerCode"].(string)).VariablesFromMap(variables)
+	_, err = message.Send(util.Ctx)
+	if err != nil {
+		// failed to set the updated variables
+		util.FailJob(client, job)
+		return
+	}
+
+	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)
+	if err != nil {
+		// failed to set the updated variables
+		util.FailJob(client, job)
+		return
+	}
+
+	log.Println("Complete job", jobKey, "of type", job.Type)
+
+	ctx := context.Background()
+	_, err = request.Send(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	log.Println("Successfully completed job")
+}
