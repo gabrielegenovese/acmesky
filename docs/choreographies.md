@@ -51,12 +51,8 @@ $\text{lastMinOffer}::=(\\
 \;( \text{recvOffer}: FC_i \to ACM )\;;\\
 \;( \text{notifyPG}: ACM \to PG )\;;\\
 \;( \text{notifyUsr}: PG \to USR_j )\;;\\
-\;( 1 +\\
-\;\;(\\
-\;\;\;( \text{acceptOffer} : USR_j \to ACM)\;;\\
-\;\;\;( \text{notifyFlightCompany} : ACM \to FC_i)\\
-\;\;)\\
-\;)\\
+\;( \text{offerRecv}: USR_j \to ACM )\;;\\
+\;( \text{confirmRecv}: ACM \to FC_i )\\
 )^*$
 
 This choreography is valid for each flight company $i$ and for each user $n$ that want to know about last-minute offers. The operations are:
@@ -64,8 +60,8 @@ This choreography is valid for each flight company $i$ and for each user $n$ tha
 - `recvOffer`: the flight company place a new offer;
 - `notifyPG`: ACMESky use Prontogram API to start the notification process;
 - `notifyUsr`: Prontogram notify every user;
-- `acceptOffer`: the user insert the code offer in ACMESky;
-- `notifyFlightCompany`: the corresponding flight company is nortified.
+- `offerRecv`: the user confirm the reception of the code offer to ACMESky;
+- `confirmRecv`: ACMESky confirm to the Flight company the reception of the offer.
 
 ### Buying a ticket
 
@@ -142,7 +138,7 @@ This choreography is connected because the receiver in `registerFlightInterest` 
 
 ### Receiving and notify last-minute offers
 
-This choreography is connected because the receiver in `recvOffer` is equal to the sender in `notifyPG`, the receiver in `notifyPG` is equal to the sender in `notifyUsr`, the receiver in `notifyUsr` is equal to the sender in `acceptOffer` and the receiver in `acceptOffer` is equal to the sender in `notifyFlightCompany`. This choreography is connected for the **sender** pattern.
+This choreography is connected because the receiver in `recvOffer` is equal to the sender in `notifyPG`, the receiver in `notifyPG` is equal to the sender in `notifyUsr`, the receiver in `notifyUsr` is equal to the sender in `confirmRecv` and the receiver in `confirmRecv` is equal to the sender in `recvOffer`. This choreography is connected for the **sender** pattern.
 
 ### Buying a ticket
 
@@ -161,7 +157,8 @@ This choreography is connected because:
 - the receiver in `calcGeoDistance` is equal to the sender in `resDistance`;
 - the receiver in `resDistance` is equal to the sender in `bookTransport`;
 - the receiver in `resDistance` is equal to the sender in `sendTicketAndData`;
-- the receiver in `resBookTransport` is equal to the sender in `sendTicketAndData`.
+- the receiver in `resBookTransport` is equal to the sender in `sendTicketAndData`;
+- the receiver in `sendTicketAndData` is equal to the sender in `wantToBuy`.
 
 This choreography is connected for the **sender** pattern $(b=c)$, so the entire choreography is connected.
 
@@ -171,12 +168,12 @@ Choreographies where the participant taken in consideration is not present will 
 
 ### $ACM$
 
-$\text{proj}(\text{reqFlight}, ACM) = (\overline{\text{reqFlightInfo}}@FC_i\;;\;\text{resFlightInfo}@FC_i)$
+$\text{proj}(\text{reqFlight}, ACM) = \overline{\text{reqFlightInfo}}@FC_i\;;\;\text{resFlightInfo}@FC_i$
 
-$\text{proj}(\text{regUser}, ACM) = (\overline{\text{registerFlightInterest}}@USR_j\;;\;(\text{resConfirm}@USR_j\;+\; \text{resError}@USR_j))$
+$\text{proj}(\text{regUser}, ACM) = \text{registerFlightInterest}@USR_j\;;\;(\overline{\text{resConfirm}@USR_j}\;+\; \overline{\text{resError}@USR_j})$
 
-$\text{proj}(\text{lastMinOffer}, ACM) = ((\text{recvOffer}@FC_i);(\overline{\text{notifyPG}}@PG); 1;( 1 +((\text{acceptOffer}@USR_j);(\overline{\text{notifyFlightCompany}}@FC_i)))) \\
-= (\text{recvOffer}@FC_i)\;;\;(\overline{\text{notifyPG}}@PG)\;;\;(\;1\;+\;((\text{acceptOffer}@USR_j)\;;\;(\overline{\text{notifyFlightCompany}}@FC_i)))$
+$\text{proj}(\text{lastMinOffer}, ACM) = ((\text{recvOffer}@FC_i);(\overline{\text{notifyPG}}@PG); 1; (\text{offerRecv}@USR_j);(\overline{\text{confirmRecv}}@FC_i)) \\
+= ((\text{recvOffer}@FC_i);(\overline{\text{notifyPG}}@PG); (\text{offerRecv}@USR_j);(\overline{\text{confirmRecv}}@FC_i))$
 
 $\text{proj}(\text{buyTicket}, ACM) = (\\
 \;(\text{wantToBuy}@USR_j)\;;\\
@@ -219,22 +216,21 @@ $\text{proj}(\text{buyTicket}, ACM) = (\\
 
 ### $FC_i$
 
-$\text{proj}(\text{reqFlight}, FC_i) = (\overline{\text{reqFlightInfo}}@ACM\;;\;\text{resFlightInfo}@ACM)$
+$\text{proj}(\text{reqFlight}, FC_i) = \overline{\text{reqFlightInfo}}@ACM\;;\;\text{resFlightInfo}@ACM$
 
 $\text{proj}(\text{lastMinOffer}, FC_i) = \\
-\;\;(\;(\overline{\text{recvOffer}}@ACM)\;;\;1\;;\;1\;;\;(\;1\;+\;(\;1\;;\;(\text{notifyFlightCompany}@ACM)\;))) \\
-=(\overline{\text{recvOffer}}@ACM)\;;\;(\;1\;+\;(\text{notifyFlightCompany}@ACM)$
+\;\;\;(\overline{\text{recvOffer}}@ACM)\;;\;1\;;\;1\;;\;\;1\;;\;(\text{confirmRecv}@ACM)\; \\
+=\overline{\text{recvOffer}}@ACM\;;\;\text{confirmRecv}@ACM$
 
 $\text{proj}(\text{buyTicket}, FC_i) = (\;1\;;\;1\;;\;1\;;\;1\;;\;1\;;\;\;(\;(1;1)\;+\;(\;1\;;\;\\
 \;\;(\text{bookTicket}@ACM)\;;\;(\overline{\text{sendTicketData}}@ACM)\;;\\
-\;\;(\;1\;+\;(\;1\;;\;1\;;\;(\;1\;+\;\;(\;(\;1\;;\;1\;)^*;\;1;\;1\;;\;))));1))\\
+\;\;(\;1\;+\;(\;1\;;\;1\;;\;(\;1\;+\;\;(\;(\;1\;;\;1\;)^*;\;1;\;1\;;\;))));1)))\\
 = (\text{bookTicket}@ACM) \;;\;(\overline{\text{sendTicketData}}@ACM)$
 
 ### $PG$
 
-$\text{proj}(\text{lastMinOffer}, PG) = \\
-\;\;(\;1\;;\;(\text{notifyPG}@ACM)\;;\;(\overline{\text{notifyUsr}}@USR_j)\;;\;(\;1\;+\;(\;1\;;\;1\;))) \\
-=(\text{notifyPG}@ACM)\;;\;(\overline{\text{notifyUsr}}@USR_j)$
+$\text{proj}(\text{lastMinOffer}, PG) = \;1\;;\;\text{notifyPG}@ACM\;;\;\overline{\text{notifyUsr}}@USR_j\;;\;1\;;\;1\; \\
+\;= \;\text{notifyPG}@ACM\;;\;\overline{\text{notifyUsr}}@USR_j$
 
 ### $BK$
 
@@ -255,11 +251,10 @@ $\text{proj}(\text{buyTicket}, GD) = (\;1\;;\;1\;;\;1\;;\;1\;;\;1\;;\;(\;(1;1)\;
 
 ### $USR_j$
 
-$\text{proj}(\text{regUser}, USR_j) = (\text{registerFlightInterest}@ACM\;;\;(\overline{\text{resConfirm}}@ACM\;+\; \overline{\text{resError}}@ACM))$
+$\text{proj}(\text{regUser}, USR_j) = \overline{\text{registerFlightInterest}}@ACM\;;\;(\text{resConfirm}@ACM\;+\; \text{resError}@ACM)$
 
-$\text{proj}(\text{lastMinOffer}, USR_j) = \\
-\;\;(\;1\;;\;1\;;\;(\text{notifyUsr}@PG)\;;\;(\;1\;+\;(\;(\overline{\text{acceptOffer}}@ACM)\;;\;1\;))) \\
-=(\text{notifyUsr}@PG)\;;\;(\;1\;+\;(\overline{\text{acceptOffer}}@ACM)$
+$\text{proj}(\text{lastMinOffer}, USR_j) = \;1\;;\;1\;;\;(\text{notifyUsr}@PG)\;;\;(\overline{\text{offerRecv}}@ACM)\;;\;1 \\
+\;=\;\text{notifyUsr}@PG\;;\;\overline{\text{offerRecv}}@ACM$
 
 $\text{proj}(\text{buyTicket}, USR_j) = (\\
 \;(\overline{\text{wantToBuy}}@ACM)\;;\\
