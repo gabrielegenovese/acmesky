@@ -11,6 +11,8 @@ theme:
     scheme: slate
 
 markdown_extensions:
+  - attr_list
+  - md_in_html
   - pymdownx.arithmatex: # latex math in markdown
       generic: true
 
