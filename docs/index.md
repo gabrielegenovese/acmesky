@@ -1,6 +1,6 @@
 # ACMESky Documentation
 
-This is the project's documentation of **Ingegneria del Software Orientata ai Servizi** for the AA 2023/2024 University of Bologna's Master Degree. The team members are:
+This is the project's documentation of the **Service Oriented Software Engineering**'s course (Ingegneria del Software Orientata ai Servizi) for the AA 2023/2024 University of Bologna's Master Degree. The team members are:
 
 - Luca Bassi
 - Gabriele Genovese

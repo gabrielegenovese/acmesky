@@ -117,7 +117,7 @@ where $USR_j$ is any user, $FC_i$ is any flight company and $NCC_k$ is any renta
 - `sendError`: ACMESky notify the user of the failed operation
 - `paymentOk`: the payment was succesful and the user is notified
 - `bookTicket`: ACMESky asks the flight company to book the ticket
-- `sendTicketData`:  the flight comapany sends the ticket informations to ACMESky
+- `sendTicketData`: the flight comapany sends the ticket informations to ACMESky
 - `calcGeoDistance`: ACMESky asks the distance of two points to the GeoDistance service
 - `resDistance`: the GeoDistance service responds to ACMESky
 - `bookTransport`: ACMESky books a cabin for the user
@@ -234,7 +234,7 @@ $\text{proj}(\text{lastMinOffer}, PG) = \;1\;;\;\text{notifyPG}@ACM\;;\;\overlin
 
 ### $BK$
 
-$\text{proj}(\text{buyTicket}, BK) = (\;1\;;\\
+$\text{proj}(\text{buyTicket}, BK) = \;1\;;\\
 \;(\;\text{requestPayment}@ACM)\;;\;(\overline{\text{resPaymentData}}@ACM)\;;\;1\;;\\
 \;(\text{payReceipt}@USR_j)\;;\;(\;(\overline{\text{paymentFailed}}@USR_j)\;+\;(\;(\overline{\text{paymentOk}}@USR_j)\;;\\
 1\;;\;1\;;\;(\;(1;1)\;+\;(\;1\;;\;1\;;(\;1\;+\;\;(\;(\;1\;;\;1\;)^*;1;\;\;1\;))));1))\\
@@ -243,7 +243,7 @@ $\text{proj}(\text{buyTicket}, BK) = (\;1\;;\\
 
 ### $GD$
 
-$\text{proj}(\text{buyTicket}, GD) = (\;1\;;\;1\;;\;1\;;\;1\;;\;1\;;\;(\;(1;1)\;+\;(\;1\;;\;1\;;\;1\;;\;(\;1\;+\;(\;\\
+$\text{proj}(\text{buyTicket}, GD) = \;1\;;\;1\;;\;1\;;\;1\;;\;1\;;\;(\;(1;1)\;+\;(\;1\;;\;1\;;\;1\;;\;(\;1\;+\;(\;\\
 \;\;\;(\text{calcGeoDistance}@ACM)\;;\;(\overline{\text{resDistance}}@ACM)\;;\\
 \;\;\;(\;1\;+\;\;(\;(\;(\text{calcGeoDistance}@ACM)\;;\;(\overline{\text{resDistance}}@ACM)\;)^*;\\
 1;\;\;1\;))));1))\\
@@ -299,7 +299,7 @@ $\text{proj}(\text{buyTicket}, USR_j) = (\\
 
 ### $NCC_k$
 
-$\text{proj}(\text{buyTicket}, NCC_k) = (\;1\;;\;1\;;\;1\;;\;1\;;\;1\;;\\
+$\text{proj}(\text{buyTicket}, NCC_k) = \;1\;;\;1\;;\;1\;;\;1\;;\;1\;;\\
 \;\;(\;(1;1)\;+\;(\;1\;;\;1\;;\;1\;;\;(\;1\;+\;(\;1\;;\;1\;;\;(\;1\;+\;\;(\;(\;1\;;\;1\;)^*;\\
 \;\;\;\;(\text{bookTransport}@ACM);\\
 \;\;\;\;(\overline{\text{resBookTransport}}@ACM)\;;\\

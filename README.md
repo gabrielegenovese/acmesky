@@ -1,6 +1,6 @@
 # ACMEsky
 
-Project for the Ingegneria del Software Orientata ai Servizi AA 2023/2024's course.
+Project for the Service Oriented Software Engineering (Ingegneria del Software Orientata ai Servizi) AA 2023/2024's course.
 
 ## Deploy using Docker compose
 
@@ -28,4 +28,4 @@ docker-compose \
 
 ## Docs
 
-The documentation is generated with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
+The documentation can be viewd [here](https://acmesky-expuss2000-d511ae4437280f0ac43140f188bc34fa077888571f00.gitlab.io/) and it's generated with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
