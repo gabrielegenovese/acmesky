@@ -33,7 +33,7 @@ func SendNewMessageHandler(client worker.JobClient, job entities.Job) {
 	messageRest := Message{
 		Sender:         util.ProntogramUser,
 		ReceiverUserId: variables["prontogramId"].(string),
-		Content:        "OfferCode: " + variables["offerCode"].(string),
+		Content:        "OfferCode: " + variables["offerCode"].(string), // TODO improve message
 	}
 	data, _ := json.Marshal(messageRest)
 	http.Post(os.Getenv("PRONTOGRAM_API")+"/api/users/prontogram/messages", "application/json", bytes.NewReader(data))

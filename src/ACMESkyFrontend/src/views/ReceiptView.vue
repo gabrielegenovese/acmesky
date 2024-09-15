@@ -47,7 +47,7 @@ async function searchNCC() {
 			paymentId: payment.value.id,
 			prontogramId: offer.value.travel_preference.customer_prontogram_id,
 			address: address.value,
-			airportAddress: originAirport.value.city, // TODO Address
+			airportAddress: originAirport.value.city,
 		}),
 	})
 		.then((response) => response.json())
@@ -160,7 +160,7 @@ onMounted(async () => {
 		</button>
 	</div>
 	<div
-		v-if="payment.amount > 1000"
+		v-if="payment.amount && Number(payment.amount) > 1000"
 		class="mx-auto flex max-w-prose flex-col gap-2 p-4 text-center"
 	>
 		<p class="text-xl">

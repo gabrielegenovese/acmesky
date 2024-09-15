@@ -80,7 +80,7 @@ func BookNCCHandler(client worker.JobClient, job entities.Job) {
 	bookingRequest := util.NCCBookingRequest{
 		NccId: variables["nearestNCC"].(string),
 		Name: variables["prontogramId"].(string),
-		Date: "",//TODO
+		Date: variables["departDatetime"].(string),
 		
 	}
 	data, _ := json.Marshal(bookingRequest)

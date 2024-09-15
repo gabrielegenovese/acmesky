@@ -106,7 +106,7 @@ func SendNewOffertHandler(client worker.JobClient, job entities.Job) {
 			variables := make(map[string]interface{})
 			variables["prontogramId"] = offer.TravelPreference.ProntogramID
 			variables["offerCode"] = fmt.Sprintf("%d", offer.OfferCode)
-			message, err := util.ZbClient.NewPublishMessageCommand().MessageName("MessageNewOffert").CorrelationKey("correlation").VariablesFromMap(variables)
+			message, err := util.ZbClient.NewPublishMessageCommand().MessageName("MessageNewOffert").CorrelationKey(variables["offerCode"].(string)).VariablesFromMap(variables)
 			_, err = message.Send(util.Ctx)
 			if err != nil {
 				util.FailJob(client, job)
@@ -133,7 +133,7 @@ func SendNewOffertHandler(client worker.JobClient, job entities.Job) {
 	log.Println("Successfully completed job")
 }
 
-func bookFlight(flightID string, prontogramID string, seats uint) (string, float64, error) {
+func bookFlight(flightID string, prontogramID string, seats uint) (string, float64, string, error) {
 	fmt.Println("Depart func: ", flightID)
 	flightIDint, _ := strconv.ParseInt(flightID, 10, 64)
 	bookingRequest := util.FlightBooking{
@@ -152,9 +152,9 @@ func bookFlight(flightID string, prontogramID string, seats uint) (string, float
 		json.NewDecoder(response.Body).Decode(&flight)
 		fmt.Println("Flight ", flight)
 		totalPrice := flight.FlightPrice * float64(seats)
-		return fmt.Sprintf("%d", booking.BookingID), totalPrice, nil
+		return fmt.Sprintf("%d", booking.BookingID), totalPrice, flight.DepartDatetime, nil
 	} else {
-		return "", 0, errors.New("Booking error")
+		return "", 0, "", errors.New("Booking error")
 	}
 }
 
@@ -177,14 +177,14 @@ func BookFlightHandler(client worker.JobClient, job entities.Job) {
 		var offer util.Offer
 		json.NewDecoder(response.Body).Decode(&offer)
 		fmt.Println("Depart: ", offer.DepartFlight.FlightID)
-		departBooking, departPrice, err := bookFlight(offer.DepartFlight.FlightID, offer.TravelPreference.ProntogramID, offer.TravelPreference.SeatsCount)
+		departBooking, departPrice, departDatetime, err := bookFlight(offer.DepartFlight.FlightID, offer.TravelPreference.ProntogramID, offer.TravelPreference.SeatsCount)
 		if err != nil {
 			util.BuyResults[variables["offerCode"].(string)] <- util.BuyResult{Success: false}
 			util.FailJob(client, job)
 			return
 		}
 		variables["departBooking"] = departBooking
-		returnBooking, returnPrice, err := bookFlight(offer.ReturnFlight.FlightID, offer.TravelPreference.ProntogramID, offer.TravelPreference.SeatsCount)
+		returnBooking, returnPrice, _, err := bookFlight(offer.ReturnFlight.FlightID, offer.TravelPreference.ProntogramID, offer.TravelPreference.SeatsCount)
 		if err != nil {
 			util.BuyResults[variables["offerCode"].(string)] <- util.BuyResult{Success: false}
 			util.FailJob(client, job)
@@ -193,6 +193,7 @@ func BookFlightHandler(client worker.JobClient, job entities.Job) {
 		variables["totalPrice"] = departPrice + returnPrice
 		variables["flightBooked"] = true
 		variables["returnBooking"] = returnBooking
+		variables["departDatetime"] = departDatetime
 	}
 
 	request, err := client.NewCompleteJobCommand().JobKey(jobKey).VariablesFromMap(variables)

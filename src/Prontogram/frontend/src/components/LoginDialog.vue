@@ -60,9 +60,7 @@ onMounted(() => {
 				name="password"
 				required
 			/>
-			<a
-				href="/create"
-				class="text-sky-600 hover:text-sky-500"
+			<a href="/create" class="text-sky-600 hover:text-sky-500"
 				>Don't have an account? Create one</a
 			>
 			<input

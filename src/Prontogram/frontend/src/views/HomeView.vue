@@ -23,8 +23,8 @@ const chats = [
 function logout() {
 	fetch(
 		import.meta.env.VITE_PRONTOGRAM_SERVICE_API +
-			"/users/" +
-			localStorage.username +
+			"/auth/" +
+			localStorage.userId +
 			"/logout",
 		{
 			method: "POST",
@@ -33,7 +33,8 @@ function logout() {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
-				//TODO
+				userId: localStorage.userId,
+				sid: localStorage.sid,
 			}),
 		},
 	).then((response) => {
