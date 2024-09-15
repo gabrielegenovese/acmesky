@@ -19,6 +19,10 @@ function print() {
 }
 
 async function searchNCC() {
+	if (address.value.trim().length == 0) {
+		alert("Insert your address");
+		return;
+	}
 	await fetch(import.meta.env.VITE_SKY_SERVICE_API + "/airports")
 		.then((response) => response.json())
 		.then((json) => {
