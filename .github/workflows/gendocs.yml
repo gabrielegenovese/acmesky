@@ -11,7 +11,19 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [ '1.21.x' ]
+
     steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+      # You can test your matrix by printing the current Go version
+      - name: Display Go version
+        run: go version
       - uses: actions/checkout@v4
       - name: Configure Git Credentials
         run: |
@@ -28,7 +40,6 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install -r requirements.txt
-      - run: apt install golang
       - run: go install -v github.com/swaggo/swag/cmd/swag@latest
       - run: cd src/ACMESkyNCC/middleware
       - run: swag init --parseDependency --instanceName ncc
