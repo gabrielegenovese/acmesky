@@ -1,0 +1,1307 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Luca Bassi, Gabriele Genovese, Jacopo Rimediotti">
+      
+      
+      
+        <link rel="prev" href="../bpmn_chor/">
+      
+      
+        <link rel="next" href="../soa_schema/">
+      
+      
+      <link rel="icon" href="../assets/airplane.svg">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.21">
+    
+    
+      
+        <title>Choreographies - ACMESky Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.66ac8b77.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/katex.min.css">
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#choreographies" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ACMESky Docs" class="md-header__button md-logo" aria-label="ACMESky Docs" data-md-component="logo">
+      
+  <img src="../assets/airplane.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ACMESky Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Choreographies
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://gitlab.com/expuss2000/acmesky" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    expuss2000/acmesky
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ACMESky Docs" class="md-nav__button md-logo" aria-label="ACMESky Docs" data-md-component="logo">
+      
+  <img src="../assets/airplane.svg" alt="logo">
+
+    </a>
+    ACMESky Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://gitlab.com/expuss2000/acmesky" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    expuss2000/acmesky
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ACMESky Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../UML/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    UML
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bpmn/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BPMN
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bpmn_chor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    BPMN Choreographies
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Choreographies
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Choreographies
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      Naming convention
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choreography" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choreography
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Choreography">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requesting-flights" class="md-nav__link">
+    <span class="md-ellipsis">
+      Requesting flights
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registering-a-users-interest" class="md-nav__link">
+    <span class="md-ellipsis">
+      Registering a user's interest
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#receiving-and-notify-last-minute-offers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Receiving and notify last-minute offers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buying-a-ticket" class="md-nav__link">
+    <span class="md-ellipsis">
+      Buying a ticket
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-connectedness" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verifying connectedness
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verifying connectedness">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requesting-flights_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Requesting flights
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registering-a-users-interest_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Registering a user's interest
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#receiving-and-notify-last-minute-offers_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Receiving and notify last-minute offers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buying-a-ticket_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Buying a ticket
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#projections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Projections
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Projections">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#acm" class="md-nav__link">
+    <span class="md-ellipsis">
+      \(ACM\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fc_i" class="md-nav__link">
+    <span class="md-ellipsis">
+      \(FC_i\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pg" class="md-nav__link">
+    <span class="md-ellipsis">
+      \(PG\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bk" class="md-nav__link">
+    <span class="md-ellipsis">
+      \(BK\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gd" class="md-nav__link">
+    <span class="md-ellipsis">
+      \(GD\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usr_j" class="md-nav__link">
+    <span class="md-ellipsis">
+      \(USR_j\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ncc_k" class="md-nav__link">
+    <span class="md-ellipsis">
+      \(NCC_k\)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../soa_schema/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SOA Schema
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Services
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Services
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../services/acmesky/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ACMESky Api Interface
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../services/bank/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bank
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../services/flight_company/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flight Company
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../services/geo_distance/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Geographical Distance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../services/ncc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rental NCC
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../services/prontogram/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prontogram
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#naming-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      Naming convention
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choreography" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choreography
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Choreography">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requesting-flights" class="md-nav__link">
+    <span class="md-ellipsis">
+      Requesting flights
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registering-a-users-interest" class="md-nav__link">
+    <span class="md-ellipsis">
+      Registering a user's interest
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#receiving-and-notify-last-minute-offers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Receiving and notify last-minute offers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buying-a-ticket" class="md-nav__link">
+    <span class="md-ellipsis">
+      Buying a ticket
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-connectedness" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verifying connectedness
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verifying connectedness">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requesting-flights_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Requesting flights
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registering-a-users-interest_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Registering a user's interest
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#receiving-and-notify-last-minute-offers_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Receiving and notify last-minute offers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buying-a-ticket_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Buying a ticket
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#projections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Projections
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Projections">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#acm" class="md-nav__link">
+    <span class="md-ellipsis">
+      \(ACM\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fc_i" class="md-nav__link">
+    <span class="md-ellipsis">
+      \(FC_i\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pg" class="md-nav__link">
+    <span class="md-ellipsis">
+      \(PG\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bk" class="md-nav__link">
+    <span class="md-ellipsis">
+      \(BK\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gd" class="md-nav__link">
+    <span class="md-ellipsis">
+      \(GD\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usr_j" class="md-nav__link">
+    <span class="md-ellipsis">
+      \(USR_j\)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ncc_k" class="md-nav__link">
+    <span class="md-ellipsis">
+      \(NCC_k\)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="choreographies">Choreographies</h1>
+<p>The following choreographies formalise all possible interactions that may occur in the system with ACMESky. Interactions that do not include ACMESky Service as the sender or recipient are ignored, as they are external and their implementation is unknown to the company.</p>
+<h2 id="naming-convention">Naming convention</h2>
+<p>The following abbreviations will be used:</p>
+<ul>
+<li><span class="arithmatex">\(ACM\)</span>: the ACMESky Service</li>
+<li><span class="arithmatex">\(FC_i\)</span>: a Fight Company Service, where <span class="arithmatex">\(i \in \{1...N\}\)</span></li>
+<li><span class="arithmatex">\(PG\)</span>: the Prontogram Service</li>
+<li><span class="arithmatex">\(BK\)</span>: the Bank Service</li>
+<li><span class="arithmatex">\(GD\)</span>: the GeoDistance Service</li>
+<li><span class="arithmatex">\(USR_j\)</span>: a user, where <span class="arithmatex">\(j \in \{1...M\}\)</span></li>
+<li><span class="arithmatex">\(NCC_k\)</span>: the NCC Service, where <span class="arithmatex">\(k \in \{1...P\}\)</span></li>
+</ul>
+<p>where <span class="arithmatex">\(N\)</span>, <span class="arithmatex">\(M\)</span> and <span class="arithmatex">\(P\)</span> are natural numbers.</p>
+<h2 id="choreography">Choreography</h2>
+<p>All the following choreographies are part of a single parallel choreography. They are divided in four choreography for readability.</p>
+<h3 id="requesting-flights">Requesting flights</h3>
+<blockquote>
+<p>ACMESky should ask to every flight company what are the available flights. This task is executed every hour.</p>
+</blockquote>
+<p><span class="arithmatex">\(\text{reqFlight}::=(\text{reqFlightInfo} : ACM \to FC_i)\;;\;(\text{resFlightInfo} : FC_i \to ACM)\)</span></p>
+<p>where <span class="arithmatex">\(i\)</span> can be any flight company and the operations are:</p>
+<ul>
+<li><code>reqFlightInfo</code>: request fights for the user;</li>
+<li><code>resFlightInfo</code>: respond fights' information to ACMESky.</li>
+</ul>
+<h3 id="registering-a-users-interest">Registering a user's interest</h3>
+<blockquote>
+<p>ACMESky should register if a user is interested in an air route.</p>
+</blockquote>
+<p><span class="arithmatex">\(\text{regUser}::=(\\ \; (\text{registerFlightInterest}: USR_j \to ACM) \;; \\ \;((\text{resConfirm}: ACM \to USR_j) \,+ (\text{resError}: ACM \to USR_j))\\ )^*\)</span></p>
+<p>where <span class="arithmatex">\(j\)</span> can be any users who want to register an interest for a flight, then ACMESky can reply with a confirmation or an error. The operations are:</p>
+<ul>
+<li><code>registerFlightInterest</code>: request from te user to register a new interest;</li>
+<li><code>resConfirm</code>: confim response;</li>
+<li><code>resError</code>: error response.</li>
+</ul>
+<h3 id="receiving-and-notify-last-minute-offers">Receiving and notify last-minute offers</h3>
+<blockquote>
+<p>A flight company notify ACMESky that a last-minute offer is available. ACMESky, throught Prontogram, should notify every user interested. The user can decide to accept or ignore an offer. If a user accept an offer, then ACMESky notify the flight company.</p>
+</blockquote>
+<p><span class="arithmatex">\(\text{lastMinOffer}::=(\\
+\;( \text{recvOffer}: FC_i \to ACM )\;;\\
+\;( \text{notifyPG}: ACM \to PG )\;;\\
+\;( \text{notifyUsr}: PG \to USR_j )\;;\\
+\;( \text{offerRecv}: USR_j \to ACM )\;;\\
+\;( \text{confirmRecv}: ACM \to FC_i )\\
+)^*\)</span></p>
+<p>This choreography is valid for each flight company <span class="arithmatex">\(i\)</span> and for each user <span class="arithmatex">\(n\)</span> that want to know about last-minute offers. The operations are:</p>
+<ul>
+<li><code>recvOffer</code>: the flight company place a new offer;</li>
+<li><code>notifyPG</code>: ACMESky use Prontogram API to start the notification process;</li>
+<li><code>notifyUsr</code>: Prontogram notify every user;</li>
+<li><code>offerRecv</code>: the user confirm the reception of the code offer to ACMESky;</li>
+<li><code>confirmRecv</code>: ACMESky confirm to the Flight company the reception of the offer.</li>
+</ul>
+<h3 id="buying-a-ticket">Buying a ticket</h3>
+<blockquote>
+<p>The user can buy a ticket, paying throughth the Bank Service. Then ACMESky check if the flight cost exceeds 1000 euros to offer free transfert service if the airport is 30 km away from the accommodation. ACMESky also book the nearest NCC company to the airport.</p>
+</blockquote>
+<p><span class="arithmatex">\(\text{buyTicket}::=(\\
+\;(\text{wantToBuy}: USR_j \to ACM)\;;\\
+\;(\text{requestPayment}: ACM \to BK)\;;\\
+\;(\text{resPaymentData}: BK \to ACM)\;;\\
+\;(\text{resPaymentData}: ACM \to USR_j)\;;\\
+\;(\text{payReceipt}: USR_j \to BK)\;;\\
+\;(\\
+\;\;(\\
+\;\;\;(\text{paymentFailed}: BK \to ACM)\;;\\
+\;\;\;(\text{sendError}: ACM \to USR_j)\\
+\;\;)\\
+\;\;+\\
+\;\;(\\
+\;\;\;(\text{paymentOk}: BK \to ACM)\;;\\
+\;\;\;(\text{bookTicket}: ACM \to FC_i)\;;\\
+\;\;\;(\text{sendTicketData}: FC_i \to ACM)\;;\\
+\;\;\;(\\
+\;\;\;\; 1 + \\
+\;\;\;\;(\\
+\;\;\;\;\;(\text{calcGeoDistance}: ACM \to GD)\;;\\
+\;\;\;\;\;(\text{resDistance}: GD \to ACM)\;;\\
+\;\;\;\;\;(\\
+\;\;\;\;\;\;1 + \\
+\;\;\;\;\;\;(\\
+\;\;\;\;\;\;\;(\\
+\;\;\;\;\;\;\;\;(\text{calcGeoDistance}: ACM \to GD)\;;\\
+\;\;\;\;\;\;\;\;(\text{resDistance}: GD \to ACM)\\
+\;\;\;\;\;\;\;)^*\;;\\
+\;\;\;\;\;\;\;(\text{bookTransport}: ACM \to NCC_k)\;;\\
+\;\;\;\;\;\;\;(\text{resBookTransport}: NCC_k \to ACM)\;;\\
+\;\;\;\;\;\;)\\
+\;\;\;\;\;)\\
+\;\;\;\;)\\
+\;\;\;)\;;\\
+\;\;\;(\text{sendTicketAndData}: ACM \to USR_j)\\
+\;\;)\\
+\;)\\
+)^*\)</span></p>
+<p>where <span class="arithmatex">\(USR_j\)</span> is any user, <span class="arithmatex">\(FC_i\)</span> is any flight company and <span class="arithmatex">\(NCC_k\)</span> is any rental service. The opertations are:</p>
+<ul>
+<li><code>wantToBuy</code>: a user insert a code to buy a ticket</li>
+<li><code>requestPayment</code>: ACMESky requests the generation of a new payment practice</li>
+<li><code>resPaymentData</code>: the bank creates the payment practice and return the informations</li>
+<li><code>resPaymentData</code>: ACMESky returns the information to the user and ask to pay the bill</li>
+<li><code>payReceipt</code>: the user pay with its bank details</li>
+<li><code>paymentFailed</code>: the payment has failed and ACMESky is notified</li>
+<li><code>sendError</code>: ACMESky notify the user of the failed operation</li>
+<li><code>paymentOk</code>: the payment was succesful and the user is notified</li>
+<li><code>bookTicket</code>: ACMESky asks the flight company to book the ticket</li>
+<li><code>sendTicketData</code>: the flight comapany sends the ticket informations to ACMESky</li>
+<li><code>calcGeoDistance</code>: ACMESky asks the distance of two points to the GeoDistance service</li>
+<li><code>resDistance</code>: the GeoDistance service responds to ACMESky</li>
+<li><code>bookTransport</code>: ACMESky books a cabin for the user</li>
+<li><code>resBookTransport</code>: the rental service responds with details to ACMESky</li>
+<li><code>sendTicketAndData</code>: ACMESky sends the ticket and all the optional informations to the user</li>
+</ul>
+<h2 id="verifying-connectedness">Verifying connectedness</h2>
+<p>We will analyse the connectedness of the separeted choreographies because there are no codition for parallel composition.</p>
+<h3 id="requesting-flights_1">Requesting flights</h3>
+<p>This choreography is connected for the sequence because the receiver in <code>reqFlightInfo</code> is equal to the sender in <code>resFlightInfo</code>. This choreography is connected for the <strong>sender</strong> pattern.</p>
+<h3 id="registering-a-users-interest_1">Registering a user's interest</h3>
+<p>This choreography is connected because the receiver in <code>registerFlightInterest</code> is equal to the sender in both <code>resConfirm</code> and <code>resError</code>. This choreography is connected for the <strong>sender</strong> pattern.</p>
+<h3 id="receiving-and-notify-last-minute-offers_1">Receiving and notify last-minute offers</h3>
+<p>This choreography is connected because the receiver in <code>recvOffer</code> is equal to the sender in <code>notifyPG</code>, the receiver in <code>notifyPG</code> is equal to the sender in <code>notifyUsr</code>, the receiver in <code>notifyUsr</code> is equal to the sender in <code>confirmRecv</code> and the receiver in <code>confirmRecv</code> is equal to the sender in <code>recvOffer</code>. This choreography is connected for the <strong>sender</strong> pattern.</p>
+<h3 id="buying-a-ticket_1">Buying a ticket</h3>
+<p>This choreography is connected because:</p>
+<ul>
+<li>the receiver in <code>wantToBuy</code> is equal to the sender in <code>requestPayment</code>;</li>
+<li>the receiver in <code>requestPayment</code> is equal to the sender in <code>resPaymentData</code>;</li>
+<li>the receiver in <code>resPaymentData</code> is equal to the sender in <code>payReceipt</code>;</li>
+<li>the receiver in <code>payReceipt</code> is equal in both operation's senders (<code>paymentFailed</code> and <code>paymentOk</code>);</li>
+<li>the receiver in <code>paymentFailed</code> is equal to the sender in <code>sendError</code>;</li>
+<li>the receiver in <code>sendError</code> is equal to the sender in <code>sendTicketAndData</code>;</li>
+<li>the receiver in <code>paymentOk</code> is equal to the sender in <code>bookTicket</code>;</li>
+<li>the receiver in <code>bookTicket</code> is equal to the sender in <code>sendTicketData</code>;</li>
+<li>the receiver in <code>sendTicketData</code> is equal to the sender in <code>calcGeoDistance</code>;</li>
+<li>the receiver in <code>sendTicketData</code> is equal to the sender in <code>sendTicketAndData</code>;</li>
+<li>the receiver in <code>calcGeoDistance</code> is equal to the sender in <code>resDistance</code>;</li>
+<li>the receiver in <code>resDistance</code> is equal to the sender in <code>bookTransport</code>;</li>
+<li>the receiver in <code>resDistance</code> is equal to the sender in <code>sendTicketAndData</code>;</li>
+<li>the receiver in <code>resBookTransport</code> is equal to the sender in <code>sendTicketAndData</code>;</li>
+<li>the receiver in <code>sendTicketAndData</code> is equal to the sender in <code>wantToBuy</code>.</li>
+</ul>
+<p>This choreography is connected for the <strong>sender</strong> pattern <span class="arithmatex">\((b=c)\)</span>, so the entire choreography is connected.</p>
+<h2 id="projections">Projections</h2>
+<p>Choreographies where the participant taken in consideration is not present will be ignored.</p>
+<h3 id="acm"><span class="arithmatex">\(ACM\)</span></h3>
+<p><span class="arithmatex">\(\text{proj}(\text{reqFlight}, ACM) = \overline{\text{reqFlightInfo}}@FC_i\;;\;\text{resFlightInfo}@FC_i\)</span></p>
+<p><span class="arithmatex">\(\text{proj}(\text{regUser}, ACM) = \text{registerFlightInterest}@USR_j\;;\;(\overline{\text{resConfirm}@USR_j}\;+\; \overline{\text{resError}@USR_j})\)</span></p>
+<p><span class="arithmatex">\(\text{proj}(\text{lastMinOffer}, ACM) = ((\text{recvOffer}@FC_i);(\overline{\text{notifyPG}}@PG); 1; (\text{offerRecv}@USR_j);(\overline{\text{confirmRecv}}@FC_i)) \\
+= ((\text{recvOffer}@FC_i);(\overline{\text{notifyPG}}@PG); (\text{offerRecv}@USR_j);(\overline{\text{confirmRecv}}@FC_i))\)</span></p>
+<p><span class="arithmatex">\(\text{proj}(\text{buyTicket}, ACM) = (\\
+\;(\text{wantToBuy}@USR_j)\;;\\
+\;(\overline{\text{requestPayment}@BK})\;;\\
+\;(\text{resPaymentData}@BK)\;;\\
+\;(\overline{\text{resPaymentData}@USR_j})\;;\\
+\;1\;;\\
+\;(\\
+\;\;(\\
+\;\;\;(\text{paymentFailed}@BK)\;;\\
+\;\;\;(\overline{\text{sendError}}@USR_j)\\
+\;\;)\\
+\;\;+\\
+\;\;(\\
+\;\;\;(\text{paymentOk}@BK)\;;\\
+\;\;\;(\overline{\text{bookTicket}@FC_i})\;;\\
+\;\;\;(\text{sendTicketData}@FC_i)\;;\\
+\;\;\;(\\
+\;\;\;\; 1 + \\
+\;\;\;\;(\\
+\;\;\;\;\;(\overline{\text{calcGeoDistance}@GD})\;;\\
+\;\;\;\;\;(\text{resDistance}@GD)\;;\\
+\;\;\;\;\;(\\
+\;\;\;\;\;\;1 + \\
+\;\;\;\;\;\;(\\
+\;\;\;\;\;\;\;(\\
+\;\;\;\;\;\;\;\;(\overline{\text{calcGeoDistance}@GD})\;;\\
+\;\;\;\;\;\;\;\;(\text{resDistance}@GD)\\
+\;\;\;\;\;\;\;)^*\;;\\
+\;\;\;\;\;\;\;(\overline{\text{bookTransport}@NCC_k})\;;\\
+\;\;\;\;\;\;\;(\text{resBookTransport}@NCC_k)\;;\\
+\;\;\;\;\;\;)\\
+\;\;\;\;\;)\\
+\;\;\;\;)\\
+\;\;\;)\;;\\
+\;\;\;(\overline{\text{sendTicketAndData}@USR_j})\\
+\;\;)\\
+\;)\\
+)\)</span></p>
+<h3 id="fc_i"><span class="arithmatex">\(FC_i\)</span></h3>
+<p><span class="arithmatex">\(\text{proj}(\text{reqFlight}, FC_i) = \overline{\text{reqFlightInfo}}@ACM\;;\;\text{resFlightInfo}@ACM\)</span></p>
+<p><span class="arithmatex">\(\text{proj}(\text{lastMinOffer}, FC_i) = \\
+\;\;\;(\overline{\text{recvOffer}}@ACM)\;;\;1\;;\;1\;;\;\;1\;;\;(\text{confirmRecv}@ACM)\; \\
+=\overline{\text{recvOffer}}@ACM\;;\;\text{confirmRecv}@ACM\)</span></p>
+<p><span class="arithmatex">\(\text{proj}(\text{buyTicket}, FC_i) = (\;1\;;\;1\;;\;1\;;\;1\;;\;1\;;\;\;(\;(1;1)\;+\;(\;1\;;\;\\
+\;\;(\text{bookTicket}@ACM)\;;\;(\overline{\text{sendTicketData}}@ACM)\;;\\
+\;\;(\;1\;+\;(\;1\;;\;1\;;\;(\;1\;+\;\;(\;(\;1\;;\;1\;)^*;\;1;\;1\;;\;))));1)))\\
+= (\text{bookTicket}@ACM) \;;\;(\overline{\text{sendTicketData}}@ACM)\)</span></p>
+<h3 id="pg"><span class="arithmatex">\(PG\)</span></h3>
+<p><span class="arithmatex">\(\text{proj}(\text{lastMinOffer}, PG) = \;1\;;\;\text{notifyPG}@ACM\;;\;\overline{\text{notifyUsr}}@USR_j\;;\;1\;;\;1\; \\
+\;= \;\text{notifyPG}@ACM\;;\;\overline{\text{notifyUsr}}@USR_j\)</span></p>
+<h3 id="bk"><span class="arithmatex">\(BK\)</span></h3>
+<p><span class="arithmatex">\(\text{proj}(\text{buyTicket}, BK) = \;1\;;\\
+\;(\;\text{requestPayment}@ACM)\;;\;(\overline{\text{resPaymentData}}@ACM)\;;\;1\;;\\
+\;(\text{payReceipt}@USR_j)\;;\;(\;(\overline{\text{paymentFailed}}@USR_j)\;+\;(\;(\overline{\text{paymentOk}}@USR_j)\;;\\
+1\;;\;1\;;\;(\;(1;1)\;+\;(\;1\;;\;1\;;(\;1\;+\;\;(\;(\;1\;;\;1\;)^*;1;\;\;1\;))));1))\\
+= (\text{requestPayment}@ACM)\; ;\; (\overline{\text{resPaymentData}}@ACM)\; ;\\
+\;\;\;(\text{payReceipt}@USR_j)\;; \;(\; (\overline{\text{paymentFailed}}@USR_j)\; +\; (\overline{\text{paymentOk}}@USR_j)\;)\)</span></p>
+<h3 id="gd"><span class="arithmatex">\(GD\)</span></h3>
+<p><span class="arithmatex">\(\text{proj}(\text{buyTicket}, GD) = \;1\;;\;1\;;\;1\;;\;1\;;\;1\;;\;(\;(1;1)\;+\;(\;1\;;\;1\;;\;1\;;\;(\;1\;+\;(\;\\
+\;\;\;(\text{calcGeoDistance}@ACM)\;;\;(\overline{\text{resDistance}}@ACM)\;;\\
+\;\;\;(\;1\;+\;\;(\;(\;(\text{calcGeoDistance}@ACM)\;;\;(\overline{\text{resDistance}}@ACM)\;)^*;\\
+1;\;\;1\;))));1))\\
+= (\;1\;+\;(\text{calcGeoDistance}@ACM)\;;\;(\overline{\text{resDistance}}@ACM)\;;\; (\;1\;+\;(\text{calcGeoDistance}@ACM)\;;\;(\overline{\text{resDistance}}@ACM)))\)</span></p>
+<h3 id="usr_j"><span class="arithmatex">\(USR_j\)</span></h3>
+<p><span class="arithmatex">\(\text{proj}(\text{regUser}, USR_j) = \overline{\text{registerFlightInterest}}@ACM\;;\;(\text{resConfirm}@ACM\;+\; \text{resError}@ACM)\)</span></p>
+<p><span class="arithmatex">\(\text{proj}(\text{lastMinOffer}, USR_j) = \;1\;;\;1\;;\;(\text{notifyUsr}@PG)\;;\;(\overline{\text{offerRecv}}@ACM)\;;\;1 \\
+\;=\;\text{notifyUsr}@PG\;;\;\overline{\text{offerRecv}}@ACM\)</span></p>
+<p><span class="arithmatex">\(\text{proj}(\text{buyTicket}, USR_j) = (\\
+\;(\overline{\text{wantToBuy}}@ACM)\;;\\
+\;1\;;\\
+\;1\;;\\
+\;(\text{resPaymentData}@ACM)\;;\\
+\;(\overline{\text{payReceipt}}@BK)\;;\\
+\;(\\
+\;\;(\\
+\;\;\;1\\\
+\;\;\;(\text{sendError}@ACM)\\\
+\;\;)\\
+\;\;+\\
+\;\;(\\
+\;\;\;1\;;\\
+\;\;\;1\;;\\
+\;\;\;1\;;\\
+\;\;\;(\\
+\;\;\;\; 1 + \\
+\;\;\;\;(\\
+\;\;\;\;\;1\;;\\
+\;\;\;\;\;1\;;\\
+\;\;\;\;\;(\\
+\;\;\;\;\;\;1 + \\
+\;\;\;\;\;\;(\\
+\;\;\;\;\;\;\;(\\
+\;\;\;\;\;\;\;\;1\;;\\
+\;\;\;\;\;\;\;\;1\\
+\;\;\;\;\;\;\;)^*\;;\\
+\;\;\;\;\;\;\;1\;;\\
+\;\;\;\;\;\;\;1\;;\\
+\;\;\;\;\;\;)\\
+\;\;\;\;\;)\\
+\;\;\;\;)\\
+\;\;\;)\;;\\
+\;\;\;(\text{sendTicketAndData}@ACM)\\
+\;\;)\\
+\;)\\
+)\\
+= (\overline{\text{wantToBuy}}@ACM)\;;\; (\text{resPaymentData}@ACM)\;;\;\\
+ (\overline{\text{payReceipt}}@BK)\;;\; (\;(\text{sendError}@ACM)\;+\; (\text{sendTicketAndData}@ACM)\;)\)</span></p>
+<h3 id="ncc_k"><span class="arithmatex">\(NCC_k\)</span></h3>
+<p><span class="arithmatex">\(\text{proj}(\text{buyTicket}, NCC_k) = \;1\;;\;1\;;\;1\;;\;1\;;\;1\;;\\
+\;\;(\;(1;1)\;+\;(\;1\;;\;1\;;\;1\;;\;(\;1\;+\;(\;1\;;\;1\;;\;(\;1\;+\;\;(\;(\;1\;;\;1\;)^*;\\
+\;\;\;\;(\text{bookTransport}@ACM);\\
+\;\;\;\;(\overline{\text{resBookTransport}}@ACM)\;;\\
+\;\;))));1)) = (\text{bookTransport}@ACM)\;;\;(\overline{\text{resBookTransport}}@ACM)\)</span></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a7c05c9e.min.js"></script>
+      
+        <script src="../javascripts/katex.js"></script>
+      
+        <script src="../javascripts/katex.min.js"></script>
+      
+        <script src="../javascripts/auto-render.min.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>

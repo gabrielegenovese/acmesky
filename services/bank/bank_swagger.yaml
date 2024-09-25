@@ -1,0 +1,158 @@
+basePath: /
+definitions:
+  api.Payment:
+    properties:
+      amount:
+        type: integer
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/sql.NullTime'
+      description:
+        type: string
+      id:
+        type: string
+      link:
+        type: string
+      paid:
+        type: boolean
+      updated_at:
+        type: string
+      user:
+        type: string
+    type: object
+  api.PaymentReq:
+    properties:
+      amount:
+        type: integer
+      description:
+        type: string
+      user:
+        type: string
+    type: object
+  api.Res:
+    properties:
+      res:
+        type: string
+    type: object
+  sql.NullTime:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+host: localhost:8001
+info:
+  contact:
+    email: gabriele.genovese2@studio.unibo.it
+    name: Gabriele Genovese
+  description: This is a minimal microservice to act as a bank.
+  license:
+    name: GPLv2
+    url: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  title: Bank Service API
+  version: "1.0"
+paths:
+  /payment/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Given a payment ID, find the corresponding payment and delete it.
+      parameters:
+      - description: payment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Res'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Res'
+      summary: Delete a payment
+      tags:
+      - payment
+    get:
+      consumes:
+      - application/json
+      description: Given a payment ID, find the corresponding payment and return it.
+      parameters:
+      - description: payment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Res'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Res'
+      summary: Get a payment
+      tags:
+      - payment
+  /payment/new:
+    put:
+      consumes:
+      - application/json
+      description: Create a new unpaid payment
+      parameters:
+      - description: payment data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.PaymentReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Payment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Res'
+      summary: New payment
+      tags:
+      - payment
+  /payment/pay/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Pay an unpaid payment
+      parameters:
+      - description: payment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Res'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Res'
+      summary: Pay a payment
+      tags:
+      - payment
+swagger: "2.0"

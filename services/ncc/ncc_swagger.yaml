@@ -1,0 +1,129 @@
+basePath: /
+definitions:
+  main.booking:
+    properties:
+      success:
+        type: string
+    type: object
+  main.bookingRequest:
+    properties:
+      date:
+        description: 'Format: dd/MM/yyyy kk:mm:ss'
+        type: string
+      name:
+        type: string
+      nccId:
+        type: string
+    type: object
+  main.ncc:
+    properties:
+      id:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+      price:
+        type: string
+    type: object
+  main.nccRequest:
+    properties:
+      location:
+        type: string
+      name:
+        type: string
+      price:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Manage and book NCCs.
+  title: NCC API
+  version: "1.0"
+paths:
+  /addNCC:
+    post:
+      consumes:
+      - application/json
+      description: Create a new NCC
+      parameters:
+      - description: NCC
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.nccRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.ncc'
+        "400":
+          description: Bad Request
+      summary: New NCC
+      tags:
+      - ncc
+  /book:
+    post:
+      description: Book a NCC
+      parameters:
+      - description: Booking request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.bookingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.booking'
+        "400":
+          description: Bad Request
+      summary: Book a NCC
+      tags:
+      - booking
+  /getNCC:
+    get:
+      description: Get all the NCCs
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.ncc'
+            type: array
+        "400":
+          description: Bad Request
+      summary: Get all NCCs
+      tags:
+      - ncc
+  /getNCC/{id}:
+    get:
+      description: Get the NCC with the specified ID
+      parameters:
+      - description: NCC ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.ncc'
+        "400":
+          description: Bad Request
+      summary: Get a specified NCC
+      tags:
+      - ncc
+swagger: "2.0"
