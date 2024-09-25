@@ -42,13 +42,18 @@ jobs:
       - run: pip install -r requirements.txt
       - run: go install -v github.com/swaggo/swag/cmd/swag@latest
       - run: cd src/ACMESkyNCC/middleware
+      - run: go mod tidy
       - run: swag init --parseDependency --instanceName ncc
       - run: cd ../../ACMESkyService
+      - run: go mod tidy
       - run: swag init --parseDependency --instanceName acme
       - run: cd ../BankService/server
+      - run: go mod tidy
       - run: swag init --parseDependency --instanceName bank
       - run: cd ../../FlightCompanyService
+      - run: go mod tidy
       - run: swag init --parseDependency --instanceName fc
       - run: cd ../GeoDistance
+      - run: go mod tidy
       - run: swag init --parseDependency --instanceName geo
       - run: mkdocs gh-deploy --force
