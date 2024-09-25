@@ -1,7 +1,7 @@
 site_name: ACMESky Docs
 site_author: Luca Bassi, Gabriele Genovese, Jacopo Rimediotti
-repo_name: expuss2000/acmesky
-repo_url: https://gitlab.com/expuss2000/acmesky
+repo_name: gabrielegenovese/acmesky
+repo_url: https://github.com/gabrielegenovese/acmesky
 theme:
   logo: assets/airplane.svg
   favicon: assets/airplane.svg
