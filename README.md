@@ -5,7 +5,7 @@ Project for the Service Oriented Software Engineering (Ingegneria del Software O
 ## Deploy using Docker compose
 
 If running locally as demo you must run the following docker-compose command first as setup:
-This will create a fake shared network which allow all other container to comunicate each to others.
+This will create a fake shared network which allow all other container to communicate each to others.
 
 ```bash
 docker-compose -f docker-compose-shared.yaml up -d
@@ -35,4 +35,4 @@ bash ./src/ACMESkyNCC/client/init.sh
 
 ## Docs
 
-The documentation can be viewd [here](https://gabrielegenovese.github.io/acmesky/) and it's generated with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
+The documentation can be viewed [here](https://gabrielegenovese.github.io/acmesky/), and it's generated with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).

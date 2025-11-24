@@ -32,4 +32,4 @@ plugins:
   - kroki # import bpmn schema
   - render_swagger: # render swagger in documentation
       allow_arbitrary_locations: true
-      css: https://acmesky-expuss2000-d511ae4437280f0ac43140f188bc34fa077888571f00.gitlab.io/stylesheets/swagger-ui.css
+      css: https://gabrielegenovese.github.io/acmesky/stylesheets/swagger-ui.css
